@@ -120,6 +120,184 @@ def try_xor_decrypt(
     return results
 
 
+def try_rc4_decrypt(
+    encrypted_hex: str,
+    key_candidates: list[bytes] | None = None,
+) -> list[dict[str, Any]]:
+    """Try to decrypt data using RC4 with candidate keys.
+
+    If no keys provided, tries common short keys (1-4 bytes).
+    """
+    encrypted = bytes.fromhex(encrypted_hex)
+    results = []
+
+    if key_candidates is None:
+        # Try single-byte keys
+        key_candidates = [bytes([k]) for k in range(256)]
+
+    for key in key_candidates:
+        decrypted = _rc4(key, encrypted)
+        score = _printable_score(decrypted)
+        if score > 0.7:
+            try:
+                text = decrypted.decode("utf-8", errors="strict")
+                results.append({
+                    "method": "rc4",
+                    "key": key.hex(),
+                    "key_len": len(key),
+                    "decrypted": text,
+                    "score": round(score, 3),
+                })
+            except UnicodeDecodeError:
+                pass
+
+    results.sort(key=lambda r: r["score"], reverse=True)
+    return results[:10]
+
+
+def _rc4(key: bytes, data: bytes) -> bytes:
+    """RC4 stream cipher implementation."""
+    S = list(range(256))
+    j = 0
+    for i in range(256):
+        j = (j + S[i] + key[i % len(key)]) % 256
+        S[i], S[j] = S[j], S[i]
+
+    i = j = 0
+    result = bytearray()
+    for byte in data:
+        i = (i + 1) % 256
+        j = (j + S[i]) % 256
+        S[i], S[j] = S[j], S[i]
+        result.append(byte ^ S[(S[i] + S[j]) % 256])
+    return bytes(result)
+
+
+def try_sub_table_decrypt(
+    encrypted_hex: str,
+    table: list[int] | None = None,
+) -> list[dict[str, Any]]:
+    """Try decryption with a substitution table.
+
+    If no table provided, tries to infer one from frequency analysis.
+    """
+    encrypted = bytes.fromhex(encrypted_hex)
+    results = []
+
+    if table is not None:
+        # Direct table application
+        if len(table) != 256:
+            return []
+        decrypted = bytes(table[b] for b in encrypted)
+        score = _printable_score(decrypted)
+        if score > 0.5:
+            try:
+                text = decrypted.decode("utf-8", errors="strict")
+                results.append({
+                    "method": "substitution",
+                    "decrypted": text,
+                    "score": round(score, 3),
+                })
+            except UnicodeDecodeError:
+                pass
+    else:
+        # Try ROT-N (Caesar cipher on bytes)
+        for rot in range(1, 256):
+            decrypted = bytes((b + rot) % 256 for b in encrypted)
+            score = _printable_score(decrypted)
+            if score > 0.7:
+                try:
+                    text = decrypted.decode("utf-8", errors="strict")
+                    results.append({
+                        "method": f"rot_{rot}",
+                        "rotation": rot,
+                        "decrypted": text,
+                        "score": round(score, 3),
+                    })
+                except UnicodeDecodeError:
+                    pass
+
+    results.sort(key=lambda r: r["score"], reverse=True)
+    return results[:5]
+
+
+def try_multibyte_xor_decrypt(
+    encrypted_hex: str,
+    max_key_len: int = 4,
+) -> list[dict[str, Any]]:
+    """Try multi-byte repeating XOR decryption.
+
+    Uses index of coincidence to guess key length, then frequency analysis.
+    """
+    encrypted = bytes.fromhex(encrypted_hex)
+    results = []
+
+    for key_len in range(2, max_key_len + 1):
+        # For each key byte position, find the best single-byte XOR
+        key = bytearray()
+        for pos in range(key_len):
+            subset = bytes(encrypted[i] for i in range(pos, len(encrypted), key_len))
+            best_byte = 0
+            best_score = -1.0
+            for k in range(256):
+                dec = bytes(b ^ k for b in subset)
+                # Use English text score to prefer real text over random printable
+                s = _english_text_score(dec)
+                if s > best_score:
+                    best_score = s
+                    best_byte = k
+            key.append(best_byte)
+
+        # Decrypt with the guessed key
+        decrypted = bytes(encrypted[i] ^ key[i % key_len] for i in range(len(encrypted)))
+        score = _printable_score(decrypted)
+
+        if score > 0.7:
+            try:
+                text = decrypted.decode("utf-8", errors="strict")
+                results.append({
+                    "method": f"xor_multi_{key_len}",
+                    "key": bytes(key).hex(),
+                    "key_len": key_len,
+                    "decrypted": text,
+                    "score": round(score, 3),
+                })
+            except UnicodeDecodeError:
+                pass
+
+    results.sort(key=lambda r: r["score"], reverse=True)
+    return results[:5]
+
+
+def _try_all_methods(data_hex: str, known_key: int | None = None) -> list[dict[str, Any]]:
+    """Try all available decryption methods on the data."""
+    all_results = []
+
+    # XOR (single-byte)
+    key_candidates = [known_key] if known_key else None
+    all_results.extend(try_xor_decrypt(data_hex, key_candidates))
+
+    # Multi-byte XOR
+    all_results.extend(try_multibyte_xor_decrypt(data_hex))
+
+    # RC4
+    all_results.extend(try_rc4_decrypt(data_hex))
+
+    # ROT-N substitution
+    all_results.extend(try_sub_table_decrypt(data_hex))
+
+    # Deduplicate by decrypted text
+    seen = set()
+    unique = []
+    for r in all_results:
+        if r["decrypted"] not in seen:
+            seen.add(r["decrypted"])
+            unique.append(r)
+
+    unique.sort(key=lambda r: r["score"], reverse=True)
+    return unique[:10]
+
+
 def decrypt_strings(params: dict[str, Any]) -> dict[str, Any]:
     """Main entry: find and decrypt OLLVM-encrypted strings.
 
@@ -139,8 +317,7 @@ def decrypt_strings(params: dict[str, Any]) -> dict[str, Any]:
         results = []
         for addr_info in target_addrs:
             data_hex = addr_info["data_hex"]
-            key_candidates = [known_key] if known_key else None
-            decryptions = try_xor_decrypt(data_hex, key_candidates)
+            decryptions = _try_all_methods(data_hex, known_key)
             if decryptions:
                 results.append({
                     "address": addr_info["address"],
@@ -156,8 +333,7 @@ def decrypt_strings(params: dict[str, Any]) -> dict[str, Any]:
 
     results = []
     for candidate in candidates:
-        key_candidates = [known_key] if known_key else None
-        decryptions = try_xor_decrypt(candidate["data"], key_candidates)
+        decryptions = _try_all_methods(candidate["data"], known_key)
         if decryptions:
             results.append({
                 "address": candidate["offset"],
@@ -204,3 +380,30 @@ def _alpha_ratio(text: str) -> float:
     if not text:
         return 0.0
     return sum(1 for c in text if c.isalnum()) / len(text)
+
+
+def _english_text_score(data: bytes) -> float:
+    """Score how likely a byte sequence is to be English text.
+
+    Weights spaces and lowercase letters more heavily than other printable
+    characters, which helps distinguish real English from random printable bytes
+    during frequency analysis (e.g., multi-byte XOR key recovery).
+    """
+    if not data:
+        return 0.0
+    score = 0.0
+    for b in data:
+        if b == 0x20:  # space -- very common in English (~13%)
+            score += 3.0
+        elif 0x61 <= b <= 0x7A:  # lowercase letters
+            score += 2.0
+        elif 0x41 <= b <= 0x5A:  # uppercase letters
+            score += 1.5
+        elif 0x30 <= b <= 0x39:  # digits
+            score += 1.0
+        elif b in (0x09, 0x0A, 0x0D):  # tab, newline, CR
+            score += 0.8
+        elif 0x20 <= b <= 0x7E:  # other printable ASCII
+            score += 0.5
+        # non-printable: 0 points
+    return score / (len(data) * 3.0)  # normalize so max ~1.0 for space-heavy text
