@@ -3,6 +3,8 @@ layout: default
 title: String Decryption
 ---
 
+**English** | [中文](../cn/modules/strings)
+
 # String Decryption
 
 D810G detects and decrypts OLLVM-encrypted strings using multiple decryption methods.

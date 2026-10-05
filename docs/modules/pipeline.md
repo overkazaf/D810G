@@ -3,6 +3,8 @@ layout: default
 title: Deobfuscation Pipeline
 ---
 
+**English** | [中文](../cn/modules/pipeline)
+
 # Multi-Pass Deobfuscation Pipeline
 
 The pipeline chains all analysis passes and iterates until no more changes are made.

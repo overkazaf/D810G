@@ -3,6 +3,8 @@ layout: default
 title: VM Devirtualization
 ---
 
+**English** | [中文](../cn/modules/virtualization)
+
 # VM Devirtualization
 
 D810G detects and analyzes Tigress VM-protected functions — recovering the custom bytecode instruction set and generating pseudocode.

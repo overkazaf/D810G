@@ -3,6 +3,8 @@ layout: default
 title: Opaque Predicates
 ---
 
+**English** | [中文](../cn/modules/opaque)
+
 # Opaque Predicate Elimination
 
 Opaque predicates are conditions that always evaluate the same way, inserted by obfuscators to add fake branches.

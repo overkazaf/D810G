@@ -3,6 +3,8 @@ layout: default
 title: MBA Simplification
 ---
 
+**English** | [中文](../cn/modules/mba)
+
 # MBA Simplification
 
 Mixed Boolean-Arithmetic (MBA) expressions are used by obfuscators like OLLVM to disguise simple operations. D810G automatically simplifies them using pattern matching verified by Z3.

@@ -3,6 +3,8 @@ layout: default
 title: D810G — Ghidra Deobfuscation Framework
 ---
 
+**English** | [中文](cn/)
+
 # D810G
 
 **The most comprehensive open-source deobfuscation toolkit for Ghidra.**
