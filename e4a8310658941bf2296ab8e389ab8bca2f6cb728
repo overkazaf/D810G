@@ -1,0 +1,57 @@
+python/d810g_engine/deflattener/tigress.py
+  1ba8494afe4ffabd 1-120
+test/test_tigress.py
+  1ba8494afe4ffabd 1-98
+python/d810g_engine/deflattener/__init__.py
+  1ba8494afe4ffabd 6,8
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "e4a8310658941bf2296ab8e389ab8bca2f6cb728",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 435,
+      "total_deletions": 0,
+      "accepted_lines": 435,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_constant_folding.json": {
+          "additions": 16,
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/deflattener/__init__.py": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "additions": 31,
+          "accepted_lines": 31
+        },
+        "test/test_mba_extended.py": {
+          "additions": 147,
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/deflattener/tigress.py": {
+          "additions": 120,
+          "accepted_lines": 120
+        },
+        "test/test_tigress.py": {
+          "additions": 98,
+          "accepted_lines": 98
+        },
+        "data/rules/mba_ollvm.json": {
+          "additions": 21,
+          "accepted_lines": 21
+        }
+      }
+    }
+  }
+}
