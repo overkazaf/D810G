@@ -1,0 +1,130 @@
+docs/index.md
+  1ba8494afe4ffabd 6-7
+docs/cn/modules/opaque.md
+  1ba8494afe4ffabd 1-35
+docs/cn/modules/deflattening.md
+  1ba8494afe4ffabd 1-64
+docs/cn/modules/strings.md
+  1ba8494afe4ffabd 1-30
+docs/modules/opaque.md
+  1ba8494afe4ffabd 6-7
+docs/cn/modules/virtualization.md
+  1ba8494afe4ffabd 1-36
+docs/modules/pipeline.md
+  1ba8494afe4ffabd 6-7
+docs/cn/modules/pipeline.md
+  1ba8494afe4ffabd 1-37
+docs/cn/index.md
+  1ba8494afe4ffabd 1-84
+docs/modules/virtualization.md
+  1ba8494afe4ffabd 6-7
+docs/modules/mba.md
+  1ba8494afe4ffabd 6-7
+docs/cn/modules/mba.md
+  1ba8494afe4ffabd 1-60
+docs/modules/strings.md
+  1ba8494afe4ffabd 6-7
+docs/modules/deflattening.md
+  1ba8494afe4ffabd 6-7
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "24df4b663d7a2fa3e72846a68dbb8611f1111c3d",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 612,
+      "total_deletions": 0,
+      "accepted_lines": 955,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "docs/cn/modules/virtualization.md": {
+          "additions": 36,
+          "accepted_lines": 36
+        },
+        "docs/modules/opaque.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "docs/assets/architecture.svg": {
+          "additions": 156,
+          "accepted_lines": 156
+        },
+        "docs/cn/modules/deflattening.md": {
+          "additions": 64,
+          "accepted_lines": 64
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/modules/mba.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "docs/cn/modules/pipeline.md": {
+          "additions": 37,
+          "accepted_lines": 37
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "docs/cn/modules/strings.md": {
+          "additions": 30,
+          "accepted_lines": 30
+        },
+        "docs/modules/virtualization.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "docs/index.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "docs/modules/strings.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "docs/cn/modules/mba.md": {
+          "additions": 60,
+          "accepted_lines": 60
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "docs/modules/deflattening.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "docs/modules/pipeline.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "docs/cn/modules/opaque.md": {
+          "additions": 35,
+          "accepted_lines": 35
+        },
+        "docs/assets/pipeline.svg": {
+          "additions": 96,
+          "accepted_lines": 96
+        },
+        "docs/cn/index.md": {
+          "additions": 84,
+          "accepted_lines": 84
+        }
+      }
+    }
+  }
+}
