@@ -1,0 +1,41 @@
+demo/demo_opaque.py
+  1ba8494afe4ffabd 1-124
+demo/demo_deflat.py
+  1ba8494afe4ffabd 1-192
+demo/demo_mba.py
+  1ba8494afe4ffabd 1-123
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "4211afdcca43710bcb143330944d7222b61aa21d",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 439,
+      "total_deletions": 0,
+      "accepted_lines": 439,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "demo/demo_deflat.py": {
+          "additions": 192,
+          "accepted_lines": 192
+        },
+        "demo/demo_mba.py": {
+          "additions": 123,
+          "accepted_lines": 123
+        },
+        "demo/demo_opaque.py": {
+          "additions": 124,
+          "accepted_lines": 124
+        }
+      }
+    }
+  }
+}
