@@ -78,11 +78,13 @@ def main() -> int:
     from d810g_engine.mba import register_handlers as register_mba
     from d810g_engine.opaque import register_handlers as register_opaque
     from d810g_engine.bcf import register_handlers as register_bcf
+    from d810g_engine.strings import register_handlers as register_strings
 
     server = Server()
     register_deflat(server)
     register_mba(server)
     register_opaque(server)
     register_bcf(server)
+    register_strings(server)
     server.serve()
     return 0
