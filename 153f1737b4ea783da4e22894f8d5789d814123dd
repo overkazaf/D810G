@@ -1,0 +1,51 @@
+README_CN.md
+  1ba8494afe4ffabd 1-2,5,7,9-15,18-31,35,37-42,46-51,53,56-64,66,69-71,73-75,77-80,82,84-101,103,105-113,118,120,122-125,127,129-140,147-168,170,172,174-177,182-210,214-216,218-223,225,227,231-241,245-250,254,256,258-263,265,268,271,273-278,283,285,287-290,292,295-297,299,301-302,304,306-323,328,330-356,362-363,366,372
+README.md
+  1ba8494afe4ffabd 3-4
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "153f1737b4ea783da4e22894f8d5789d814123dd",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 292,
+      "total_deletions": 122,
+      "accepted_lines": 635,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "README_CN.md": {
+          "additions": 290,
+          "deletions": 122,
+          "accepted_lines": 290
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "README.md": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        }
+      }
+    }
+  }
+}
