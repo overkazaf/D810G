@@ -1,0 +1,74 @@
+docs/assets/mba-flow.svg
+  1ba8494afe4ffabd 1-97
+docs/index.md
+  1ba8494afe4ffabd 56-67
+docs/assets/pipeline.svg
+  1ba8494afe4ffabd 1-96
+README.md
+  1ba8494afe4ffabd 146,152
+README_CN.md
+  1ba8494afe4ffabd 146,152
+docs/assets/architecture.svg
+  1ba8494afe4ffabd 1-156
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "f11b5fd1cd297806fb1d730c6caf3a3a514b8fb0",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 113,
+      "total_deletions": 56,
+      "accepted_lines": 708,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "README_CN.md": {
+          "additions": 2,
+          "deletions": 28,
+          "accepted_lines": 2
+        },
+        "docs/assets/architecture.svg": {
+          "accepted_lines": 156
+        },
+        "docs/assets/mba-flow.svg": {
+          "additions": 97,
+          "accepted_lines": 97
+        },
+        "README.md": {
+          "additions": 2,
+          "deletions": 28,
+          "accepted_lines": 2
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "docs/assets/pipeline.svg": {
+          "accepted_lines": 96
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "docs/index.md": {
+          "additions": 12,
+          "accepted_lines": 12
+        }
+      }
+    }
+  }
+}
