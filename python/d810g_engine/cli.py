@@ -109,6 +109,23 @@ def cmd_rules(args):
     print(f"\n  Total: {total} rules")
 
 
+def cmd_pipeline(args):
+    """Run full deobfuscation pipeline on a block graph."""
+    import json
+    with open(args.input_file) as f:
+        params = json.load(f)
+    if args.passes:
+        params["passes"] = args.passes
+    from d810g_engine.pipeline.orchestrator import run_pipeline
+    result = run_pipeline(params)
+    if args.json:
+        print(json.dumps(result, indent=2))
+    else:
+        print(f"  Pipeline: {result['summary']}")
+        for p in result.get("passes", []):
+            print(f"    [{p['name']}] {p['status']} — {p['patches']} patches ({p['time_ms']}ms)")
+
+
 def cmd_batch(args):
     """Process multiple expressions from stdin."""
     rules_file = args.rules
@@ -170,6 +187,13 @@ def main(argv=None):
     p_batch = sub.add_parser("batch", help="Batch simplify expressions from stdin")
     p_batch.add_argument("--rules", default="mba_basic.json", help="Rules file to use")
     p_batch.set_defaults(func=cmd_batch)
+
+    # pipeline
+    p_pipe = sub.add_parser("pipeline", help="Run full deobfuscation pipeline on block graph (JSON)")
+    p_pipe.add_argument("input_file", help="JSON file with blocks and binary_hex")
+    p_pipe.add_argument("--passes", nargs="+", help="Specific passes to run")
+    p_pipe.add_argument("--json", action="store_true", help="Output as JSON")
+    p_pipe.set_defaults(func=cmd_pipeline)
 
     # interactive
     p_interact = sub.add_parser("interactive", help="Interactive rule editor and tester")
