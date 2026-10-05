@@ -80,6 +80,7 @@ def main() -> int:
     from d810g_engine.bcf import register_handlers as register_bcf
     from d810g_engine.strings import register_handlers as register_strings
     from d810g_engine.virtualization import register_handlers as register_vm
+    from d810g_engine.dce import register_handlers as register_dce
 
     server = Server()
     register_deflat(server)
@@ -88,5 +89,6 @@ def main() -> int:
     register_bcf(server)
     register_strings(server)
     register_vm(server)
+    register_dce(server)
     server.serve()
     return 0
