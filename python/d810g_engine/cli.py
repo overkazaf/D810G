@@ -152,6 +152,10 @@ def main(argv=None):
     p_batch.add_argument("--rules", default="mba_basic.json", help="Rules file to use")
     p_batch.set_defaults(func=cmd_batch)
 
+    # interactive
+    p_interact = sub.add_parser("interactive", help="Interactive rule editor and tester")
+    p_interact.set_defaults(func=lambda args: _run_interactive())
+
     args = parser.parse_args(argv)
     if not args.command:
         parser.print_help()
@@ -159,3 +163,8 @@ def main(argv=None):
 
     args.func(args)
     return 0
+
+
+def _run_interactive():
+    from d810g_engine.interactive import main as interactive_main
+    interactive_main()
