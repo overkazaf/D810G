@@ -1,0 +1,73 @@
+test/test_mba_deep.py
+  1ba8494afe4ffabd 1-86
+python/d810g_engine/cli.py
+  1ba8494afe4ffabd 31-48,152
+python/d810g_engine/mba/__init__.py
+  1ba8494afe4ffabd 49,62-147,150
+python/d810g_engine/mba/matcher.py
+  1ba8494afe4ffabd 56,71-77,141,144,149-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "264ef09792aa8038e8b14b31d932c7ed9eb51280",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 139,
+      "total_deletions": 0,
+      "accepted_lines": 910,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "python/d810g_engine/cli.py": {
+          "additions": 24,
+          "accepted_lines": 62
+        },
+        "python/d810g_engine/pipeline/__init__.py": {
+          "accepted_lines": 6
+        },
+        "test/test_pipeline.py": {
+          "additions": 113,
+          "accepted_lines": 113
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 166
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "python/d810g_engine/mba/__init__.py": {
+          "accepted_lines": 90
+        },
+        "test/test_mba_deep.py": {
+          "accepted_lines": 86
+        },
+        "python/d810g_engine/mba/matcher.py": {
+          "accepted_lines": 42
+        },
+        "python/d810g_engine/server.py": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        }
+      }
+    }
+  }
+}
