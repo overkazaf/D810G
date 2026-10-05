@@ -1,0 +1,49 @@
+python/d810g_engine/deflattener/__init__.py
+  1ba8494afe4ffabd 1-6
+python/d810g_engine/deflattener/detector.py
+  1ba8494afe4ffabd 1-33
+python/d810g_engine/deflattener/ollvm.py
+  1ba8494afe4ffabd 1-44
+python/d810g_engine/deflattener/symbolic.py
+  1ba8494afe4ffabd 1-46
+test/test_deflattener.py
+  1ba8494afe4ffabd 1-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "6310024faf2b14d75c157d46bada6313bae9d0d9",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 62,
+      "total_deletions": 0,
+      "accepted_lines": 191,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/deflattener/symbolic.py": {
+          "accepted_lines": 46
+        },
+        "python/d810g_engine/deflattener/__init__.py": {
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/deflattener/detector.py": {
+          "accepted_lines": 33
+        },
+        "test/test_deflattener.py": {
+          "additions": 62,
+          "accepted_lines": 62
+        },
+        "python/d810g_engine/deflattener/ollvm.py": {
+          "accepted_lines": 44
+        }
+      }
+    }
+  }
+}
