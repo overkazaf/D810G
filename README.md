@@ -1,5 +1,7 @@
 # D810G
 
+**English** | [中文](README_CN.md)
+
 **Deobfuscation framework for Ghidra** — the most comprehensive open-source deobfuscation toolkit for the Ghidra reverse engineering platform.
 
 D810G brings [D-810](https://gitlab.com/eshard/d810)-level deobfuscation capabilities to Ghidra. It uses a hybrid Java + Python architecture: a Ghidra plugin handles UI and binary patching, while a Python engine powered by Z3, Unicorn, Capstone, and Keystone performs the heavy analysis.

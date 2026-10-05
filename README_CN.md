@@ -1,204 +1,372 @@
+[English](README.md) | **中文**
+
 # D810G
 
-**Ghidra 反混淆框架** -- 控制流平坦化还原、MBA 表达式化简、不透明谓词消除。
+**Ghidra 反混淆框架** -- 最全面的开源 Ghidra 逆向工程平台反混淆工具包。
 
-D810G 将 [D-810](https://gitlab.com/eshard/d810) 的反混淆能力带入 Ghidra 生态。采用 Java + Python 混合架构：Ghidra 插件提取 P-Code 和二进制数据，通过 JSON-RPC 发送给 Python 分析引擎，再将引擎返回的补丁应用到程序中。
+D810G 将 [D-810](https://gitlab.com/eshard/d810) 级别的反混淆能力带入 Ghidra。它采用 Java + Python 混合架构：Ghidra 插件负责 UI 和二进制修补，Python 引擎借助 Z3、Unicorn、Capstone 和 Keystone 执行深度分析。
+
+![Tests](https://img.shields.io/badge/tests-201%20passed-brightgreen)
+![Rules](https://img.shields.io/badge/MBA%20rules-60-blue)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue)
+![Ghidra](https://img.shields.io/badge/Ghidra-11.x-green)
+![Python](https://img.shields.io/badge/python-3.11%2B-yellow)
+![Arch](https://img.shields.io/badge/arch-x86__64%20%7C%20ARM64%20%7C%20ARM32-orange)
 
 ---
 
-## 功能特性
+## 核心特性
 
-### 控制流平坦化还原
-还原 OLLVM 风格的 switch-dispatch 控制流平坦化。检测 dispatcher 模式，识别相关基本块，使用 Z3 符号执行解析后继关系。
+| 模块 | 说明 |
+|------|------|
+| **控制流平坦化还原** | 通过 Unicorn 模拟执行恢复 OLLVM + Tigress CFF |
+| **MBA 表达式化简** | 60 条规则，多轮迭代化简，Z3 等价性验证 |
+| **不透明谓词消除** | 标准 + 高级（数论、整数算术） |
+| **虚假控制流移除** | 检测并剥离由不透明谓词保护的虚假分支 |
+| **死代码消除** | BFS 可达性分析 + NOP 填充 |
+| **字符串解密** | XOR、多字节 XOR、RC4、替换表、ROT-N |
+| **VM 反虚拟化** | Tigress VM 分发器检测、handler 分类、字节码追踪 |
+| **完整流水线** | 6 趟自动链式处理，不动点迭代 |
+| **独立 CLI** | 无需 Ghidra 即可使用：`simplify`、`opaque`、`interactive`、`pipeline` |
+| **Ghidra 分析器** | 分析过程中一键自动反混淆 |
+
+---
+
+## 快速开始（CLI -- 无需 Ghidra）
+
+```bash
+git clone https://github.com/overkazaf/D810G.git
+cd D810G
+python3 -m venv .venv && source .venv/bin/activate
+pip install z3-solver unicorn keystone-engine capstone
+```
 
 ### MBA 表达式化简
-基于规则引擎化简混合布尔-算术（MBA）表达式，内置 10+ 条重写规则。每条规则均通过 Z3 形式化验证语义等价性。规则以 JSON 定义，无需修改代码即可扩展。
 
-### 不透明谓词消除
-使用 Z3 可满足性分析检测并消除不透明谓词（恒真/恒假分支条件），将死分支替换为无条件跳转或 NOP。
+```
+$ PYTHONPATH=python python -m d810g_engine cli simplify "(x | y) - (x & y)"
+  (x | y) - (x & y)
+  → (x ^ y) (Z3 verified)
+  Rule: mba_xor_1
+```
+
+### 多轮深度化简
+
+```
+$ PYTHONPATH=python python -m d810g_engine cli simplify --deep \
+    "((x | y) - (x & y)) ^ ((x | y) - (x & y))"
+  ((x | y) - (x & y)) ^ ((x | y) - (x & y))
+  → ((x ^ y) ^ ((x | y) - (x & y)))  (step 1, mba_xor_1)
+  → ((x ^ y) ^ (x ^ y))              (step 2, mba_xor_1)
+  → 0                                 (step 3, mba_zero_1)
+  Final: Z3 verified equivalent
+  Iterations: 3, fixpoint: True
+```
+
+### 不透明谓词检测
+
+```
+$ PYTHONPATH=python python -m d810g_engine cli opaque "x == x"
+  x == x
+  → ALWAYS TRUE  — opaque, can be eliminated
+
+$ PYTHONPATH=python python -m d810g_engine cli opaque "(x & 1) == 2"
+  (x & 1) == 2
+  → ALWAYS FALSE — opaque, can be eliminated
+
+$ PYTHONPATH=python python -m d810g_engine cli opaque "x > 5"
+  x > 5
+  → DYNAMIC      — real condition, keep as-is
+```
+
+### 交互式规则编辑器
+
+```
+$ PYTHONPATH=python python -m d810g_engine cli interactive
+  D810G Interactive Rule Editor
+  Loaded 60 rules from 4 files
+
+d810g> test (x | y) - (x & y)
+  → (x ^ y)  [Z3 verified]
+     Rule: mba_xor_1
+
+d810g> verify (x & y) + (x ^ y) = x | y
+  8-bit:  EQUIVALENT
+  16-bit: EQUIVALENT
+  32-bit: EQUIVALENT
+  64-bit: EQUIVALENT
+
+d810g> add my_rule ~(~x & ~y) = x | y
+  Added rule 'my_rule': ~(~x & ~y) -> x | y [verified]
+```
+
+### 所有 CLI 命令
+
+```bash
+PYTHONPATH=python python -m d810g_engine cli simplify "<expr>"      # 单次化简
+PYTHONPATH=python python -m d810g_engine cli simplify --deep "<expr>" # 多轮化简
+PYTHONPATH=python python -m d810g_engine cli opaque "<condition>"    # 谓词分类
+PYTHONPATH=python python -m d810g_engine cli rules                   # 列出全部 60 条规则
+PYTHONPATH=python python -m d810g_engine cli rules --verify          # Z3 验证所有规则
+PYTHONPATH=python python -m d810g_engine cli batch < exprs.txt       # 批量化简
+PYTHONPATH=python python -m d810g_engine cli interactive             # REPL 交互模式
+PYTHONPATH=python python -m d810g_engine cli pipeline input.json     # 完整流水线
+```
 
 ---
 
-## 安装
+## Ghidra 集成
 
-### 1. 安装 Ghidra 扩展
+### 插件（手动安装）
+
+1. 构建扩展（参见[从源码构建](#从源码构建)）
+2. 在 Ghidra 中：**File > Install Extensions > Add extension**（选择 zip 文件）
+3. 右键任意函数 → **D810G > Deobfuscate Function**
+4. 结果显示在 **D810G Results** 面板中
+
+### 分析器（自动模式）
+
+D810G 内置 Ghidra `Analyzer`，可在分析过程中自动检测并反混淆函数：
+
+1. 打开 **Analysis > Auto Analyze** 选项
+2. 启用 **D810G Deobfuscation**
+3. 运行分析 -- D810G 会扫描所有函数的混淆模式，并对可疑函数进行反混淆
+
+### 无头脚本
 
 ```bash
-# 从源码构建（参见"从源码构建"章节），然后：
-# 在 Ghidra 中：File > Install Extensions > Add extension（选择构建产物 zip）
+analyzeHeadless /path/to/project Project -import binary.exe \
+    -postScript headless_deobfuscate.py
 ```
-
-也可以从 Releases 页面下载发布包，通过 Ghidra 扩展管理器安装。
-
-### 2. 配置 Python 引擎
-
-Python 引擎需要 Python 3.12+ 和 z3-solver。
-
-```bash
-cd <ghidra_extensions>/D810G
-
-# 创建虚拟环境（D810G 会自动查找 .venv/）
-python3 -m venv .venv
-source .venv/bin/activate
-
-# 安装依赖
-pip install z3-solver
-```
-
----
-
-## 使用方法
-
-1. 在 Ghidra 中打开目标二进制文件并运行自动分析。
-2. 导航到被混淆的函数。
-3. 在 Listing 视图中右键点击，选择 **D810G > Deobfuscate Function**。
-4. 插件会启动 Python 引擎（如果尚未运行），将函数数据发送给引擎分析，然后应用补丁。
-5. 在 **D810G Results** 面板中查看日志和状态。
-
-结果面板会显示每个函数的摘要，包括应用的补丁数量、检测到的混淆类型以及错误信息。
 
 ---
 
 ## 架构
 
 ```
-+-----------------+       JSON-RPC (stdio)       +-------------------+
-|   Ghidra 插件   |  <========================>  |   Python 引擎     |
-|   (Java)        |   Content-Length 帧协议       |   (d810g_engine)  |
-+-----------------+                               +-------------------+
-| D810GPlugin     |                               | server.py         |
-| EngineManager   |--- 启动/停止子进程 ---------->| protocol.py       |
-| EngineProtocol  |--- send(method, params) ----->|                   |
-| PcodeUtils      |   提取基本块和字节码           | deflattener/      |
-| PatchManager    |   应用返回的补丁               |   detector.py     |
-| Orchestrator    |   协调各分析阶段               |   ollvm.py        |
-| DeobfuscateFunc |   右键菜单动作                 |   symbolic.py     |
-| D810GProvider   |   结果 UI 面板                 | mba/              |
-+-----------------+                               |   rules.py        |
-                                                  |   matcher.py      |
-                                                  |   verifier.py     |
-                                                  | opaque/           |
-                                                  |   predicate.py    |
-                                                  +-------------------+
+┌──────────────────┐     JSON-RPC (stdio)     ┌─────────────────────────┐
+│   Ghidra (Java)  │ ◄═══════════════════════► │   Python Engine         │
+├──────────────────┤   Content-Length framing   ├─────────────────────────┤
+│ D810GPlugin      │                           │ server.py / protocol.py │
+│ D810GAnalyzer    │                           │                         │
+│ EngineManager    │──── subprocess ──────────►│ deflattener/            │
+│ EngineProtocol   │──── send(method) ────────►│   ollvm.py + tigress.py │
+│ PcodeUtils       │    extract blocks/bytes   │   symbolic.py (Unicorn) │
+│ PatchManager     │    apply patches          │ mba/                    │
+│ Orchestrator     │    coordinate passes      │   rules + matcher +     │
+│ DeobfuscateFunc  │    context menu           │   verifier (Z3)         │
+│ D810GProvider    │    results panel          │ opaque/ + advanced.py   │
+└──────────────────┘                           │ bcf/                    │
+                                               │ dce/                    │
+                                               │ strings/ (XOR/RC4/...) │
+                                               │ virtualization/         │
+                                               │   analyzer + tracer    │
+                                               │ pipeline/              │
+                                               │   orchestrator         │
+                                               │ cli.py + interactive   │
+                                               └─────────────────────────┘
 ```
 
-**函数处理流水线：**
+### 反混淆流水线
 
-1. Java 端从函数中提取 P-Code 基本块和原始字节。
-2. 向 Python 引擎发送 `deflat.run` 请求，包含基本块图、二进制 hex、架构和基地址。
-3. Python 引擎执行控制流平坦化还原（预处理）。
-4. MBA 化简和不透明谓词消除作为后处理运行。
-5. 引擎返回二进制补丁列表（地址 + 字节）。
-6. Java 端通过 `PatchManager` 将补丁应用到 Ghidra 程序中。
+完整流水线按最优顺序执行 6 趟处理，循环迭代直到无更多变更：
 
----
-
-## 支持的混淆类型
-
-| 混淆技术 | 状态 | 说明 |
-|---|---|---|
-| OLLVM 控制流平坦化 | 已支持 | Switch-dispatch 模式检测 + 符号执行还原 |
-| MBA 表达式 | 已支持 | 10 条内置规则，Z3 验证，可通过 JSON 扩展 |
-| 不透明谓词 | 已支持 | Z3 可满足性分析，NOP/JMP 补丁 |
-| OLLVM 虚假控制流 | 计划中 | |
-| OLLVM 字符串加密 | 计划中 | |
-| Tigress 虚拟化 | 计划中 | |
-| 指令替换 | 计划中 | |
+```
+deflat_ollvm → deflat_tigress → bcf → opaque → dce → strings
+     │                                                    │
+     └──────────── iterate until fixpoint ────────────────┘
+```
 
 ---
 
-## 添加自定义规则
+## 支持的混淆技术
 
-MBA 化简规则定义在 `data/rules/mba_basic.json` 中。每条规则指定一个模式及其化简后的表达式：
+| 技术 | 状态 | 详情 |
+|------|------|------|
+| OLLVM 控制流平坦化 | ✅ | Switch-dispatch + Unicorn 模拟执行 + Keystone 修补 |
+| Tigress CFF（间接跳转） | ✅ | 跳转表检测与解析 |
+| Tigress CFF（if 链） | ✅ | 顺序比较链检测 |
+| OLLVM 虚假控制流 | ✅ | 不透明谓词保护的虚假分支移除 |
+| MBA 表达式 | ✅ | 60 条规则，多轮迭代，子表达式递归化简 |
+| 不透明谓词（标准） | ✅ | Z3 位向量可满足性分析 |
+| 不透明谓词（高级） | ✅ | 整数算术回退 + 数论模式 |
+| 死代码消除 | ✅ | BFS 可达性 + NOP 填充（x86/ARM64/ARM32） |
+| 字符串加密（XOR） | ✅ | 单字节、多字节、XOR-with-index |
+| 字符串加密（RC4） | ✅ | 暴力搜索密钥 |
+| 字符串加密（替换表） | ✅ | ROT-N 及自定义查找表 |
+| Tigress VM（检测） | ✅ | 分发器检测 + handler 分类 |
+| Tigress VM（字节码追踪） | ✅ | 执行模拟 + 伪代码生成 |
+| 完整流水线 | ✅ | 6 趟自动链式处理，不动点迭代 |
+| 独立 CLI | ✅ | simplify、opaque、rules、batch、interactive、pipeline |
+| Ghidra 分析器 | ✅ | 自动分析集成 |
+| Ghidra 无头模式 | ✅ | 通过 `analyzeHeadless` 批量扫描 |
+
+### 架构支持
+
+| 架构 | 控制流还原 | 二进制修补 | 死代码消除 |
+|------|-----------|-----------|-----------|
+| x86_64 | ✅ | ✅ | ✅ |
+| ARM64 (AArch64) | ✅ | ✅ | ✅ |
+| ARM32 | ✅ | ✅ | ✅ |
+
+---
+
+## MBA 规则集
+
+D810G 内置 **60 条规则**，分布在 4 个规则文件中：
+
+| 规则集 | 数量 | 说明 |
+|--------|------|------|
+| `mba_basic.json` | 10 | 基本 MBA 恒等式（XOR、AND、OR 等价关系） |
+| `mba_hackers_delight.json` | 25 | 《Hacker's Delight》位操作技巧（abs、min、max、De Morgan） |
+| `mba_ollvm.json` | 15 | OLLVM 指令替换模式 |
+| `mba_constant_folding.json` | 10 | 代数恒等式与常量折叠 |
+
+### 添加自定义规则
+
+在 `data/rules/` 中创建 JSON 文件：
 
 ```json
 {
-  "id": "my_custom_rule",
-  "pattern": "(x | y) - (x & y)",
-  "replacement": "x ^ y",
-  "commutative": true,
-  "description": "通过 OR 减 AND 实现 XOR"
+  "name": "my_rules",
+  "description": "Custom MBA rules",
+  "rules": [
+    {
+      "id": "my_xor_1",
+      "pattern": "(x | y) ^ (x & y)",
+      "replacement": "x ^ y",
+      "commutative": true,
+      "description": "XOR via OR XOR AND"
+    }
+  ]
 }
 ```
 
-字段说明：
-- **`pattern`** -- 要匹配的 MBA 表达式（使用变量 `x`、`y`）
-- **`replacement`** -- 化简后的等价表达式
-- **`commutative`** -- 如果为 `true`，同时匹配操作数交换的情况
-- **`description`** -- 可读的规则说明
+或使用交互式编辑器：
+```bash
+PYTHONPATH=python python -m d810g_engine cli interactive
+d810g> add my_rule (x | y) ^ (x & y) = x ^ y
+d810g> save my_rules.json
+```
 
-所有规则在加载时自动经过 Z3 验证。如果规则不满足语义等价，会被拒绝并输出警告。
+---
 
-可以在 `mba_basic.json` 中追加规则，也可以在 `data/rules/` 目录下新建 JSON 文件，遵循相同的格式即可。
+## 安装
+
+### 方式一：仅 CLI（无需 Ghidra）
+
+```bash
+git clone https://github.com/overkazaf/D810G.git
+cd D810G
+python3 -m venv .venv && source .venv/bin/activate
+pip install z3-solver unicorn keystone-engine capstone
+```
+
+### 方式二：Ghidra 扩展
+
+```bash
+# 构建
+export GHIDRA_INSTALL_DIR=/path/to/ghidra_11.x
+cd D810G
+$GHIDRA_INSTALL_DIR/support/gradle/gradlew buildExtension
+
+# 安装
+# 在 Ghidra 中：File > Install Extensions > 选择 dist/*.zip
+# 在扩展目录中设置 venv：
+cd <ghidra_extensions>/D810G
+python3 -m venv .venv && source .venv/bin/activate
+pip install z3-solver unicorn keystone-engine capstone
+```
 
 ---
 
 ## 从源码构建
 
-### 环境要求
+### 前置要求
 
 - JDK 17+
-- Ghidra 11.x（需设置 `GHIDRA_INSTALL_DIR`）
-- Python 3.12+
-- z3-solver（`pip install z3-solver`）
+- Ghidra 11.x
+- Python 3.11+
+- `pip install z3-solver unicorn keystone-engine capstone pytest`
 
-### 构建
-
-```bash
-export GHIDRA_INSTALL_DIR=/path/to/ghidra_11.x
-
-cd D810G
-gradle buildExtension
-```
-
-扩展 zip 包会生成在 `dist/` 目录中。
-
----
-
-## 运行测试
-
-Python 引擎包含完整的测试套件，覆盖协议、控制流还原、MBA 化简和不透明谓词模块。
+### 构建与测试
 
 ```bash
-cd D810G
+# 构建 Ghidra 扩展
+export GHIDRA_INSTALL_DIR=/path/to/ghidra
+$GHIDRA_INSTALL_DIR/support/gradle/gradlew buildExtension
 
-# 激活虚拟环境
+# 运行全部 201 个测试
 source .venv/bin/activate
+PYTHONPATH=python python -m pytest test/ -v
+```
 
-# 运行全部测试
-pytest test/ -v
+### 测试模块
 
-# 运行特定测试模块
-pytest test/test_protocol.py -v
-pytest test/test_deflattener.py -v
-pytest test/test_mba.py -v
-pytest test/test_opaque.py -v
+```bash
+python -m pytest test/test_deflattener.py     # CFF + Unicorn 模拟 (12 tests)
+python -m pytest test/test_tigress.py         # Tigress 变体 (6 tests)
+python -m pytest test/test_mba.py             # MBA 匹配 (9 tests)
+python -m pytest test/test_mba_extended.py    # 60 规则 Z3 验证 (41 tests)
+python -m pytest test/test_mba_deep.py        # 多轮化简 (8 tests)
+python -m pytest test/test_opaque.py          # 不透明谓词 (6 tests)
+python -m pytest test/test_opaque_advanced.py # 高级谓词 (11 tests)
+python -m pytest test/test_bcf.py             # 虚假控制流 (10 tests)
+python -m pytest test/test_dce.py             # 死代码消除 (14 tests)
+python -m pytest test/test_strings.py         # 字符串解密 (19 tests)
+python -m pytest test/test_virtualization.py  # VM 分析 (13 tests)
+python -m pytest test/test_vm_tracer.py       # 字节码追踪 (13 tests)
+python -m pytest test/test_pipeline.py        # 完整流水线 (9 tests)
+python -m pytest test/test_cli.py             # CLI 命令 (7 tests)
+python -m pytest test/test_interactive.py     # 交互式编辑器 (10 tests)
+python -m pytest test/test_protocol.py        # IPC 协议 (4 tests)
+python -m pytest test/test_integration.py     # 集成测试 (9 tests)
 ```
 
 ---
 
-## 路线图
+## 项目结构
 
-- [ ] **Tigress 支持** -- 处理基于虚拟化的混淆
-- [ ] **完整符号执行** -- 扩展 Z3 分析以覆盖更多平坦化变体
-- [ ] **Ghidra Analyzer 集成** -- 作为一键式自动分析步骤运行
-- [ ] **Hacker's Delight 规则** -- 来自位运算恒等式的 MBA 规则
-- [ ] **OLLVM 虚假控制流** -- 检测并剥离虚假条件分支
-- [ ] **字符串解密** -- 还原 OLLVM 加密的字符串字面量
-- [ ] **批量模式** -- 一次性反混淆二进制文件中的所有函数
+```
+D810G/
+├── src/main/java/d810g/         # Ghidra 插件 (Java)
+│   ├── D810GPlugin.java         # 插件入口
+│   ├── D810GAnalyzer.java       # 自动分析集成
+│   ├── engine/                  # Python 进程管理 + JSON-RPC
+│   ├── core/                    # Orchestrator, PatchManager, PcodeUtils
+│   ├── actions/                 # 右键菜单操作
+│   └── ui/                      # 结果面板
+├── python/d810g_engine/         # 分析引擎 (Python)
+│   ├── server.py                # JSON-RPC 服务端
+│   ├── cli.py                   # 独立 CLI
+│   ├── interactive.py           # 交互式规则编辑器
+│   ├── deflattener/             # OLLVM + Tigress + Unicorn
+│   ├── mba/                     # 规则 + 匹配器 + Z3 验证器
+│   ├── opaque/                  # 标准 + 高级谓词
+│   ├── bcf/                     # 虚假控制流
+│   ├── dce/                     # 死代码消除
+│   ├── strings/                 # 字符串解密 (XOR/RC4/sub)
+│   ├── virtualization/          # VM 分析 + 字节码追踪器
+│   └── pipeline/                # 多趟编排器
+├── data/rules/                  # MBA 规则定义 (60 条规则)
+├── test/                        # 201 个测试
+├── demo/                        # 演示脚本
+├── scripts/                     # 无头分析脚本
+└── .github/workflows/           # CI (Python 3.11/3.12/3.13)
+```
 
 ---
 
 ## 致谢
 
-D810G 的灵感来源于：
-- [D-810](https://gitlab.com/eshard/d810) -- eShard 开发的原始 IDA Pro 反混淆插件
+D810G 的灵感来自：
+- [D-810](https://gitlab.com/eshard/d810) -- eShard 开发的原版 IDA Pro 反混淆插件
 - [D-810-ng](https://github.com/nickcano/D-810-ng) -- 社区维护的更新分支
 
-旨在将同样的能力带入 Ghidra 逆向工程生态。
+D810G 致力于将这些能力以及更多功能带入 Ghidra 逆向工程生态系统。
 
 ---
 
 ## 许可证
 
-Apache License 2.0。详见 [Module.manifest](Module.manifest)。
+Apache License 2.0。详见 [LICENSE](LICENSE)。
