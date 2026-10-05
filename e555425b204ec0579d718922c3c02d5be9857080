@@ -1,0 +1,71 @@
+src/main/java/d810g/core/PatchManager.java
+  1ba8494afe4ffabd 1-61
+src/main/java/d810g/core/DeobfuscationOrchestrator.java
+  1ba8494afe4ffabd 1-92
+src/main/java/d810g/actions/DeobfuscateFunctionAction.java
+  1ba8494afe4ffabd 1-69
+src/main/java/d810g/D810GPlugin.java
+  1ba8494afe4ffabd 1-98
+src/main/java/d810g/engine/EngineProtocol.java
+  1ba8494afe4ffabd 1-86
+src/main/java/d810g/engine/EngineManager.java
+  1ba8494afe4ffabd 1-128
+src/main/java/d810g/core/PcodeUtils.java
+  1ba8494afe4ffabd 1-68
+src/main/java/d810g/ui/D810GProvider.java
+  1ba8494afe4ffabd 1-55
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "e555425b204ec0579d718922c3c02d5be9857080",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 657,
+      "total_deletions": 0,
+      "accepted_lines": 657,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "src/main/java/d810g/engine/EngineManager.java": {
+          "additions": 128,
+          "accepted_lines": 128
+        },
+        "src/main/java/d810g/core/DeobfuscationOrchestrator.java": {
+          "additions": 92,
+          "accepted_lines": 92
+        },
+        "src/main/java/d810g/engine/EngineProtocol.java": {
+          "additions": 86,
+          "accepted_lines": 86
+        },
+        "src/main/java/d810g/actions/DeobfuscateFunctionAction.java": {
+          "additions": 69,
+          "accepted_lines": 69
+        },
+        "src/main/java/d810g/D810GPlugin.java": {
+          "additions": 98,
+          "accepted_lines": 98
+        },
+        "src/main/java/d810g/core/PcodeUtils.java": {
+          "additions": 68,
+          "accepted_lines": 68
+        },
+        "src/main/java/d810g/ui/D810GProvider.java": {
+          "additions": 55,
+          "accepted_lines": 55
+        },
+        "src/main/java/d810g/core/PatchManager.java": {
+          "additions": 61,
+          "accepted_lines": 61
+        }
+      }
+    }
+  }
+}
