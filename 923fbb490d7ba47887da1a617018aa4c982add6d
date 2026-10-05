@@ -1,0 +1,49 @@
+python/d810g_engine/mba/matcher.py
+  1ba8494afe4ffabd 1-253
+python/d810g_engine/mba/rules.py
+  1ba8494afe4ffabd 1-31
+test/test_mba.py
+  1ba8494afe4ffabd 1-76
+python/d810g_engine/mba/verifier.py
+  1ba8494afe4ffabd 1-71
+python/d810g_engine/mba/__init__.py
+  1ba8494afe4ffabd 1-62
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "923fbb490d7ba47887da1a617018aa4c982add6d",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 76,
+      "total_deletions": 0,
+      "accepted_lines": 493,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/mba/matcher.py": {
+          "accepted_lines": 253
+        },
+        "test/test_mba.py": {
+          "additions": 76,
+          "accepted_lines": 76
+        },
+        "python/d810g_engine/mba/rules.py": {
+          "accepted_lines": 31
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 71
+        },
+        "python/d810g_engine/mba/__init__.py": {
+          "accepted_lines": 62
+        }
+      }
+    }
+  }
+}
