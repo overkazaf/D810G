@@ -235,3 +235,62 @@ def test_patch_skips_no_target():
         dispatcher_addr=0x401000,
     )
     assert len(patches) == 0
+
+
+# ---- ARM32 tests ----
+
+
+def test_solve_state_transitions_arm32():
+    """Test ARM32 state variable detection via STR to frame pointer."""
+    try:
+        from keystone import Ks, KS_ARCH_ARM, KS_MODE_ARM
+        from d810g_engine.deflattener.symbolic import solve_state_transitions
+    except ImportError:
+        pytest.skip("keystone not installed")
+
+    ks = Ks(KS_ARCH_ARM, KS_MODE_ARM)
+    # ARM32 case block: push {r11, lr}; mov r11, sp;
+    # mov r0, #0xBB; str r0, [r11, #-0x10]; b dispatcher
+    code, _ = ks.asm(
+        "push {r11, lr}; "
+        "mov r11, sp; "
+        "mov r0, #0xBB; "
+        "str r0, [r11, #-16]; "
+        "b 0x1000",  # back to dispatcher
+        addr=0x1100,
+    )
+
+    # Pad binary to cover address range
+    binary = bytes(0x1100) + bytes(code) + bytes(0x1000)
+
+    transitions = solve_state_transitions(
+        binary_bytes=binary,
+        arch="arm",
+        dispatcher_addr=0x1000,
+        state_var_offset=0x10,
+        state_var_size=4,
+        case_blocks=[0x1100],
+    )
+    # Verify it returns a list and doesn't crash
+    assert isinstance(transitions, list)
+    assert len(transitions) == 1
+    assert transitions[0]["from_block"] == 0x1100
+
+
+def test_patch_control_flow_arm32():
+    """Test ARM32 patch generation (B instruction)."""
+    try:
+        from d810g_engine.deflattener.symbolic import patch_control_flow
+    except ImportError:
+        pytest.skip("dependencies not installed")
+
+    transitions = [
+        {"from_block": 0x1100, "to_block": 0x1200, "state_value": 0xBB},
+    ]
+    patches = patch_control_flow(
+        binary_bytes=bytearray(b'\x00' * 0x2000),
+        arch="arm",
+        transitions=transitions,
+        dispatcher_addr=0x1000,
+    )
+    assert isinstance(patches, list)

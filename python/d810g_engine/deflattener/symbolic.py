@@ -14,6 +14,7 @@ from typing import Any
 from unicorn import (
     Uc,
     UcError,
+    UC_ARCH_ARM,
     UC_ARCH_ARM64,
     UC_ARCH_X86,
     UC_HOOK_CODE,
@@ -24,10 +25,11 @@ from unicorn import (
     UC_MODE_64,
     UC_MODE_ARM,
 )
+from unicorn.arm_const import UC_ARM_REG_SP, UC_ARM_REG_R11
 from unicorn.arm64_const import UC_ARM64_REG_SP, UC_ARM64_REG_X29
 from unicorn.x86_const import UC_X86_REG_RBP, UC_X86_REG_RSP
-from capstone import Cs, CS_ARCH_ARM64, CS_ARCH_X86, CS_MODE_64, CS_MODE_ARM
-from keystone import Ks, KS_ARCH_ARM64, KS_ARCH_X86, KS_MODE_64, KS_MODE_LITTLE_ENDIAN
+from capstone import Cs, CS_ARCH_ARM, CS_ARCH_ARM64, CS_ARCH_X86, CS_MODE_64, CS_MODE_ARM
+from keystone import Ks, KS_ARCH_ARM, KS_ARCH_ARM64, KS_ARCH_X86, KS_MODE_64, KS_MODE_ARM as KS_MODE_ARM32, KS_MODE_LITTLE_ENDIAN
 
 log = logging.getLogger(__name__)
 
@@ -43,6 +45,7 @@ _SCAN_BYTES = 128  # bytes to disassemble when scanning a case block
 
 _ARCH_X86_64 = "x86_64"
 _ARCH_ARM64 = "arm64"
+_ARCH_ARM32 = "arm"
 
 
 # ---------------------------------------------------------------------------
@@ -67,6 +70,14 @@ def _arch_cfg(arch: str) -> dict[str, Any]:
             ks_arch=KS_ARCH_ARM64, ks_mode=KS_MODE_LITTLE_ENDIAN,
             sp_reg=UC_ARM64_REG_SP, bp_reg=UC_ARM64_REG_X29,
             nop=b"\x1f\x20\x03\xd5", jmp_size=4, name=_ARCH_ARM64,
+        )
+    if "arm" in a:
+        return dict(
+            uc_arch=UC_ARCH_ARM, uc_mode=UC_MODE_ARM,
+            cs_arch=CS_ARCH_ARM, cs_mode=CS_MODE_ARM,
+            ks_arch=KS_ARCH_ARM, ks_mode=KS_MODE_ARM32,
+            sp_reg=UC_ARM_REG_SP, bp_reg=UC_ARM_REG_R11,
+            nop=b"\x00\x00\xa0\xe1", jmp_size=4, name=_ARCH_ARM32,
         )
     raise ValueError(f"Unsupported architecture: {arch}")
 
@@ -251,12 +262,13 @@ def solve_state_transitions(
         Raw image bytes.  ``binary_bytes[0]`` corresponds to virtual address
         *base_address*.
     arch : str
-        ``"x86_64"`` or ``"arm64"``.
+        ``"x86_64"``, ``"arm64"``, or ``"arm"`` (ARM32).
     dispatcher_addr : int
         Virtual address of the CFF dispatcher block.
     state_var_offset : int
         Positive offset of the state variable below the frame pointer
-        (``[rbp - offset]`` on x86_64, ``[x29 - offset]`` on ARM64).
+        (``[rbp - offset]`` on x86_64, ``[x29 - offset]`` on ARM64,
+        ``[r11, #-offset]`` on ARM32).
     state_var_size : int
         Width of the state variable in bytes (typically 4).
     case_blocks : list[int]
@@ -311,6 +323,9 @@ def _is_state_assign(insn, arch_name: str, sv_offset: int) -> bool:
     if arch_name == _ARCH_ARM64 and insn.mnemonic in ("str", "stur"):
         pat = r"x29,\s*#?\s*-?\s*0x" + format(sv_offset, "x")
         return bool(re.search(pat, insn.op_str, re.IGNORECASE))
+    if arch_name == _ARCH_ARM32 and insn.mnemonic == "str":
+        pat = r"r11,\s*#?\s*-?\s*0x" + format(sv_offset, "x")
+        return bool(re.search(pat, insn.op_str, re.IGNORECASE))
     return False
 
 
@@ -321,7 +336,7 @@ def _jump_target(insn, arch_name: str) -> int | None:
             return int(insn.op_str, 0)
         except ValueError:
             return None
-    if arch_name == _ARCH_ARM64 and insn.mnemonic == "b":
+    if arch_name in (_ARCH_ARM64, _ARCH_ARM32) and insn.mnemonic == "b":
         raw = insn.op_str.lstrip("#").strip()
         try:
             return int(raw, 0)
@@ -423,7 +438,7 @@ def patch_control_flow(
 
     For each transition whose *to_block* is resolved, the state-variable
     assignment and the jump back to the dispatcher are replaced by a single
-    ``jmp to_block`` (x86_64) or ``b to_block`` (ARM64), padded with NOPs.
+    ``jmp to_block`` (x86_64) or ``b to_block`` (ARM64/ARM32), padded with NOPs.
 
     Returns
     -------
