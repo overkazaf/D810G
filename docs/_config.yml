@@ -1,0 +1,13 @@
+title: D810G
+description: Ghidra Deobfuscation Framework
+theme: jekyll-theme-cayman
+baseurl: "/D810G"
+url: "https://overkazaf.github.io"
+
+plugins:
+  - jekyll-seo-tag
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
