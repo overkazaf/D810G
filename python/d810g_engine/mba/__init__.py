@@ -46,6 +46,7 @@ def _ast_to_str(node: ASTNode) -> str:
     op_map = {
         Op.ADD: "+", Op.SUB: "-", Op.MUL: "*",
         Op.AND: "&", Op.OR: "|", Op.XOR: "^",
+        Op.SHL: "<<", Op.SHR: ">>",
     }
     if node.op == Op.NOT:
         return f"~{_ast_to_str(node.children[0])}"
@@ -58,5 +59,92 @@ def _ast_to_str(node: ASTNode) -> str:
     return "?"
 
 
+def simplify_expression_deep(params: dict[str, Any]) -> dict[str, Any]:
+    """Iteratively simplify an MBA expression until no more rules apply.
+
+    Applies all rule files in sequence, repeating until fixpoint or max_iterations.
+    Returns the full simplification chain for transparency.
+    """
+    expr_str = params["expression"]
+    max_iterations = params.get("max_iterations", 10)
+    verify = params.get("verify", True)
+
+    # Load ALL rule files
+    all_rules = []
+    for rules_file in sorted(_RULES_DIR.glob("*.json")):
+        all_rules.extend(load_rules(rules_file))
+
+    chain = []  # list of {step, rule_id, before, after}
+    current = expr_str
+
+    for iteration in range(max_iterations):
+        current_ast = parse_expr(current)
+
+        # Try to simplify any sub-expression, not just the root
+        result_ast, applied_rule = _simplify_recursive(current_ast, all_rules)
+
+        if applied_rule is not None:
+            new_expr = _ast_to_str(result_ast)
+            if new_expr != current:
+                chain.append({
+                    "step": iteration + 1,
+                    "rule_id": applied_rule.id,
+                    "before": current,
+                    "after": new_expr,
+                })
+                current = new_expr
+                continue
+
+        # No simplification found — fixpoint reached
+        break
+
+    verified = False
+    if verify and current != expr_str:
+        verified = verify_equivalence(expr_str, current)
+
+    return {
+        "original": expr_str,
+        "simplified": current,
+        "iterations": len(chain),
+        "chain": chain,
+        "verified": verified,
+        "fixpoint": len(chain) < max_iterations,
+    }
+
+
+def _simplify_recursive(node: ASTNode, rules: list) -> tuple[ASTNode, Any]:
+    """Try to simplify any node in the AST tree (bottom-up).
+
+    First tries to simplify children, then the current node.
+    Returns (simplified_node, rule_that_matched) or (original_node, None).
+    """
+    # First, try to simplify children (bottom-up)
+    if node.children:
+        new_children = []
+        for i, child in enumerate(node.children):
+            simplified_child, rule = _simplify_recursive(child, rules)
+            if rule is not None:
+                # A child was simplified — rebuild this node and return
+                new_children.append(simplified_child)
+                new_children.extend(node.children[i + 1:])
+                return ASTNode(
+                    op=node.op,
+                    children=new_children,
+                    name=node.name,
+                    value=node.value,
+                ), rule
+            new_children.append(child)
+        node = ASTNode(op=node.op, children=new_children, name=node.name, value=node.value)
+
+    # Then try to simplify the current node
+    for rule in rules:
+        result = match_rule(node, rule)
+        if result is not None:
+            return result, rule
+
+    return node, None
+
+
 def register_handlers(server) -> None:
     server.register("mba.simplify", simplify_expression)
+    server.register("mba.simplify_deep", simplify_expression_deep)

@@ -53,6 +53,7 @@ class ASTNode:
 # ---------- tokenizer ----------
 
 _OP_CHARS = set("+-*&|^~()")
+_SHIFT_CHARS = set("<>")
 
 
 def _tokenize(expr: str) -> list[str]:
@@ -67,6 +68,13 @@ def _tokenize(expr: str) -> list[str]:
         if c in _OP_CHARS:
             tokens.append(c)
             i += 1
+        elif c in _SHIFT_CHARS:
+            # Handle << and >> as two-character tokens
+            if i + 1 < len(expr) and expr[i + 1] == c:
+                tokens.append(c + c)
+                i += 2
+            else:
+                i += 1  # skip lone < or >
         elif c.isdigit():
             j = i
             while j < len(expr) and expr[j].isdigit():
@@ -130,11 +138,23 @@ def _parse_add_sub(tokens: list[str], pos: int) -> tuple[ASTNode, int]:
 
 def _parse_and(tokens: list[str], pos: int) -> tuple[ASTNode, int]:
     """Parse &."""
-    left, pos = _parse_mul(tokens, pos)
+    left, pos = _parse_shift(tokens, pos)
     while pos < len(tokens) and tokens[pos] == "&":
         pos += 1
-        right, pos = _parse_mul(tokens, pos)
+        right, pos = _parse_shift(tokens, pos)
         left = ASTNode(Op.AND, children=[left, right])
+    return left, pos
+
+
+def _parse_shift(tokens: list[str], pos: int) -> tuple[ASTNode, int]:
+    """Parse << and >>."""
+    left, pos = _parse_mul(tokens, pos)
+    while pos < len(tokens) and tokens[pos] in ("<<", ">>"):
+        op_tok = tokens[pos]
+        pos += 1
+        right, pos = _parse_mul(tokens, pos)
+        op = Op.SHL if op_tok == "<<" else Op.SHR
+        left = ASTNode(op, children=[left, right])
     return left, pos
 
 

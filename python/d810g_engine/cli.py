@@ -28,6 +28,24 @@ RULES_DIR = Path(__file__).parent.parent.parent / "data" / "rules"
 
 def cmd_simplify(args):
     """Simplify an MBA expression."""
+    if args.deep:
+        from d810g_engine.mba import simplify_expression_deep
+        result = simplify_expression_deep({
+            "expression": args.expression,
+            "max_iterations": 10,
+            "verify": not args.no_verify,
+        })
+        if args.json:
+            print(json.dumps(result, indent=2))
+            return
+        print(f"  {args.expression}")
+        for step in result.get("chain", []):
+            print(f"  -> {step['after']}  (step {step['step']}, {step['rule_id']})")
+        if result.get("verified"):
+            print(f"  Final: Z3 verified equivalent")
+        print(f"  Iterations: {result['iterations']}, fixpoint: {result['fixpoint']}")
+        return
+
     result = simplify_expression({
         "expression": args.expression,
         "rules": args.rules,
@@ -131,6 +149,7 @@ def main(argv=None):
     p_simp.add_argument("expression", help="MBA expression to simplify")
     p_simp.add_argument("--rules", default="mba_basic.json", help="Rules file to use")
     p_simp.add_argument("--no-verify", action="store_true", help="Skip Z3 verification")
+    p_simp.add_argument("--deep", action="store_true", help="Iterative multi-pass simplification")
     p_simp.add_argument("--json", action="store_true", help="Output as JSON")
     p_simp.set_defaults(func=cmd_simplify)
 
