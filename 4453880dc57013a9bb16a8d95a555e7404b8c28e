@@ -1,0 +1,40 @@
+README_CN.md
+  1ba8494afe4ffabd 1-204
+extension.properties
+  1ba8494afe4ffabd 3
+README.md
+  1ba8494afe4ffabd 1-209
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "4453880dc57013a9bb16a8d95a555e7404b8c28e",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 413,
+      "total_deletions": 0,
+      "accepted_lines": 414,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "README.md": {
+          "additions": 209,
+          "accepted_lines": 209
+        },
+        "extension.properties": {
+          "accepted_lines": 1
+        },
+        "README_CN.md": {
+          "additions": 204,
+          "accepted_lines": 204
+        }
+      }
+    }
+  }
+}
