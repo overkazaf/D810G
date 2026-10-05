@@ -1,0 +1,74 @@
+demo/demo_bcf.py
+  1ba8494afe4ffabd 1-109
+demo/demo_deep_mba.py
+  1ba8494afe4ffabd 1-129
+demo/demo_vm.py
+  1ba8494afe4ffabd 1-156
+demo/demo_all.py
+  1ba8494afe4ffabd 1-66
+demo/demo_pipeline.py
+  1ba8494afe4ffabd 1-129
+demo/demo_strings.py
+  1ba8494afe4ffabd 1-129
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "f9f23beb4d93ab47ad8f8ca3a1c8a8f129fd1ceb",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 718,
+      "total_deletions": 0,
+      "accepted_lines": 1061,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "demo/demo_pipeline.py": {
+          "additions": 129,
+          "accepted_lines": 129
+        },
+        "demo/demo_strings.py": {
+          "additions": 129,
+          "accepted_lines": 129
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "demo/demo_vm.py": {
+          "additions": 156,
+          "accepted_lines": 156
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "demo/demo_all.py": {
+          "additions": 66,
+          "accepted_lines": 66
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "demo/demo_deep_mba.py": {
+          "additions": 129,
+          "accepted_lines": 129
+        },
+        "demo/demo_bcf.py": {
+          "additions": 109,
+          "accepted_lines": 109
+        }
+      }
+    }
+  }
+}
