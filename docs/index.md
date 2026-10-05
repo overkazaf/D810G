@@ -53,6 +53,18 @@ $ d810g cli opaque "x > 5"
   → DYNAMIC      — real condition, keep as-is
 ```
 
+## Architecture
+
+![Architecture](assets/architecture.svg)
+
+### Deobfuscation Pipeline
+
+![Pipeline](assets/pipeline.svg)
+
+### MBA Simplification
+
+![MBA Flow](assets/mba-flow.svg)
+
 ## Get Started
 
 ```bash

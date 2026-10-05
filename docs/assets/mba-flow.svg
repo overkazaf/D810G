@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 270" width="820" height="270">
+  <defs>
+    <marker id="marr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#565f89"/>
+    </marker>
+    <marker id="marr-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#9ece6a"/>
+    </marker>
+    <marker id="marr-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#e0af68"/>
+    </marker>
+    <linearGradient id="bg3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1b26"/>
+      <stop offset="100%" stop-color="#16161e"/>
+    </linearGradient>
+  </defs>
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+
+  <!-- Background -->
+  <rect width="820" height="270" rx="10" fill="url(#bg3)"/>
+
+  <!-- Title -->
+  <text x="410" y="28" text-anchor="middle" font-size="15" font-weight="bold" fill="#c0caf5">MBA Simplification Flow</text>
+
+  <!-- ===== Main flow (top row) ===== -->
+
+  <!-- Input Expression -->
+  <rect x="20" y="56" width="110" height="44" rx="22" fill="#24283b" stroke="#7aa2f7" stroke-width="1.5"/>
+  <text x="75" y="83" text-anchor="middle" font-size="11" font-weight="600" fill="#7aa2f7">Input Expr</text>
+
+  <line x1="130" y1="78" x2="155" y2="78" stroke="#565f89" stroke-width="1.5" marker-end="url(#marr)"/>
+
+  <!-- Parse AST -->
+  <rect x="155" y="56" width="100" height="44" rx="6" fill="#24283b" stroke="#73daca" stroke-width="1.5"/>
+  <text x="205" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">Parse AST</text>
+  <text x="205" y="90" text-anchor="middle" font-size="9" fill="#565f89">tokenize + build</text>
+
+  <line x1="255" y1="78" x2="280" y2="78" stroke="#565f89" stroke-width="1.5" marker-end="url(#marr)"/>
+
+  <!-- Bottom-up Traversal -->
+  <rect x="280" y="56" width="116" height="44" rx="6" fill="#24283b" stroke="#73daca" stroke-width="1.5"/>
+  <text x="338" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">Traverse</text>
+  <text x="338" y="90" text-anchor="middle" font-size="9" fill="#565f89">bottom-up walk</text>
+
+  <line x1="396" y1="78" x2="421" y2="78" stroke="#565f89" stroke-width="1.5" marker-end="url(#marr)"/>
+
+  <!-- Match Rules -->
+  <rect x="421" y="56" width="110" height="44" rx="6" fill="#24283b" stroke="#e0af68" stroke-width="1.5"/>
+  <text x="476" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#e0af68">Match Rules</text>
+  <text x="476" y="90" text-anchor="middle" font-size="9" fill="#565f89">60 patterns</text>
+
+  <line x1="531" y1="78" x2="556" y2="78" stroke="#565f89" stroke-width="1.5" marker-end="url(#marr)"/>
+
+  <!-- Z3 Verify -->
+  <rect x="556" y="56" width="100" height="44" rx="6" fill="#24283b" stroke="#bb9af7" stroke-width="1.5"/>
+  <text x="606" y="75" text-anchor="middle" font-size="11" font-weight="600" fill="#bb9af7">Z3 Verify</text>
+  <text x="606" y="90" text-anchor="middle" font-size="9" fill="#565f89">equivalence check</text>
+
+  <line x1="656" y1="78" x2="681" y2="78" stroke="#565f89" stroke-width="1.5" marker-end="url(#marr)"/>
+
+  <!-- Decision: simplified? -->
+  <polygon points="720,56 766,78 720,100 674,78" fill="#24283b" stroke="#ff9e64" stroke-width="1.5"/>
+  <text x="720" y="82" text-anchor="middle" font-size="10" font-weight="bold" fill="#ff9e64">changed?</text>
+
+  <!-- yes: loop back to Traverse -->
+  <path d="M 720 100 L 720 120 L 338 120 L 338 100" fill="none" stroke="#e0af68" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#marr-amber)"/>
+  <text x="530" y="134" text-anchor="middle" font-size="10" font-weight="bold" fill="#e0af68">yes - iterate</text>
+
+  <!-- no: output -->
+  <line x1="766" y1="78" x2="790" y2="78" stroke="#9ece6a" stroke-width="1.5" marker-end="url(#marr-green)"/>
+  <text x="778" y="72" text-anchor="middle" font-size="9" fill="#9ece6a">no</text>
+  <rect x="790" y="56" width="20" height="44" rx="3" fill="#9ece6a" opacity="0.15"/>
+  <text x="800" y="82" text-anchor="middle" font-size="11" font-weight="bold" fill="#9ece6a" transform="rotate(-90 800 82)">OUT</text>
+
+  <!-- ===== Concrete Example (bottom section) ===== -->
+  <rect x="60" y="158" width="700" height="90" rx="8" fill="#1e2030" stroke="#3d59a1" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="410" y="180" text-anchor="middle" font-size="12" font-weight="bold" fill="#a9b1d6">Example: Multi-pass simplification</text>
+
+  <!-- Step 1 -->
+  <text x="80" y="202" font-size="11" fill="#565f89">Step 1:</text>
+  <text x="136" y="202" font-size="11" font-family="'SF Mono', 'Fira Code', Consolas, monospace" fill="#f7768e">(x|y) - (x&amp;y)</text>
+  <text x="290" y="202" font-size="12" fill="#e0af68">--></text>
+  <text x="318" y="202" font-size="11" font-family="'SF Mono', 'Fira Code', Consolas, monospace" fill="#9ece6a">x ^ y</text>
+  <text x="380" y="202" font-size="10" fill="#565f89">[mba_xor_1]</text>
+
+  <!-- Step 2 -->
+  <text x="80" y="224" font-size="11" fill="#565f89">Step 2:</text>
+  <text x="136" y="224" font-size="11" font-family="'SF Mono', 'Fira Code', Consolas, monospace" fill="#f7768e">(x ^ y) ^ (x ^ y)</text>
+  <text x="320" y="224" font-size="12" fill="#e0af68">--></text>
+  <text x="348" y="224" font-size="11" font-family="'SF Mono', 'Fira Code', Consolas, monospace" fill="#9ece6a">0</text>
+  <text x="380" y="224" font-size="10" fill="#565f89">[mba_zero_1, Z3 verified]</text>
+
+  <!-- Check mark -->
+  <text x="560" y="224" font-size="12" fill="#9ece6a">Fixpoint reached</text>
+</svg>

@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520" width="820" height="520">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#f0a050"/>
+    </marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#7aa2f7"/>
+    </marker>
+    <linearGradient id="bg-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1b26"/>
+      <stop offset="100%" stop-color="#16161e"/>
+    </linearGradient>
+    <filter id="shadow" x="-4%" y="-4%" width="108%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+  <style>
+    text { font-family: -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+  </style>
+
+  <!-- Background -->
+  <rect width="820" height="520" rx="10" fill="url(#bg-grad)"/>
+
+  <!-- Title -->
+  <text x="410" y="32" text-anchor="middle" font-size="17" font-weight="bold" fill="#c0caf5">D810G Architecture</text>
+
+  <!-- ===== LEFT: Ghidra (Java) ===== -->
+  <rect x="20" y="52" width="260" height="440" rx="8" fill="#1e2030" stroke="#3d59a1" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="150" y="76" text-anchor="middle" font-size="14" font-weight="bold" fill="#7aa2f7">Ghidra (Java)</text>
+
+  <!-- Plugin & Analyzer -->
+  <rect x="36" y="92" width="228" height="36" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="150" y="115" text-anchor="middle" font-size="12" font-weight="600" fill="#7dcfff">D810GPlugin</text>
+
+  <rect x="36" y="136" width="228" height="36" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="150" y="159" text-anchor="middle" font-size="12" font-weight="600" fill="#7dcfff">D810GAnalyzer</text>
+
+  <!-- Engine layer -->
+  <rect x="36" y="184" width="228" height="64" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="150" y="207" text-anchor="middle" font-size="12" font-weight="600" fill="#7dcfff">EngineManager</text>
+  <text x="150" y="226" text-anchor="middle" font-size="10" fill="#565f89">subprocess + JSON-RPC</text>
+  <text x="150" y="240" text-anchor="middle" font-size="10" fill="#565f89">EngineProtocol</text>
+
+  <!-- Core layer -->
+  <rect x="36" y="260" width="108" height="52" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="90" y="282" text-anchor="middle" font-size="11" font-weight="600" fill="#bb9af7">PcodeUtils</text>
+  <text x="90" y="298" text-anchor="middle" font-size="9" fill="#565f89">extract blocks</text>
+
+  <rect x="156" y="260" width="108" height="52" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="210" y="282" text-anchor="middle" font-size="11" font-weight="600" fill="#bb9af7">PatchManager</text>
+  <text x="210" y="298" text-anchor="middle" font-size="9" fill="#565f89">apply patches</text>
+
+  <!-- Orchestrator -->
+  <rect x="36" y="324" width="228" height="36" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="150" y="347" text-anchor="middle" font-size="12" font-weight="600" fill="#bb9af7">Orchestrator</text>
+
+  <!-- UI layer -->
+  <rect x="36" y="376" width="108" height="52" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="90" y="396" text-anchor="middle" font-size="10" font-weight="600" fill="#9ece6a">DeobfuscateFunc</text>
+  <text x="90" y="412" text-anchor="middle" font-size="9" fill="#565f89">context menu</text>
+
+  <rect x="156" y="376" width="108" height="52" rx="5" fill="#24283b" stroke="#3d59a1" stroke-width="1"/>
+  <text x="210" y="396" text-anchor="middle" font-size="10" font-weight="600" fill="#9ece6a">D810GProvider</text>
+  <text x="210" y="412" text-anchor="middle" font-size="9" fill="#565f89">results panel</text>
+
+  <!-- Label -->
+  <text x="150" y="456" text-anchor="middle" font-size="10" fill="#565f89">UI + Binary Patching</text>
+
+  <!-- ===== CENTER: IPC Connection ===== -->
+  <!-- Arrow lines -->
+  <line x1="280" y1="215" x2="350" y2="215" stroke="#f0a050" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="350" y1="225" x2="280" y2="225" stroke="#f0a050" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- IPC label box -->
+  <rect x="320" y="170" width="180" height="80" rx="6" fill="#1e2030" stroke="#e0af68" stroke-width="1.5" stroke-dasharray="6,3"/>
+  <text x="410" y="195" text-anchor="middle" font-size="11" font-weight="bold" fill="#e0af68">JSON-RPC (stdio)</text>
+  <text x="410" y="213" text-anchor="middle" font-size="10" fill="#cfc9c2">Content-Length framing</text>
+  <text x="410" y="231" text-anchor="middle" font-size="10" fill="#cfc9c2">Bidirectional</text>
+  <text x="410" y="246" text-anchor="middle" font-size="9" fill="#565f89">request / response / notify</text>
+
+  <!-- ===== RIGHT: Python Engine ===== -->
+  <rect x="500" y="52" width="300" height="440" rx="8" fill="#1e2030" stroke="#2a6e4e" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="650" y="76" text-anchor="middle" font-size="14" font-weight="bold" fill="#9ece6a">Python Engine</text>
+
+  <!-- Server -->
+  <rect x="516" y="92" width="268" height="36" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="650" y="115" text-anchor="middle" font-size="12" font-weight="600" fill="#73daca">server.py + protocol.py</text>
+
+  <!-- Deflattener -->
+  <rect x="516" y="136" width="130" height="48" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="581" y="155" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">deflattener/</text>
+  <text x="581" y="172" text-anchor="middle" font-size="9" fill="#565f89">OLLVM + Tigress</text>
+  <text x="581" y="182" text-anchor="middle" font-size="8" fill="#565f89">Unicorn emulation</text>
+
+  <!-- MBA -->
+  <rect x="654" y="136" width="130" height="48" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="719" y="155" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">mba/</text>
+  <text x="719" y="172" text-anchor="middle" font-size="9" fill="#565f89">60 rules + matcher</text>
+  <text x="719" y="182" text-anchor="middle" font-size="8" fill="#565f89">Z3 verifier</text>
+
+  <!-- Opaque -->
+  <rect x="516" y="192" width="130" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="581" y="211" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">opaque/</text>
+  <text x="581" y="226" text-anchor="middle" font-size="9" fill="#565f89">standard + advanced</text>
+
+  <!-- BCF -->
+  <rect x="654" y="192" width="130" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="719" y="211" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">bcf/</text>
+  <text x="719" y="226" text-anchor="middle" font-size="9" fill="#565f89">bogus control flow</text>
+
+  <!-- DCE -->
+  <rect x="516" y="242" width="130" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="581" y="261" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">dce/</text>
+  <text x="581" y="276" text-anchor="middle" font-size="9" fill="#565f89">dead code elimination</text>
+
+  <!-- Strings -->
+  <rect x="654" y="242" width="130" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="719" y="261" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">strings/</text>
+  <text x="719" y="276" text-anchor="middle" font-size="9" fill="#565f89">XOR / RC4 / sub</text>
+
+  <!-- Virtualization -->
+  <rect x="516" y="292" width="268" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="650" y="311" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">virtualization/</text>
+  <text x="650" y="326" text-anchor="middle" font-size="9" fill="#565f89">VM analyzer + bytecode tracer</text>
+
+  <!-- Pipeline -->
+  <rect x="516" y="342" width="268" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="650" y="361" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">pipeline/</text>
+  <text x="650" y="376" text-anchor="middle" font-size="9" fill="#565f89">multi-pass orchestrator</text>
+
+  <!-- CLI -->
+  <rect x="516" y="392" width="130" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="581" y="411" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">cli.py</text>
+  <text x="581" y="426" text-anchor="middle" font-size="9" fill="#565f89">standalone CLI</text>
+
+  <!-- Interactive -->
+  <rect x="654" y="392" width="130" height="42" rx="5" fill="#24283b" stroke="#2a6e4e" stroke-width="1"/>
+  <text x="719" y="411" text-anchor="middle" font-size="11" font-weight="600" fill="#73daca">interactive.py</text>
+  <text x="719" y="426" text-anchor="middle" font-size="9" fill="#565f89">rule editor REPL</text>
+
+  <!-- Label -->
+  <text x="650" y="462" text-anchor="middle" font-size="10" fill="#565f89">Analysis + Z3 + Unicorn + Capstone + Keystone</text>
+
+  <!-- Bottom legend -->
+  <rect x="120" y="486" width="12" height="12" rx="2" fill="#3d59a1"/>
+  <text x="140" y="497" font-size="10" fill="#a9b1d6">Java / Ghidra</text>
+
+  <rect x="260" y="486" width="12" height="12" rx="2" fill="#e0af68"/>
+  <text x="280" y="497" font-size="10" fill="#a9b1d6">IPC Channel</text>
+
+  <rect x="400" y="486" width="12" height="12" rx="2" fill="#2a6e4e"/>
+  <text x="420" y="497" font-size="10" fill="#a9b1d6">Python Engine</text>
+
+  <rect x="560" y="486" width="12" height="12" rx="2" fill="#bb9af7" opacity="0.5"/>
+  <text x="580" y="497" font-size="10" fill="#a9b1d6">Core Utilities</text>
+</svg>

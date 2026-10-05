@@ -143,39 +143,13 @@ analyzeHeadless /path/to/project Project -import binary.exe \
 
 ## 架构
 
-```
-┌──────────────────┐     JSON-RPC (stdio)     ┌─────────────────────────┐
-│   Ghidra (Java)  │ ◄═══════════════════════► │   Python Engine         │
-├──────────────────┤   Content-Length framing   ├─────────────────────────┤
-│ D810GPlugin      │                           │ server.py / protocol.py │
-│ D810GAnalyzer    │                           │                         │
-│ EngineManager    │──── subprocess ──────────►│ deflattener/            │
-│ EngineProtocol   │──── send(method) ────────►│   ollvm.py + tigress.py │
-│ PcodeUtils       │    extract blocks/bytes   │   symbolic.py (Unicorn) │
-│ PatchManager     │    apply patches          │ mba/                    │
-│ Orchestrator     │    coordinate passes      │   rules + matcher +     │
-│ DeobfuscateFunc  │    context menu           │   verifier (Z3)         │
-│ D810GProvider    │    results panel          │ opaque/ + advanced.py   │
-└──────────────────┘                           │ bcf/                    │
-                                               │ dce/                    │
-                                               │ strings/ (XOR/RC4/...) │
-                                               │ virtualization/         │
-                                               │   analyzer + tracer    │
-                                               │ pipeline/              │
-                                               │   orchestrator         │
-                                               │ cli.py + interactive   │
-                                               └─────────────────────────┘
-```
+![Architecture](docs/assets/architecture.svg)
 
 ### 反混淆流水线
 
 完整流水线按最优顺序执行 6 趟处理，循环迭代直到无更多变更：
 
-```
-deflat_ollvm → deflat_tigress → bcf → opaque → dce → strings
-     │                                                    │
-     └──────────── iterate until fixpoint ────────────────┘
-```
+![Pipeline](docs/assets/pipeline.svg)
 
 ---
 
