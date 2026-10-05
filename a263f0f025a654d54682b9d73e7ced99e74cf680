@@ -1,0 +1,61 @@
+src/main/java/d810g/D810GAnalyzer.java
+  1ba8494afe4ffabd 1-236
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "a263f0f025a654d54682b9d73e7ced99e74cf680",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 576,
+      "total_deletions": 1,
+      "accepted_lines": 918,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "src/main/java/d810g/D810GAnalyzer.java": {
+          "additions": 236,
+          "accepted_lines": 236
+        },
+        "python/d810g_engine/strings/decryptor.py": {
+          "additions": 200,
+          "deletions": 1,
+          "accepted_lines": 199
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "test/test_strings.py": {
+          "additions": 132,
+          "accepted_lines": 132
+        },
+        "python/d810g_engine/strings/__init__.py": {
+          "additions": 6,
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/server.py": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        }
+      }
+    }
+  }
+}
