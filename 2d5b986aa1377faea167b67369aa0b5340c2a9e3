@@ -1,0 +1,63 @@
+test/test_pipeline.py
+  1ba8494afe4ffabd 1-113
+python/d810g_engine/cli.py
+  1ba8494afe4ffabd 112-128,191-197
+python/d810g_engine/pipeline/orchestrator.py
+  1ba8494afe4ffabd 1-166
+python/d810g_engine/pipeline/__init__.py
+  1ba8494afe4ffabd 1-6
+python/d810g_engine/server.py
+  1ba8494afe4ffabd 84,94
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "2d5b986aa1377faea167b67369aa0b5340c2a9e3",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 692,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_pipeline.py": {
+          "accepted_lines": 113
+        },
+        "python/d810g_engine/cli.py": {
+          "accepted_lines": 62
+        },
+        "python/d810g_engine/server.py": {
+          "accepted_lines": 2
+        },
+        "python/d810g_engine/pipeline/__init__.py": {
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 166
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        }
+      }
+    }
+  }
+}
