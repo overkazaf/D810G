@@ -1,0 +1,87 @@
+CONTRIBUTING.md
+  1ba8494afe4ffabd 1-70
+test/test_cli.py
+  1ba8494afe4ffabd 1-52
+.github/workflows/test.yml
+  1ba8494afe4ffabd 1-32
+LICENSE
+  1ba8494afe4ffabd 1-189
+scripts/headless_deobfuscate.py
+  1ba8494afe4ffabd 1-73
+python/d810g_engine/cli.py
+  1ba8494afe4ffabd 1-161
+python/d810g_engine/__main__.py
+  1ba8494afe4ffabd 1,4-14
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "7f93974b350836389febf4d03410245643aa0ff2",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 711,
+      "total_deletions": 52,
+      "accepted_lines": 924,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".github/workflows/test.yml": {
+          "additions": 32,
+          "accepted_lines": 32
+        },
+        "test/test_cli.py": {
+          "additions": 52,
+          "accepted_lines": 52
+        },
+        "LICENSE": {
+          "additions": 189,
+          "accepted_lines": 189
+        },
+        "test/test_mba_extended.py": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/__main__.py": {
+          "additions": 12,
+          "deletions": 2,
+          "accepted_lines": 12
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "additions": 120,
+          "deletions": 48,
+          "accepted_lines": 120
+        },
+        "data/rules/mba_ollvm.json": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 21
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "scripts/headless_deobfuscate.py": {
+          "additions": 73,
+          "accepted_lines": 73
+        },
+        "CONTRIBUTING.md": {
+          "additions": 70,
+          "accepted_lines": 70
+        },
+        "python/d810g_engine/cli.py": {
+          "additions": 161,
+          "accepted_lines": 161
+        }
+      }
+    }
+  }
+}
