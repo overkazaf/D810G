@@ -115,6 +115,27 @@ PYTHONPATH=python python -m d810g_engine cli pipeline input.json     # 完整流
 
 ---
 
+## 演示脚本
+
+D810G 附带 8 个交互式演示脚本，展示每个模块的功能。可以一键运行全部，也可以单独运行：
+
+```bash
+# 运行全部演示
+PYTHONPATH=python python demo/demo_all.py
+
+# 单独运行
+PYTHONPATH=python python demo/demo_mba.py         # MBA 简化（7 个示例 + Z3 证明表）
+PYTHONPATH=python python demo/demo_deep_mba.py     # 多轮迭代深度简化
+PYTHONPATH=python python demo/demo_opaque.py       # 不透明谓词检测（always_true/false/dynamic）
+PYTHONPATH=python python demo/demo_bcf.py          # 伪造控制流移除（3 层 BCF + ASCII 图示）
+PYTHONPATH=python python demo/demo_deflat.py       # 控制流反平坦化（OLLVM 状态机）
+PYTHONPATH=python python demo/demo_strings.py      # 字符串解密（XOR / RC4 / 多字节 / ROT-N）
+PYTHONPATH=python python demo/demo_vm.py           # VM 反虚拟化（handler 表 + Fibonacci 伪代码）
+PYTHONPATH=python python demo/demo_pipeline.py     # 完整 6-pass 流水线 + fixpoint 迭代
+```
+
+---
+
 ## Ghidra 集成
 
 ### 插件（手动安装）

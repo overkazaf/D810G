@@ -74,6 +74,25 @@ PYTHONPATH=python python -m d810g_engine cli simplify "(x | y) - (x & y)"
 - [虚拟机去虚拟化](modules/virtualization)
 - [管线处理](modules/pipeline)
 
+## 演示脚本
+
+D810G 附带 8 个交互式演示脚本，一键运行：
+
+```bash
+PYTHONPATH=python python demo/demo_all.py
+```
+
+| 演示脚本 | 说明 |
+|---------|------|
+| `demo_mba.py` | MBA 简化 — 7 个示例 + Z3 证明表 |
+| `demo_deep_mba.py` | 多轮迭代深度简化 + 逐步推导链 |
+| `demo_opaque.py` | 不透明谓词检测 — always_true / always_false / dynamic |
+| `demo_bcf.py` | 伪造控制流 — 3 层 BCF 移除 + ASCII 图示 |
+| `demo_deflat.py` | 控制流反平坦化 — OLLVM 状态机检测 |
+| `demo_strings.py` | 字符串解密 — XOR / RC4 / 多字节 XOR / ROT-N |
+| `demo_vm.py` | VM 反虚拟化 — handler 表 + Fibonacci 伪代码恢复 |
+| `demo_pipeline.py` | 完整 6-pass 流水线 + fixpoint 迭代 |
+
 ## 统计
 
 - **201** 个测试

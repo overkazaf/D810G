@@ -115,6 +115,27 @@ PYTHONPATH=python python -m d810g_engine cli pipeline input.json     # full pipe
 
 ---
 
+## Demo Scripts
+
+D810G ships with 8 interactive demo scripts showcasing every module. Run them all at once or individually:
+
+```bash
+# Run all demos
+PYTHONPATH=python python demo/demo_all.py
+
+# Or run individually
+PYTHONPATH=python python demo/demo_mba.py         # MBA simplification (7 examples + Z3 proof table)
+PYTHONPATH=python python demo/demo_deep_mba.py     # Multi-pass iterative simplification
+PYTHONPATH=python python demo/demo_opaque.py       # Opaque predicate detection (always_true/false/dynamic)
+PYTHONPATH=python python demo/demo_bcf.py          # Bogus control flow removal (3-layer BCF + ASCII diagrams)
+PYTHONPATH=python python demo/demo_deflat.py       # Control flow deflattening (OLLVM state machine)
+PYTHONPATH=python python demo/demo_strings.py      # String decryption (XOR / RC4 / multi-byte / ROT-N)
+PYTHONPATH=python python demo/demo_vm.py           # VM devirtualization (handler table + Fibonacci pseudocode)
+PYTHONPATH=python python demo/demo_pipeline.py     # Full 6-pass pipeline with fixpoint iteration
+```
+
+---
+
 ## Ghidra Integration
 
 ### Plugin (Manual)

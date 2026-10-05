@@ -86,6 +86,25 @@ PYTHONPATH=python python -m d810g_engine cli simplify "(x | y) - (x & y)"
 - [VM Devirtualization](modules/virtualization)
 - [Pipeline](modules/pipeline)
 
+## Demo Scripts
+
+D810G includes 8 interactive demos — run them all with one command:
+
+```bash
+PYTHONPATH=python python demo/demo_all.py
+```
+
+| Demo | Description |
+|------|-------------|
+| `demo_mba.py` | MBA simplification — 7 examples with Z3 proof table |
+| `demo_deep_mba.py` | Multi-pass iterative simplification with step-by-step chain |
+| `demo_opaque.py` | Opaque predicate detection — always_true / always_false / dynamic |
+| `demo_bcf.py` | Bogus control flow — 3-layer BCF removal with ASCII diagrams |
+| `demo_deflat.py` | Control flow deflattening — OLLVM state machine detection |
+| `demo_strings.py` | String decryption — XOR, RC4, multi-byte XOR, ROT-N |
+| `demo_vm.py` | VM devirtualization — handler table + Fibonacci pseudocode |
+| `demo_pipeline.py` | Full 6-pass pipeline with fixpoint iteration |
+
 ## Stats
 
 - **201** tests
