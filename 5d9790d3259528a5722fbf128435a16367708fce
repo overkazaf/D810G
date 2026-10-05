@@ -1,0 +1,92 @@
+docs/modules/mba.md
+  1ba8494afe4ffabd 1-58
+docs/index.md
+  1ba8494afe4ffabd 1-82
+docs/modules/strings.md
+  1ba8494afe4ffabd 1-28
+docs/modules/pipeline.md
+  1ba8494afe4ffabd 1-35
+docs/modules/deflattening.md
+  1ba8494afe4ffabd 1-62
+docs/modules/virtualization.md
+  1ba8494afe4ffabd 1-34
+docs/modules/opaque.md
+  1ba8494afe4ffabd 1-33
+docs/_config.yml
+  1ba8494afe4ffabd 1-13
+.github/workflows/pages.yml
+  1ba8494afe4ffabd 1-40
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "5d9790d3259528a5722fbf128435a16367708fce",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 385,
+      "total_deletions": 0,
+      "accepted_lines": 728,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "docs/modules/strings.md": {
+          "additions": 28,
+          "accepted_lines": 28
+        },
+        "docs/modules/deflattening.md": {
+          "additions": 62,
+          "accepted_lines": 62
+        },
+        "docs/modules/opaque.md": {
+          "additions": 33,
+          "accepted_lines": 33
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "docs/index.md": {
+          "additions": 82,
+          "accepted_lines": 82
+        },
+        "docs/modules/virtualization.md": {
+          "additions": 34,
+          "accepted_lines": 34
+        },
+        "docs/_config.yml": {
+          "additions": 13,
+          "accepted_lines": 13
+        },
+        ".github/workflows/pages.yml": {
+          "additions": 40,
+          "accepted_lines": 40
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "docs/modules/mba.md": {
+          "additions": 58,
+          "accepted_lines": 58
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/modules/pipeline.md": {
+          "additions": 35,
+          "accepted_lines": 35
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        }
+      }
+    }
+  }
+}
