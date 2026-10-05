@@ -1,0 +1,57 @@
+python/d810g_engine/opaque/predicate.py
+  1ba8494afe4ffabd 1-115
+test/test_opaque.py
+  1ba8494afe4ffabd 1-52
+python/d810g_engine/opaque/__init__.py
+  1ba8494afe4ffabd 1-29
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "31bd40673293690bdcd58f07d9359757094dca29",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 613,
+      "total_deletions": 0,
+      "accepted_lines": 613,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/mba/matcher.py": {
+          "additions": 253,
+          "accepted_lines": 253
+        },
+        "test/test_opaque.py": {
+          "additions": 52,
+          "accepted_lines": 52
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "additions": 71,
+          "accepted_lines": 71
+        },
+        "python/d810g_engine/mba/rules.py": {
+          "additions": 31,
+          "accepted_lines": 31
+        },
+        "python/d810g_engine/mba/__init__.py": {
+          "additions": 62,
+          "accepted_lines": 62
+        },
+        "python/d810g_engine/opaque/__init__.py": {
+          "additions": 29,
+          "accepted_lines": 29
+        },
+        "python/d810g_engine/opaque/predicate.py": {
+          "additions": 115,
+          "accepted_lines": 115
+        }
+      }
+    }
+  }
+}
