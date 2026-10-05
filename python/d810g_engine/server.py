@@ -79,6 +79,7 @@ def main() -> int:
     from d810g_engine.opaque import register_handlers as register_opaque
     from d810g_engine.bcf import register_handlers as register_bcf
     from d810g_engine.strings import register_handlers as register_strings
+    from d810g_engine.virtualization import register_handlers as register_vm
 
     server = Server()
     register_deflat(server)
@@ -86,5 +87,6 @@ def main() -> int:
     register_opaque(server)
     register_bcf(server)
     register_strings(server)
+    register_vm(server)
     server.serve()
     return 0
