@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+def ghidraInstallDir
+
+if (System.env.GHIDRA_INSTALL_DIR) {
+    ghidraInstallDir = System.env.GHIDRA_INSTALL_DIR
+} else if (project.hasProperty("GHIDRA_INSTALL_DIR")) {
+    ghidraInstallDir = project.getProperty("GHIDRA_INSTALL_DIR")
+} else {
+    throw new GradleException("GHIDRA_INSTALL_DIR is not defined")
+}
+
+apply from: new File(ghidraInstallDir).toPath().resolve("support/buildExtension.gradle").toFile()
+
+tasks.named('buildExtension') {
+    exclude '**/__pycache__/**'
+    exclude '.venv/**'
+    exclude 'test/**'
+    exclude 'docs/**'
+}
