@@ -4,23 +4,51 @@
 
 D810G brings the deobfuscation capabilities of [D-810](https://gitlab.com/eshard/d810) to the Ghidra ecosystem. It uses a hybrid Java + Python architecture: a Ghidra plugin extracts P-Code and binary data, sends it to a Python analysis engine over JSON-RPC, and applies the resulting patches back into the program.
 
-<!-- badges -->
-<!-- ![Build](https://img.shields.io/github/actions/workflow/status/YOUR_ORG/D810G/build.yml?branch=main) -->
-<!-- ![License](https://img.shields.io/badge/license-Apache%202.0-blue) -->
-<!-- ![Ghidra](https://img.shields.io/badge/Ghidra-11.x-green) -->
+![Tests](https://img.shields.io/badge/tests-92%20passed-brightgreen)
+![Rules](https://img.shields.io/badge/MBA%20rules-60-blue)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue)
+![Ghidra](https://img.shields.io/badge/Ghidra-11.x-green)
+![Python](https://img.shields.io/badge/python-3.11%2B-yellow)
 
 ---
 
 ## Features
 
 ### Control Flow Deflattening
-Recovers the original control flow from OLLVM-style switch-dispatch flattened functions. Detects the dispatcher pattern, identifies relevant blocks, and uses symbolic execution with Z3 to resolve successor relationships.
+Recovers the original control flow from OLLVM and Tigress flattened functions. Detects dispatcher patterns (switch-dispatch, indirect jump tables, if-chains), uses **Unicorn** emulation to trace state variable transitions, and generates binary patches with **Keystone** to restore direct jumps. Supports x86_64 and ARM64.
 
 ### MBA Expression Simplification
-Simplifies Mixed Boolean-Arithmetic expressions using a rule-based engine with 10+ rewrite rules. Every rule is formally verified with Z3 to guarantee semantic equivalence. Rules are defined in JSON and can be extended without code changes.
+Simplifies Mixed Boolean-Arithmetic expressions using **60 rewrite rules** across 4 rule sets (basic, Hacker's Delight, OLLVM-specific, constant folding). Every rule is formally verified with **Z3** to guarantee semantic equivalence. Rules are defined in JSON and can be extended without code changes.
 
 ### Opaque Predicate Elimination
-Detects and removes opaque predicates (always-true / always-false branch conditions) using Z3 satisfiability analysis. Patches dead branches with unconditional jumps or NOPs.
+Detects and removes opaque predicates (always-true / always-false branch conditions) using Z3 satisfiability analysis. Batch-classifies all conditional branches in a function, patches dead branches with unconditional jumps or NOPs.
+
+### Standalone CLI
+Use D810G without Ghidra for quick analysis:
+
+```bash
+# Simplify an MBA expression
+python -m d810g_engine cli simplify "(x | y) - (x & y)"
+#   (x | y) - (x & y) → (x ^ y)  (Z3 verified)
+
+# Classify an opaque predicate
+python -m d810g_engine cli opaque "(x & 1) == 2"
+#   → ALWAYS FALSE — opaque, can be eliminated
+
+# List all 60 rules
+python -m d810g_engine cli rules
+
+# Batch simplify from file
+python -m d810g_engine cli batch < expressions.txt
+```
+
+### Ghidra Headless Script
+Batch-scan binaries for obfuscated functions without the GUI:
+
+```bash
+analyzeHeadless /path/to/project Project -import binary.exe \
+    -postScript headless_deobfuscate.py
+```
 
 ---
 
@@ -102,19 +130,29 @@ The results panel shows per-function summaries including the number of patches a
 
 | Technique | Status | Notes |
 |---|---|---|
-| OLLVM Control Flow Flattening | Supported | Switch-dispatch pattern detection + symbolic recovery |
-| MBA Expressions | Supported | 10 built-in rules, Z3-verified, extensible via JSON |
-| Opaque Predicates | Supported | Z3 satisfiability analysis, NOP/JMP patching |
+| OLLVM Control Flow Flattening | **Supported** | Switch-dispatch detection + Unicorn emulation + Keystone patching |
+| Tigress CFF (indirect jump) | **Supported** | Jump table detection and resolution |
+| Tigress CFF (if-chain) | **Supported** | Sequential comparison chain detection |
+| MBA Expressions | **Supported** | 60 rules (basic + Hacker's Delight + OLLVM + constant folding), Z3-verified |
+| Opaque Predicates | **Supported** | Z3 satisfiability analysis, batch classification |
+| Standalone CLI | **Supported** | `simplify`, `opaque`, `rules`, `batch` commands |
+| Headless Batch Scan | **Supported** | Ghidra `analyzeHeadless` integration |
 | OLLVM Bogus Control Flow | Planned | |
 | OLLVM String Encryption | Planned | |
 | Tigress Virtualization | Planned | |
-| Instruction Substitution | Planned | |
 
 ---
 
 ## Adding Custom Rules
 
-MBA simplification rules are defined in `data/rules/mba_basic.json`. Each rule specifies a pattern and its simplified replacement:
+MBA simplification rules are defined in JSON files under `data/rules/`. D810G ships with 4 rule sets (60 rules total):
+
+- `mba_basic.json` -- 10 fundamental identities
+- `mba_hackers_delight.json` -- 25 bit-manipulation identities from Hacker's Delight
+- `mba_ollvm.json` -- 15 OLLVM instruction substitution patterns
+- `mba_constant_folding.json` -- 10 algebraic identity / constant folding rules
+
+Each rule specifies a pattern and its simplified replacement:
 
 ```json
 {
@@ -145,7 +183,7 @@ To add rules, either append to `mba_basic.json` or create a new JSON file in `da
 - JDK 17+
 - Ghidra 11.x (set `GHIDRA_INSTALL_DIR`)
 - Python 3.12+
-- z3-solver (`pip install z3-solver`)
+- z3-solver, unicorn, keystone-engine, capstone (`pip install z3-solver unicorn keystone-engine capstone`)
 
 ### Build
 
@@ -162,35 +200,38 @@ The extension zip will be created in `dist/`.
 
 ## Running Tests
 
-The Python engine has a full test suite covering protocol, deflattening, MBA, and opaque predicate modules.
+92 tests covering protocol, deflattening (OLLVM + Tigress), MBA (basic + extended), opaque predicates, CLI, and integration.
 
 ```bash
 cd D810G
-
-# Activate the virtualenv
 source .venv/bin/activate
 
-# Run all tests
-pytest test/ -v
+# Run all 92 tests
+PYTHONPATH=python python -m pytest test/ -v
 
-# Run specific test modules
-pytest test/test_protocol.py -v
-pytest test/test_deflattener.py -v
-pytest test/test_mba.py -v
-pytest test/test_opaque.py -v
+# Run specific modules
+python -m pytest test/test_deflattener.py -v    # CFF detection + Unicorn emulation
+python -m pytest test/test_mba.py -v            # MBA matching + Z3 verification
+python -m pytest test/test_mba_extended.py -v   # 60-rule Z3 verification
+python -m pytest test/test_opaque.py -v         # Opaque predicate classification
+python -m pytest test/test_tigress.py -v        # Tigress variant detection
+python -m pytest test/test_cli.py -v            # CLI commands
 ```
 
 ---
 
 ## Roadmap
 
-- [ ] **Tigress support** -- handle virtualization-based obfuscation
-- [ ] **Full symbolic execution** -- extend Z3-backed analysis to cover more flattening variants
+- [x] ~~**Tigress CFF support**~~ -- indirect jump table + if-chain detection
+- [x] ~~**Unicorn symbolic execution**~~ -- real emulation-based state recovery
+- [x] ~~**Hacker's Delight rules**~~ -- 25 bit-manipulation identities
+- [x] ~~**Standalone CLI**~~ -- use without Ghidra
+- [x] ~~**Headless batch scan**~~ -- `analyzeHeadless` integration
 - [ ] **Ghidra Analyzer integration** -- run as a one-click auto-analysis step
-- [ ] **Hacker's Delight rules** -- additional MBA rules from bit-manipulation identities
 - [ ] **OLLVM Bogus Control Flow** -- detect and strip bogus conditional branches
 - [ ] **String decryption** -- recover OLLVM-encrypted string literals
-- [ ] **Batch mode** -- deobfuscate all functions in a binary at once
+- [ ] **Tigress Virtualization** -- handle bytecode-based obfuscation
+- [ ] **Interactive rule editor** -- GUI for creating and testing MBA rules
 
 ---
 
@@ -206,4 +247,4 @@ Built to bring the same capabilities to the Ghidra reverse engineering ecosystem
 
 ## License
 
-Apache License 2.0. See [Module.manifest](Module.manifest) for details.
+Apache License 2.0. See [LICENSE](LICENSE) for details.
