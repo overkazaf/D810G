@@ -1,0 +1,45 @@
+README.md
+  1ba8494afe4ffabd 7-11,18,21,24-51,133-139,148-155,186,203,209-210,212-218,225-229,233-234,250
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "18a9c5179e02ecfb58472f03bd7b7565b9322cfb",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 70,
+      "total_deletions": 29,
+      "accepted_lines": 413,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "README.md": {
+          "additions": 70,
+          "deletions": 29,
+          "accepted_lines": 70
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        }
+      }
+    }
+  }
+}
