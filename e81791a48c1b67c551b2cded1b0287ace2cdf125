@@ -1,0 +1,62 @@
+test/test_virtualization.py
+  1ba8494afe4ffabd 1-134
+python/d810g_engine/server.py
+  1ba8494afe4ffabd 82,90
+python/d810g_engine/virtualization/analyzer.py
+  1ba8494afe4ffabd 1-227
+python/d810g_engine/virtualization/__init__.py
+  1ba8494afe4ffabd 1-6
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "e81791a48c1b67c551b2cded1b0287ace2cdf125",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 369,
+      "total_deletions": 0,
+      "accepted_lines": 712,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_virtualization.py": {
+          "additions": 134,
+          "accepted_lines": 134
+        },
+        "python/d810g_engine/virtualization/analyzer.py": {
+          "additions": 227,
+          "accepted_lines": 227
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "python/d810g_engine/server.py": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "python/d810g_engine/virtualization/__init__.py": {
+          "additions": 6,
+          "accepted_lines": 6
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        }
+      }
+    }
+  }
+}
