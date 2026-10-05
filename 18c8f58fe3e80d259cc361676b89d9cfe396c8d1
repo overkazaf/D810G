@@ -1,0 +1,47 @@
+test/test_integration.py
+  1ba8494afe4ffabd 1-107
+data/samples/build_samples.sh
+  1ba8494afe4ffabd 1-36
+python/d810g_engine/server.py
+  1ba8494afe4ffabd 77-80,82-84
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "18c8f58fe3e80d259cc361676b89d9cfe396c8d1",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 151,
+      "total_deletions": 3,
+      "accepted_lines": 151,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/samples/build_samples.sh": {
+          "additions": 36,
+          "accepted_lines": 36
+        },
+        "python/d810g_engine/server.py": {
+          "additions": 7,
+          "deletions": 2,
+          "accepted_lines": 7
+        },
+        "test/test_integration.py": {
+          "additions": 107,
+          "accepted_lines": 107
+        },
+        "extension.properties": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
