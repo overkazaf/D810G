@@ -1,0 +1,107 @@
+docs/assets/examples/after_mba.c
+  1ba8494afe4ffabd 1-11
+docs/assets/examples/before_bcf.c
+  1ba8494afe4ffabd 1-26
+docs/cn/tutorial.md
+  1ba8494afe4ffabd 1-191
+data/samples/test_target.c
+  1ba8494afe4ffabd 1-34
+docs/tutorial.md
+  1ba8494afe4ffabd 1-191
+docs/assets/examples/after_d810g.c
+  1ba8494afe4ffabd 1-16
+docs/assets/examples/before_ollvm.c
+  1ba8494afe4ffabd 1-43
+docs/assets/examples/before_mba.c
+  1ba8494afe4ffabd 1-21
+docs/assets/examples/before_strings.c
+  1ba8494afe4ffabd 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "ada22a12c4eeeee671ad5cf417e2d029dae3d303",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 1004,
+      "total_deletions": 0,
+      "accepted_lines": 1348,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/tutorial.md": {
+          "additions": 191,
+          "accepted_lines": 191
+        },
+        "docs/assets/examples/before_mba.c": {
+          "additions": 21,
+          "accepted_lines": 21
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "docs/assets/mockups/ghidra_rightclick.svg": {
+          "additions": 214,
+          "accepted_lines": 214
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "docs/assets/examples/before_strings.c": {
+          "additions": 19,
+          "accepted_lines": 19
+        },
+        "data/samples/test_target": {
+          "additions": 6,
+          "accepted_lines": 6
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "docs/assets/examples/before_ollvm.c": {
+          "additions": 43,
+          "accepted_lines": 43
+        },
+        "docs/cn/tutorial.md": {
+          "additions": 191,
+          "accepted_lines": 191
+        },
+        "data/samples/test_target.c": {
+          "additions": 34,
+          "accepted_lines": 34
+        },
+        "docs/assets/mockups/ghidra_before.svg": {
+          "additions": 232,
+          "accepted_lines": 232
+        },
+        "docs/assets/examples/before_bcf.c": {
+          "additions": 26,
+          "accepted_lines": 26
+        },
+        "docs/assets/examples/after_mba.c": {
+          "additions": 11,
+          "accepted_lines": 11
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "docs/assets/examples/after_d810g.c": {
+          "additions": 16,
+          "accepted_lines": 16
+        }
+      }
+    }
+  }
+}
