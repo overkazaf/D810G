@@ -1,0 +1,162 @@
+tapes/interactive.tape
+  1ba8494afe4ffabd 1-47
+docs/assets/recordings/mba.svg
+  1ba8494afe4ffabd 1
+README.md
+  1ba8494afe4ffabd 53-56,70-73,90-93,311-314
+README_CN.md
+  1ba8494afe4ffabd 53-56,70-73,90-93,311-314
+docs/assets/recordings/deep_mba.svg
+  1ba8494afe4ffabd 1
+tapes/rules.tape
+  1ba8494afe4ffabd 1-21
+tapes/record_all.sh
+  1ba8494afe4ffabd 1-68
+docs/cn/index.md
+  1ba8494afe4ffabd 43-46,60-63
+tapes/opaque.tape
+  1ba8494afe4ffabd 1-41
+docs/assets/recordings/tests.svg
+  1ba8494afe4ffabd 1
+tapes/mba.tape
+  1ba8494afe4ffabd 1-37
+docs/assets/recordings/opaque.svg
+  1ba8494afe4ffabd 1
+docs/index.md
+  1ba8494afe4ffabd 43-46,60-63
+tapes/full_demo.tape
+  1ba8494afe4ffabd 1-51
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "e7ecdf5c4114d1c03d8baba8a018edd8ba11a6f9",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 1640,
+      "total_deletions": 1322,
+      "accepted_lines": 661,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "docs/assets/recordings/tests_v2.cast": {
+          "additions": 207,
+          "deletions": 207
+        },
+        "tapes/opaque.tape": {
+          "additions": 41,
+          "accepted_lines": 41
+        },
+        "tapes/interactive.tape": {
+          "additions": 47,
+          "accepted_lines": 47
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "README.md": {
+          "additions": 16,
+          "accepted_lines": 16
+        },
+        "docs/assets/recordings/deep_mba_v2.cast": {
+          "additions": 8,
+          "deletions": 8
+        },
+        "README_CN.md": {
+          "additions": 16,
+          "accepted_lines": 16
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "docs/assets/recordings/tests.cast": {
+          "additions": 207,
+          "deletions": 207
+        },
+        "docs/assets/recordings/deep_mba.svg": {
+          "additions": 214,
+          "deletions": 213,
+          "accepted_lines": 1
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "docs/assets/recordings/tests.svg": {
+          "additions": 214,
+          "deletions": 213,
+          "accepted_lines": 1
+        },
+        "tapes/record_all.sh": {
+          "additions": 68,
+          "accepted_lines": 68
+        },
+        "docs/cn/index.md": {
+          "additions": 8,
+          "accepted_lines": 8
+        },
+        "docs/assets/recordings/mba.svg": {
+          "additions": 214,
+          "deletions": 213,
+          "accepted_lines": 1
+        },
+        "tapes/full_demo.tape": {
+          "additions": 51,
+          "accepted_lines": 51
+        },
+        "tapes/rules.tape": {
+          "additions": 21,
+          "accepted_lines": 21
+        },
+        "tapes/mba.tape": {
+          "additions": 37,
+          "accepted_lines": 37
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/assets/recordings/mba.cast": {
+          "additions": 10,
+          "deletions": 10
+        },
+        "docs/index.md": {
+          "additions": 8,
+          "accepted_lines": 8
+        },
+        "docs/assets/recordings/opaque.cast": {
+          "additions": 10,
+          "deletions": 10
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "docs/assets/recordings/mba_v2.cast": {
+          "additions": 10,
+          "deletions": 10
+        },
+        "bash": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        "docs/assets/recordings/opaque_v2.cast": {
+          "additions": 10,
+          "deletions": 10
+        },
+        "docs/assets/recordings/deep_mba.cast": {
+          "additions": 8,
+          "deletions": 8
+        },
+        "docs/assets/recordings/opaque.svg": {
+          "additions": 214,
+          "deletions": 213,
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
