@@ -1,3 +1,14 @@
+<div align="center">
+
+![Stars](https://img.shields.io/github/stars/overkazaf/D810G?style=flat-square&color=58a6ff)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)
+![Ghidra](https://img.shields.io/badge/Ghidra-Plugin-bf360c?style=flat-square)
+![Tests](https://img.shields.io/badge/Tests-201-4caf50?style=flat-square)
+![MBA Rules](https://img.shields.io/badge/MBA_Rules-60-58a6ff?style=flat-square)
+![License](https://img.shields.io/github/license/overkazaf/D810G?style=flat-square&color=58a6ff)
+
+</div>
+
 # D810G
 
 **English** | [中文](README_CN.md)
