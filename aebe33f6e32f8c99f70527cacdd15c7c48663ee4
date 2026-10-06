@@ -1,0 +1,76 @@
+docs/assets/mockups/ghidra_after.svg
+  1ba8494afe4ffabd 1-204
+README.md
+  1ba8494afe4ffabd 186-214
+docs/assets/mockups/ghidra_comparison.svg
+  1ba8494afe4ffabd 1-268
+README_CN.md
+  1ba8494afe4ffabd 175-203
+docs/assets/mockups/ghidra_before.svg
+  1ba8494afe4ffabd 1-232
+docs/assets/mockups/ghidra_rightclick.svg
+  1ba8494afe4ffabd 1-214
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "aebe33f6e32f8c99f70527cacdd15c7c48663ee4",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 531,
+      "total_deletions": 1,
+      "accepted_lines": 1320,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "bash": {
+          "accepted_lines": 1
+        },
+        "docs/assets/mockups/ghidra_comparison.svg": {
+          "additions": 269,
+          "deletions": 1,
+          "accepted_lines": 268
+        },
+        "docs/assets/mockups/ghidra_before.svg": {
+          "accepted_lines": 232
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/assets/mockups/ghidra_rightclick.svg": {
+          "accepted_lines": 214
+        },
+        "README.md": {
+          "additions": 29,
+          "accepted_lines": 29
+        },
+        "docs/assets/mockups/ghidra_after.svg": {
+          "additions": 204,
+          "accepted_lines": 204
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "README_CN.md": {
+          "additions": 29,
+          "accepted_lines": 29
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        }
+      }
+    }
+  }
+}
