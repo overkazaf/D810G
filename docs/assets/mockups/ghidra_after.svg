@@ -1,0 +1,204 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">
+  <defs>
+    <style>
+      .mono { font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace; }
+      .title-bar { fill: #3c3f41; }
+      .window-bg { fill: #2b2b2b; }
+      .panel-bg { fill: #313335; }
+      .text-normal { fill: #a9b7c6; font-size: 11px; }
+      .text-keyword { fill: #cc7832; font-size: 11px; }
+      .text-type { fill: #6897bb; font-size: 11px; }
+      .text-number { fill: #6897bb; font-size: 11px; }
+      .text-string { fill: #6a8759; font-size: 11px; }
+      .text-comment { fill: #808080; font-size: 11px; }
+      .text-func { fill: #ffc66d; font-size: 11px; }
+      .text-title { fill: #bbbbbb; font-size: 12px; }
+      .text-menu { fill: #bbbbbb; font-size: 11px; }
+      .line-num { fill: #606366; font-size: 11px; }
+      .func-list-item { fill: #a9b7c6; font-size: 10px; }
+      .func-list-selected { fill: #214283; }
+      .separator { stroke: #555555; stroke-width: 1; }
+      .btn-close { fill: #c75050; }
+      .btn-min { fill: #d4a017; }
+      .btn-max { fill: #4caf50; }
+      .log-info { fill: #6a8759; font-size: 10px; }
+      .log-text { fill: #a9b7c6; font-size: 10px; }
+      .log-label { fill: #ffc66d; font-size: 10px; }
+      .success-badge { fill: #4caf50; }
+    </style>
+  </defs>
+
+  <!-- Window background -->
+  <rect width="800" height="600" rx="6" ry="6" class="window-bg"/>
+
+  <!-- Title bar -->
+  <rect width="800" height="30" rx="6" ry="6" class="title-bar"/>
+  <rect x="0" y="20" width="800" height="10" class="title-bar"/>
+  <circle cx="18" cy="15" r="6" class="btn-close"/>
+  <circle cx="38" cy="15" r="6" class="btn-min"/>
+  <circle cx="58" cy="15" r="6" class="btn-max"/>
+  <text x="400" y="19" text-anchor="middle" class="mono text-title">CodeBrowser: test_target [x86_64/gcc]</text>
+
+  <!-- Menu bar -->
+  <rect x="0" y="30" width="800" height="22" fill="#3c3f41"/>
+  <text x="12" y="45" class="mono text-menu">File</text>
+  <text x="50" y="45" class="mono text-menu">Edit</text>
+  <text x="90" y="45" class="mono text-menu">Analysis</text>
+  <text x="155" y="45" class="mono text-menu">Navigation</text>
+  <text x="235" y="45" class="mono text-menu">Search</text>
+  <text x="290" y="45" class="mono text-menu">Window</text>
+  <text x="355" y="45" class="mono text-menu">Help</text>
+  <line x1="0" y1="52" x2="800" y2="52" class="separator"/>
+
+  <!-- Toolbar -->
+  <rect x="0" y="52" width="800" height="24" fill="#3c3f41"/>
+  <rect x="8" y="56" width="16" height="16" rx="2" fill="#4b6eaf" opacity="0.6"/>
+  <rect x="28" y="56" width="16" height="16" rx="2" fill="#4b6eaf" opacity="0.6"/>
+  <rect x="48" y="56" width="16" height="16" rx="2" fill="#4b6eaf" opacity="0.6"/>
+  <line x1="0" y1="76" x2="800" y2="76" class="separator"/>
+
+  <!-- Left panel: Function List -->
+  <rect x="0" y="76" width="170" height="524" class="panel-bg"/>
+  <rect x="0" y="76" width="170" height="20" fill="#3c3f41"/>
+  <text x="8" y="90" class="mono" style="fill:#bbbbbb; font-size:10px;">Symbol Tree</text>
+  <line x1="170" y1="76" x2="170" y2="600" class="separator"/>
+
+  <text x="10" y="112" class="mono func-list-item">Functions</text>
+  <text x="22" y="126" class="mono func-list-item">main</text>
+  <text x="22" y="140" class="mono func-list-item">init_config</text>
+  <rect x="4" y="143" width="162" height="14" class="func-list-selected" rx="2"/>
+  <text x="22" y="154" class="mono" style="fill:#ffffff; font-size:10px;">check_license</text>
+  <text x="22" y="168" class="mono func-list-item">validate_key</text>
+  <text x="22" y="182" class="mono func-list-item">decrypt_string</text>
+  <text x="22" y="196" class="mono func-list-item">process_input</text>
+  <text x="22" y="210" class="mono func-list-item">compute_hash</text>
+
+  <!-- Center panel: Decompiler -->
+  <rect x="170" y="76" width="630" height="20" fill="#3c3f41"/>
+  <text x="178" y="90" class="mono" style="fill:#bbbbbb; font-size:10px;">Decompiler: check_license</text>
+
+  <!-- Success badge -->
+  <rect x="670" y="80" width="120" height="16" rx="3" fill="#4caf50" opacity="0.15"/>
+  <text x="680" y="91" class="mono" style="fill:#4caf50; font-size:9px;">D810G Cleaned</text>
+
+  <!-- Code area - clean code -->
+  <rect x="170" y="96" width="630" height="320" class="window-bg"/>
+
+  <!-- Clean decompiled code -->
+  <!-- Line 1: function signature -->
+  <text x="180" y="116" class="mono line-num">1</text>
+  <text x="205" y="116" class="mono text-keyword">int</text>
+  <text x="228" y="116" class="mono text-func">check_license</text>
+  <text x="318" y="116" class="mono text-normal">(</text>
+  <text x="325" y="116" class="mono text-keyword">char</text>
+  <text x="355" y="116" class="mono text-normal">*param_1) {</text>
+
+  <!-- Line 2: sum -->
+  <text x="180" y="136" class="mono line-num">2</text>
+  <text x="225" y="136" class="mono text-keyword">int</text>
+  <text x="248" y="136" class="mono text-normal">sum =</text>
+  <text x="285" y="136" class="mono text-number">0</text>
+  <text x="292" y="136" class="mono text-normal">;</text>
+
+  <!-- Line 3: i -->
+  <text x="180" y="156" class="mono line-num">3</text>
+  <text x="225" y="156" class="mono text-keyword">int</text>
+  <text x="248" y="156" class="mono text-normal">i =</text>
+  <text x="272" y="156" class="mono text-number">0</text>
+  <text x="279" y="156" class="mono text-normal">;</text>
+
+  <!-- Line 4: blank -->
+  <text x="180" y="176" class="mono line-num">4</text>
+
+  <!-- Line 5: while -->
+  <text x="180" y="196" class="mono line-num">5</text>
+  <text x="225" y="196" class="mono text-keyword">while</text>
+  <text x="258" y="196" class="mono text-normal">(*(param_1 + i) !=</text>
+  <text x="392" y="196" class="mono text-string">'\0'</text>
+  <text x="420" y="196" class="mono text-normal">) {</text>
+
+  <!-- Line 6: sum += -->
+  <text x="180" y="216" class="mono line-num">6</text>
+  <text x="245" y="216" class="mono text-normal">sum = sum + *(param_1 + i);</text>
+
+  <!-- Line 7: i++ -->
+  <text x="180" y="236" class="mono line-num">7</text>
+  <text x="245" y="236" class="mono text-normal">i = i +</text>
+  <text x="302" y="236" class="mono text-number">1</text>
+  <text x="309" y="236" class="mono text-normal">;</text>
+
+  <!-- Line 8: close while -->
+  <text x="180" y="256" class="mono line-num">8</text>
+  <text x="225" y="256" class="mono text-normal">}</text>
+
+  <!-- Line 9: if -->
+  <text x="180" y="276" class="mono line-num">9</text>
+  <text x="225" y="276" class="mono text-keyword">if</text>
+  <text x="242" y="276" class="mono text-normal">(sum ==</text>
+  <text x="298" y="276" class="mono text-number">0x1a4</text>
+  <text x="331" y="276" class="mono text-normal">) {</text>
+
+  <!-- Line 10: return 1 -->
+  <text x="175" y="296" class="mono line-num">10</text>
+  <text x="245" y="296" class="mono text-keyword">return</text>
+  <text x="285" y="296" class="mono text-number">1</text>
+  <text x="292" y="296" class="mono text-normal">;</text>
+
+  <!-- Line 11: close if -->
+  <text x="175" y="316" class="mono line-num">11</text>
+  <text x="225" y="316" class="mono text-normal">}</text>
+
+  <!-- Line 12: return 0 -->
+  <text x="175" y="336" class="mono line-num">12</text>
+  <text x="225" y="336" class="mono text-keyword">return</text>
+  <text x="265" y="336" class="mono text-number">0</text>
+  <text x="272" y="336" class="mono text-normal">;</text>
+
+  <!-- Line 13: close function -->
+  <text x="175" y="356" class="mono line-num">13</text>
+  <text x="205" y="356" class="mono text-normal">}</text>
+
+  <!-- Separator between code and results panel -->
+  <line x1="170" y1="416" x2="800" y2="416" class="separator"/>
+
+  <!-- D810G Results panel -->
+  <rect x="170" y="416" width="630" height="20" fill="#3c3f41"/>
+  <text x="178" y="430" class="mono" style="fill:#ffc66d; font-size:10px;">D810G Results</text>
+
+  <rect x="170" y="436" width="630" height="150" fill="#1e1e1e"/>
+
+  <!-- Result log lines -->
+  <text x="180" y="454" class="mono log-label">[D810G]</text>
+  <text x="228" y="454" class="mono log-text">Deobfuscated</text>
+  <text x="320" y="454" class="mono" style="fill:#ffc66d; font-size:10px;">check_license</text>
+  <text x="420" y="454" class="mono log-text">: deobfuscated (</text>
+  <text x="555" y="454" class="mono" style="fill:#6897bb; font-size:10px;">5</text>
+  <text x="565" y="454" class="mono log-text">patches applied)</text>
+
+  <text x="180" y="474" class="mono log-label">[D810G]</text>
+  <text x="228" y="474" class="mono log-text">CFF pattern detected:</text>
+  <text x="395" y="474" class="mono" style="fill:#cc7832; font-size:10px;">ollvm_switch</text>
+  <text x="490" y="474" class="mono log-text">(dispatcher at 0x401000, 5 case blocks)</text>
+
+  <text x="180" y="494" class="mono log-label">[D810G]</text>
+  <text x="228" y="494" class="mono log-text">State transitions recovered via Unicorn emulation</text>
+
+  <text x="180" y="514" class="mono log-label">[D810G]</text>
+  <text x="228" y="514" class="mono log-info">2 opaque predicates eliminated</text>
+  <text x="450" y="514" class="mono log-text">(always_true: 1, always_false: 1)</text>
+
+  <text x="180" y="534" class="mono log-label">[D810G]</text>
+  <text x="228" y="534" class="mono log-info">1 dead code block removed</text>
+  <text x="410" y="534" class="mono log-text">(48 bytes)</text>
+
+  <!-- Completion indicator -->
+  <rect x="180" y="548" width="600" height="16" rx="3" fill="#4caf50" opacity="0.1"/>
+  <text x="190" y="560" class="mono" style="fill:#4caf50; font-size:10px;">Deobfuscation complete. Function reduced from 23 blocks to 5 blocks (78% reduction).</text>
+
+  <!-- Status bar -->
+  <rect x="0" y="586" width="800" height="14" rx="0" fill="#3c3f41"/>
+  <text x="8" y="596" class="mono" style="fill:#808080; font-size:9px;">check_license @ 00401000 | x86_64 | 156 bytes | 5 basic blocks | D810G: cleaned</text>
+
+  <!-- Window border -->
+  <rect width="800" height="600" rx="6" ry="6" fill="none" stroke="#555555" stroke-width="1"/>
+</svg>

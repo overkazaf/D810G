@@ -172,6 +172,35 @@ analyzeHeadless /path/to/project Project -import binary.exe \
     -postScript headless_deobfuscate.py
 ```
 
+### 截图
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_comparison.svg" alt="D810G 反混淆前后对比" width="1000">
+</p>
+
+<details>
+<summary>更多截图</summary>
+
+**混淆代码（反混淆前）：**
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_before.svg" alt="Ghidra 中的 OLLVM 混淆代码" width="800">
+</p>
+
+**右键菜单反混淆：**
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_rightclick.svg" alt="D810G 右键菜单" width="800">
+</p>
+
+**清晰代码（反混淆后）：**
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_after.svg" alt="反混淆后的代码与 D810G 结果面板" width="800">
+</p>
+
+</details>
+
 ---
 
 ## 架构

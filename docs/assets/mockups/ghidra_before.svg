@@ -1,0 +1,232 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="500" viewBox="0 0 800 500">
+  <defs>
+    <style>
+      .mono { font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace; }
+      .title-bar { fill: #3c3f41; }
+      .window-bg { fill: #2b2b2b; }
+      .panel-bg { fill: #313335; }
+      .panel-border { stroke: #555555; stroke-width: 1; fill: none; }
+      .text-normal { fill: #a9b7c6; font-size: 11px; }
+      .text-keyword { fill: #cc7832; font-size: 11px; }
+      .text-type { fill: #6897bb; font-size: 11px; }
+      .text-number { fill: #6897bb; font-size: 11px; }
+      .text-string { fill: #6a8759; font-size: 11px; }
+      .text-comment { fill: #808080; font-size: 11px; }
+      .text-func { fill: #ffc66d; font-size: 11px; }
+      .text-title { fill: #bbbbbb; font-size: 12px; }
+      .text-menu { fill: #bbbbbb; font-size: 11px; }
+      .line-num { fill: #606366; font-size: 11px; }
+      .highlight-row { fill: #214283; opacity: 0.3; }
+      .func-list-item { fill: #a9b7c6; font-size: 10px; }
+      .func-list-selected { fill: #214283; }
+      .separator { stroke: #555555; stroke-width: 1; }
+      .btn-close { fill: #c75050; }
+      .btn-min { fill: #d4a017; }
+      .btn-max { fill: #4caf50; }
+    </style>
+  </defs>
+
+  <!-- Window background -->
+  <rect width="800" height="500" rx="6" ry="6" class="window-bg"/>
+
+  <!-- Title bar -->
+  <rect width="800" height="30" rx="6" ry="6" class="title-bar"/>
+  <rect x="0" y="20" width="800" height="10" class="title-bar"/>
+
+  <!-- Window controls -->
+  <circle cx="18" cy="15" r="6" class="btn-close"/>
+  <circle cx="38" cy="15" r="6" class="btn-min"/>
+  <circle cx="58" cy="15" r="6" class="btn-max"/>
+
+  <!-- Title text -->
+  <text x="400" y="19" text-anchor="middle" class="mono text-title">CodeBrowser: test_target [x86_64/gcc]</text>
+
+  <!-- Menu bar -->
+  <rect x="0" y="30" width="800" height="22" fill="#3c3f41"/>
+  <text x="12" y="45" class="mono text-menu">File</text>
+  <text x="50" y="45" class="mono text-menu">Edit</text>
+  <text x="90" y="45" class="mono text-menu">Analysis</text>
+  <text x="155" y="45" class="mono text-menu">Navigation</text>
+  <text x="235" y="45" class="mono text-menu">Search</text>
+  <text x="290" y="45" class="mono text-menu">Window</text>
+  <text x="355" y="45" class="mono text-menu">Help</text>
+  <line x1="0" y1="52" x2="800" y2="52" class="separator"/>
+
+  <!-- Toolbar -->
+  <rect x="0" y="52" width="800" height="24" fill="#3c3f41"/>
+  <rect x="8" y="56" width="16" height="16" rx="2" fill="#4b6eaf" opacity="0.6"/>
+  <rect x="28" y="56" width="16" height="16" rx="2" fill="#4b6eaf" opacity="0.6"/>
+  <rect x="48" y="56" width="16" height="16" rx="2" fill="#4b6eaf" opacity="0.6"/>
+  <rect x="72" y="56" width="16" height="16" rx="2" fill="#629755" opacity="0.6"/>
+  <rect x="92" y="56" width="16" height="16" rx="2" fill="#629755" opacity="0.6"/>
+  <line x1="0" y1="76" x2="800" y2="76" class="separator"/>
+
+  <!-- Left panel: Function List -->
+  <rect x="0" y="76" width="170" height="424" class="panel-bg"/>
+  <rect x="0" y="76" width="170" height="20" fill="#3c3f41"/>
+  <text x="8" y="90" class="mono" style="fill:#bbbbbb; font-size:10px;">Symbol Tree</text>
+  <line x1="170" y1="76" x2="170" y2="500" class="separator"/>
+
+  <!-- Function tree -->
+  <text x="10" y="112" class="mono func-list-item">Functions</text>
+  <text x="22" y="126" class="mono func-list-item">main</text>
+  <text x="22" y="140" class="mono func-list-item">init_config</text>
+  <rect x="4" y="143" width="162" height="14" class="func-list-selected" rx="2"/>
+  <text x="22" y="154" class="mono" style="fill:#ffffff; font-size:10px;">check_license</text>
+  <text x="22" y="168" class="mono func-list-item">validate_key</text>
+  <text x="22" y="182" class="mono func-list-item">decrypt_string</text>
+  <text x="22" y="196" class="mono func-list-item">process_input</text>
+  <text x="22" y="210" class="mono func-list-item">compute_hash</text>
+  <text x="22" y="224" class="mono func-list-item">verify_signature</text>
+  <text x="22" y="238" class="mono func-list-item">encode_output</text>
+  <text x="22" y="252" class="mono func-list-item">cleanup</text>
+
+  <!-- Center panel: Decompiler -->
+  <rect x="170" y="76" width="630" height="20" fill="#3c3f41"/>
+  <text x="178" y="90" class="mono" style="fill:#bbbbbb; font-size:10px;">Decompiler: check_license</text>
+
+  <!-- Code area -->
+  <rect x="170" y="96" width="630" height="404" class="window-bg"/>
+
+  <!-- Line numbers and code -->
+  <!-- Line 1: function signature -->
+  <text x="180" y="114" class="mono line-num">1</text>
+  <text x="205" y="114" class="mono text-keyword">int</text>
+  <text x="228" y="114" class="mono text-func">check_license</text>
+  <text x="318" y="114" class="mono text-normal">(</text>
+  <text x="325" y="114" class="mono text-keyword">char</text>
+  <text x="355" y="114" class="mono text-normal">*</text>
+  <text x="362" y="114" class="mono text-normal">param_1</text>
+  <text x="412" y="114" class="mono text-normal">) {</text>
+
+  <!-- Line 2: local_10 -->
+  <text x="180" y="130" class="mono line-num">2</text>
+  <text x="225" y="130" class="mono text-keyword">int</text>
+  <text x="248" y="130" class="mono text-normal">local_10 =</text>
+  <text x="325" y="130" class="mono text-number">0x2b8a7c3f</text>
+  <text x="395" y="130" class="mono text-normal">;</text>
+
+  <!-- Line 3: local_1c -->
+  <text x="180" y="146" class="mono line-num">3</text>
+  <text x="225" y="146" class="mono text-keyword">int</text>
+  <text x="248" y="146" class="mono text-normal">local_1c =</text>
+  <text x="325" y="146" class="mono text-number">0</text>
+  <text x="332" y="146" class="mono text-normal">;</text>
+
+  <!-- Line 4: local_18 -->
+  <text x="180" y="162" class="mono line-num">4</text>
+  <text x="225" y="162" class="mono text-keyword">int</text>
+  <text x="248" y="162" class="mono text-normal">local_18 =</text>
+  <text x="325" y="162" class="mono text-number">0</text>
+  <text x="332" y="162" class="mono text-normal">;</text>
+
+  <!-- Line 5: blank -->
+  <text x="180" y="178" class="mono line-num">5</text>
+
+  <!-- Line 6: while -->
+  <text x="180" y="194" class="mono line-num">6</text>
+  <text x="225" y="194" class="mono text-keyword">while</text>
+  <text x="258" y="194" class="mono text-normal">(</text>
+  <text x="265" y="194" class="mono text-keyword">true</text>
+  <text x="292" y="194" class="mono text-normal">) {</text>
+
+  <!-- Line 7: switch -->
+  <text x="180" y="210" class="mono line-num">7</text>
+  <text x="245" y="210" class="mono text-keyword">switch</text>
+  <text x="285" y="210" class="mono text-normal">(local_10) {</text>
+
+  <!-- Line 8: case 0x2b8a7c3f -->
+  <text x="180" y="226" class="mono line-num">8</text>
+  <text x="265" y="226" class="mono text-keyword">case</text>
+  <text x="298" y="226" class="mono text-number">0x2b8a7c3f</text>
+  <text x="368" y="226" class="mono text-normal">:</text>
+
+  <!-- Line 9: if check -->
+  <text x="180" y="242" class="mono line-num">9</text>
+  <text x="285" y="242" class="mono text-keyword">if</text>
+  <text x="302" y="242" class="mono text-normal">(*(param_1 + local_18) ==</text>
+  <text x="510" y="242" class="mono text-number">0</text>
+  <text x="517" y="242" class="mono text-normal">)</text>
+
+  <!-- Line 10: state transition 1 -->
+  <text x="175" y="258" class="mono line-num">10</text>
+  <text x="305" y="258" class="mono text-normal">local_10 =</text>
+  <text x="382" y="258" class="mono text-number">0x7d3e9a15</text>
+  <text x="452" y="258" class="mono text-normal">;</text>
+
+  <!-- Line 11: else -->
+  <text x="175" y="274" class="mono line-num">11</text>
+  <text x="285" y="274" class="mono text-keyword">else</text>
+
+  <!-- Line 12: state transition 2 -->
+  <text x="175" y="290" class="mono line-num">12</text>
+  <text x="305" y="290" class="mono text-normal">local_10 =</text>
+  <text x="382" y="290" class="mono text-number">0x4f1c82d6</text>
+  <text x="452" y="290" class="mono text-normal">;</text>
+
+  <!-- Line 13: break -->
+  <text x="175" y="306" class="mono line-num">13</text>
+  <text x="285" y="306" class="mono text-keyword">break</text>
+  <text x="318" y="306" class="mono text-normal">;</text>
+
+  <!-- Line 14: case 0x4f1c82d6 -->
+  <text x="175" y="322" class="mono line-num">14</text>
+  <text x="265" y="322" class="mono text-keyword">case</text>
+  <text x="298" y="322" class="mono text-number">0x4f1c82d6</text>
+  <text x="368" y="322" class="mono text-normal">:</text>
+
+  <!-- Line 15: accumulate -->
+  <text x="175" y="338" class="mono line-num">15</text>
+  <text x="285" y="338" class="mono text-normal">local_1c = local_1c + *(param_1 + local_18);</text>
+
+  <!-- Line 16: increment -->
+  <text x="175" y="354" class="mono line-num">16</text>
+  <text x="285" y="354" class="mono text-normal">local_18 = local_18 +</text>
+  <text x="468" y="354" class="mono text-number">1</text>
+  <text x="475" y="354" class="mono text-normal">;</text>
+
+  <!-- Line 17: state transition 3 -->
+  <text x="175" y="370" class="mono line-num">17</text>
+  <text x="285" y="370" class="mono text-normal">local_10 =</text>
+  <text x="362" y="370" class="mono text-number">0x2b8a7c3f</text>
+  <text x="432" y="370" class="mono text-normal">;</text>
+
+  <!-- Line 18: break -->
+  <text x="175" y="386" class="mono line-num">18</text>
+  <text x="285" y="386" class="mono text-keyword">break</text>
+  <text x="318" y="386" class="mono text-normal">;</text>
+
+  <!-- Line 19: case 0x7d3e9a15 -->
+  <text x="175" y="402" class="mono line-num">19</text>
+  <text x="265" y="402" class="mono text-keyword">case</text>
+  <text x="298" y="402" class="mono text-number">0x7d3e9a15</text>
+  <text x="368" y="402" class="mono text-normal">:</text>
+
+  <!-- Line 20: comparison -->
+  <text x="175" y="418" class="mono line-num">20</text>
+  <text x="285" y="418" class="mono text-keyword">if</text>
+  <text x="302" y="418" class="mono text-normal">(local_1c ==</text>
+  <text x="395" y="418" class="mono text-number">0x1a4</text>
+  <text x="428" y="418" class="mono text-normal">)</text>
+
+  <!-- Line 21: ... -->
+  <text x="175" y="434" class="mono line-num">21</text>
+  <text x="305" y="434" class="mono text-normal">local_10 =</text>
+  <text x="382" y="434" class="mono text-number">0xa91f5b2e</text>
+  <text x="452" y="434" class="mono text-normal">;</text>
+
+  <!-- Line 22 -->
+  <text x="175" y="450" class="mono line-num">22</text>
+  <text x="285" y="450" class="mono text-comment">...</text>
+
+  <!-- Obfuscation warning indicator -->
+  <rect x="670" y="80" width="120" height="16" rx="3" fill="#c75050" opacity="0.15"/>
+  <text x="680" y="91" class="mono" style="fill:#c75050; font-size:9px;">OLLVM Obfuscated</text>
+
+  <!-- Status bar -->
+  <rect x="0" y="486" width="800" height="14" rx="0" fill="#3c3f41"/>
+  <text x="8" y="496" class="mono" style="fill:#808080; font-size:9px;">check_license @ 00401000 | x86_64 | 847 bytes | 23 basic blocks</text>
+
+  <!-- Window border -->
+  <rect width="800" height="500" rx="6" ry="6" fill="none" stroke="#555555" stroke-width="1"/>
+</svg>

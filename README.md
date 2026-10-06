@@ -183,6 +183,35 @@ analyzeHeadless /path/to/project Project -import binary.exe \
     -postScript headless_deobfuscate.py
 ```
 
+### Screenshots
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_comparison.svg" alt="Before and After D810G Deobfuscation" width="1000">
+</p>
+
+<details>
+<summary>More screenshots</summary>
+
+**Obfuscated code (before):**
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_before.svg" alt="Ghidra showing OLLVM-obfuscated code" width="800">
+</p>
+
+**Right-click to deobfuscate:**
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_rightclick.svg" alt="D810G right-click context menu" width="800">
+</p>
+
+**Clean code (after):**
+
+<p align="center">
+  <img src="docs/assets/mockups/ghidra_after.svg" alt="Ghidra showing deobfuscated code with D810G results" width="800">
+</p>
+
+</details>
+
 ---
 
 ## Architecture
