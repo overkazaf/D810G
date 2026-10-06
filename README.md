@@ -61,6 +61,10 @@ $ PYTHONPATH=python python -m d810g_engine cli simplify "(x | y) - (x & y)"
   Rule: mba_xor_1
 ```
 
+<p align="center">
+  <img src="docs/assets/recordings/mba.svg" alt="MBA Simplification Demo" width="800">
+</p>
+
 ### Multi-Pass Deep Simplification
 
 ```
@@ -73,6 +77,10 @@ $ PYTHONPATH=python python -m d810g_engine cli simplify --deep \
   Final: Z3 verified equivalent
   Iterations: 3, fixpoint: True
 ```
+
+<p align="center">
+  <img src="docs/assets/recordings/deep_mba.svg" alt="Deep MBA Simplification Demo" width="800">
+</p>
 
 ### Opaque Predicate Detection
 
@@ -89,6 +97,10 @@ $ PYTHONPATH=python python -m d810g_engine cli opaque "x > 5"
   x > 5
   → DYNAMIC      — real condition, keep as-is
 ```
+
+<p align="center">
+  <img src="docs/assets/recordings/opaque.svg" alt="Opaque Predicate Detection Demo" width="800">
+</p>
 
 ### Interactive Rule Editor
 
@@ -306,6 +318,10 @@ $GHIDRA_INSTALL_DIR/support/gradle/gradlew buildExtension
 source .venv/bin/activate
 PYTHONPATH=python python -m pytest test/ -v
 ```
+
+<p align="center">
+  <img src="docs/assets/recordings/tests.svg" alt="Test Suite Demo" width="800">
+</p>
 
 ### Test Modules
 

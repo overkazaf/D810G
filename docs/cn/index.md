@@ -40,6 +40,10 @@ $ d810g cli simplify --deep "((x | y) - (x & y)) ^ ((x | y) - (x & y))"
   Final: Z3 verified equivalent
 ```
 
+<p align="center">
+  <img src="../assets/recordings/mba.svg" alt="MBA 化简演示" width="800">
+</p>
+
 ### 不透明谓词检测
 
 ```
@@ -52,6 +56,10 @@ $ d810g cli opaque "(x & 1) == 2"
 $ d810g cli opaque "x > 5"
   → DYNAMIC      — 真实条件，保持不变
 ```
+
+<p align="center">
+  <img src="../assets/recordings/opaque.svg" alt="不透明谓词检测演示" width="800">
+</p>
 
 ## 快速开始
 

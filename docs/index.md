@@ -40,6 +40,10 @@ $ d810g cli simplify --deep "((x | y) - (x & y)) ^ ((x | y) - (x & y))"
   Final: Z3 verified equivalent
 ```
 
+<p align="center">
+  <img src="assets/recordings/mba.svg" alt="MBA Simplification Demo" width="800">
+</p>
+
 ### Opaque Predicate Detection
 
 ```
@@ -52,6 +56,10 @@ $ d810g cli opaque "(x & 1) == 2"
 $ d810g cli opaque "x > 5"
   → DYNAMIC      — real condition, keep as-is
 ```
+
+<p align="center">
+  <img src="assets/recordings/opaque.svg" alt="Opaque Predicate Demo" width="800">
+</p>
 
 ## Architecture
 
