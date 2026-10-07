@@ -1,0 +1,78 @@
+python/d810g_engine/mba/__init__.py
+  1ba8494afe4ffabd 101-103,105-106
+python/d810g_engine/virtualization/disasm.py
+  1ba8494afe4ffabd 109,173-175
+test/test_vm_disasm.py
+  1ba8494afe4ffabd 38,41-42
+test/test_mba_extended.py
+  1ba8494afe4ffabd 1-147
+python/d810g_engine/opaque/advanced.py
+  1ba8494afe4ffabd 69-72,74,80
+data/rules/mba_hackers_delight.json
+  1ba8494afe4ffabd 20
+data/rules/mba_ollvm.json
+  1ba8494afe4ffabd 1-21
+data/rules/mba_constant_folding.json
+  1ba8494afe4ffabd 1-16
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "624d300da676478214025fb1a60b1ae0b8ce485a",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 20,
+      "total_deletions": 13,
+      "accepted_lines": 204,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "bash": {
+          "accepted_lines": 1
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "python/d810g_engine/mba/__init__.py": {
+          "additions": 5,
+          "deletions": 2,
+          "accepted_lines": 5
+        },
+        "test/test_mba_extended.py": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/opaque/advanced.py": {
+          "additions": 6,
+          "deletions": 2,
+          "accepted_lines": 6
+        },
+        "test/test_vm_disasm.py": {
+          "additions": 3,
+          "deletions": 2,
+          "accepted_lines": 3
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "additions": 1,
+          "deletions": 2,
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/virtualization/disasm.py": {
+          "additions": 4,
+          "deletions": 4,
+          "accepted_lines": 4
+        }
+      }
+    }
+  }
+}
