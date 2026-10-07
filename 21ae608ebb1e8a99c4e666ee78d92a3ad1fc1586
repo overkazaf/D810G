@@ -1,0 +1,71 @@
+python/d810g_engine/pipeline/orchestrator.py
+  1ba8494afe4ffabd 80-81,89-129,265-276
+python/d810g_engine/mba/__init__.py
+  1ba8494afe4ffabd 7,12,18-28,32,35-40,48-59,67,134-140,187-188
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "21ae608ebb1e8a99c4e666ee78d92a3ad1fc1586",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 16,
+      "total_deletions": 5,
+      "accepted_lines": 410,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/mba/__init__.py": {
+          "additions": 3,
+          "accepted_lines": 75
+        },
+        "python/d810g_engine/config.py": {
+          "accepted_lines": 45
+        },
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        },
+        "python/d810g_engine/mba/rules.py": {
+          "additions": 3,
+          "accepted_lines": 3
+        },
+        "README_CN.md": {
+          "additions": 7,
+          "deletions": 5,
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/protocol.py": {
+          "accepted_lines": 11
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 98
+        },
+        "python/d810g_engine/mba/matcher.py": {
+          "additions": 3,
+          "accepted_lines": 3
+        },
+        "python/d810g_engine/server.py": {
+          "accepted_lines": 27
+        },
+        "README.md": {
+          "accepted_lines": 31
+        },
+        "python/d810g_engine/log.py": {
+          "accepted_lines": 16
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/__main__.py": {
+          "accepted_lines": 3
+        }
+      }
+    }
+  }
+}
