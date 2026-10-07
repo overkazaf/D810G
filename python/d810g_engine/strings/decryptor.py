@@ -3,6 +3,22 @@
 from __future__ import annotations
 from typing import Any
 
+# Common English bigrams (top 30) for n-gram frequency scoring
+_COMMON_BIGRAMS = {
+    'th', 'he', 'in', 'er', 'an', 'en', 're', 'on', 'at', 'nd',
+    'st', 'es', 'or', 'te', 'of', 'ed', 'is', 'it', 'al', 'ar',
+    'nt', 'to', 'ng', 'se', 'ha', 'as', 'ou', 'io', 'le', 'no',
+}
+
+# Common programming strings (URLs, paths, SQL, JSON, code keywords)
+_CODE_PATTERNS = [
+    b'http', b'https', b'www.', b'.com', b'.org', b'.net',
+    b'api/', b'/v1', b'/v2', b'json', b'xml',
+    b'select', b'insert', b'update', b'delete', b'from', b'where',
+    b'function', b'return', b'class', b'import',
+    b'password', b'token', b'secret', b'key', b'auth',
+]
+
 
 def find_encrypted_strings(
     binary_bytes: bytes,
@@ -382,58 +398,82 @@ def _printable_score(data: bytes) -> float:
 
 
 def _score_decryption(data: bytes) -> float:
-    """Multi-factor scoring for decryption quality.
+    """Multi-factor scoring for decryption quality with bigram analysis.
 
-    Factors:
-    1. Printable ratio (0-1)
-    2. English text likelihood -- common letter frequencies
-    3. Word-like structure -- spaces between letter groups
-    4. No control characters (except tab, newline, CR)
-    5. String length penalty -- very short strings (<8 bytes) get penalized
-    6. Alphanumeric ratio
+    Architecture: a base quality score (up to ~0.80) gates whether a decryption
+    clears the threshold, while additive bonuses (bigram, word structure, code
+    patterns) improve ranking so the correct answer rises above printable garbage
+    that also clears the gate.
+
+    Base factors:
+    1. Printable ratio (weight: 0.30) -- basic ASCII printability
+    2. Control char penalty (weight: 0.20) -- penalize non-whitespace control chars
+    3. Alphanumeric ratio (weight: 0.20) -- letter/digit density
+    4. Length factor (weight: 0.10) -- longer valid strings more likely correct
+
+    Ranking bonuses (additive):
+    5. Bigram frequency (up to +0.10) -- common English letter pairs
+    6. Word structure (up to +0.05) -- spaces between letter groups
+    7. Code pattern bonus (up to +0.05) -- URLs, SQL, code keywords
     """
-    if not data:
+    if not data or len(data) < 2:
         return 0.0
 
     length = len(data)
 
-    # Factor 1: Printable ratio
+    # --- Base quality (max ~0.80 for clean printable ASCII) ---
+
+    # 1. Printable ratio (weight: 0.30)
     printable = sum(1 for b in data if 0x20 <= b <= 0x7e or b in (0x09, 0x0a, 0x0d))
     printable_ratio = printable / length
 
-    # Factor 2: English character frequency
-    # Common English letters: e, t, a, o, i, n, s, h, r
-    common_letters = set(b'etaoinshr ETAOINSHR')
-    common_ratio = sum(1 for b in data if b in common_letters) / length
+    # 2. Control char penalty (weight: 0.20)
+    control = sum(1 for b in data if b < 0x20 and b not in (0x09, 0x0a, 0x0d))
+    control_penalty = 1.0 - (control / length)
 
-    # Factor 3: Has spaces (word-like structure)
-    # Many valid decrypted strings are identifiers/passwords with no spaces,
-    # so the no-space penalty is mild (0.5, not 0.2).
-    space_ratio = data.count(ord(' ')) / length if length > 4 else 0
-    has_words = 1.0 if 0.05 < space_ratio < 0.3 else 0.5 if space_ratio > 0 else 0.5
-
-    # Factor 4: No weird control chars
-    control_chars = sum(1 for b in data if b < 0x20 and b not in (0x09, 0x0a, 0x0d))
-    control_penalty = 1.0 - (control_chars / length)
-
-    # Factor 5: Length bonus (longer valid strings are more likely correct)
-    length_factor = min(length / 8.0, 1.0)  # full score at 8+ bytes
-
-    # Factor 6: Alphanumeric ratio
+    # 3. Alphanumeric ratio (weight: 0.20)
     alnum = sum(1 for b in data if (0x30 <= b <= 0x39) or (0x41 <= b <= 0x5a) or (0x61 <= b <= 0x7a))
     alnum_ratio = alnum / length
 
-    # Weighted combination
-    score = (
-        printable_ratio * 0.25 +
-        common_ratio * 0.20 +
-        has_words * 0.10 +
-        control_penalty * 0.15 +
-        length_factor * 0.10 +
-        alnum_ratio * 0.20
+    # 4. Length factor (weight: 0.10)
+    length_factor = min(length / 8.0, 1.0)
+
+    base = (
+        printable_ratio * 0.30 +
+        control_penalty * 0.20 +
+        alnum_ratio * 0.20 +
+        length_factor * 0.10
     )
 
-    return round(score, 4)
+    # --- Ranking bonuses (improve differentiation) ---
+
+    # 5. Bigram frequency bonus (up to +0.10)
+    # English text typically hits ~25-35% of the common bigram set; we scale
+    # the raw ratio by 3x (capped at 1.0) so that realistic English maps to a
+    # high bonus value, while random printable ASCII (~5% hit rate) stays low.
+    try:
+        text = data.decode('ascii', errors='replace').lower()
+        bigrams = [text[i:i + 2] for i in range(len(text) - 1)]
+        if bigrams:
+            common_count = sum(1 for bg in bigrams if bg in _COMMON_BIGRAMS)
+            bigram_score = min(common_count / len(bigrams) * 3.0, 1.0)
+        else:
+            bigram_score = 0.0
+    except Exception:
+        bigram_score = 0.0
+
+    # 6. Word structure bonus (up to +0.05)
+    space_count = data.count(ord(' '))
+    has_words = min(space_count / max(length / 6, 1), 1.0) if length > 4 else 0.0
+
+    # 7. Code pattern bonus (up to +0.05)
+    data_lower = data.lower()
+    code_match = any(pattern in data_lower for pattern in _CODE_PATTERNS)
+    code_score = 1.0 if code_match else 0.0
+
+    score = base + bigram_score * 0.10 + has_words * 0.05 + code_score * 0.05
+
+    return round(min(score, 1.0), 4)
 
 
 def _confidence_label(score: float) -> str:

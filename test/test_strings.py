@@ -11,6 +11,8 @@ from d810g_engine.strings.decryptor import (
     _printable_score,
     _score_decryption,
     _confidence_label,
+    _COMMON_BIGRAMS,
+    _CODE_PATTERNS,
 )
 
 
@@ -260,6 +262,72 @@ class TestFalsePositiveRate:
         for r in results:
             assert "confidence" in r
             assert r["confidence"] in ("high", "medium", "low")
+
+
+class TestRankingAccuracy:
+    """The correct decryption should be ranked first or near the top."""
+
+    def test_correct_key_ranked_first(self):
+        """The correct decryption should be ranked first or near the top."""
+        plaintext = b"Hello, World! This is a test string."
+        key = 0x42
+        encrypted = bytes(b ^ key for b in plaintext)
+        results = try_xor_decrypt(encrypted.hex())
+        assert len(results) > 0
+        assert results[0]["decrypted"] == plaintext.decode()
+        assert results[0]["key"] == key
+
+    def test_url_ranked_above_garbage(self):
+        """URL decryption should score higher than random printable results."""
+        url = b"https://api.example.com/v2/auth"
+        key = 0x55
+        encrypted = bytes(b ^ key for b in url)
+        results = try_xor_decrypt(encrypted.hex())
+        correct = [r for r in results if r["decrypted"] == url.decode()]
+        assert len(correct) > 0
+        assert correct[0] == results[0]  # should be ranked first
+
+    def test_code_pattern_boosts_score(self):
+        """Strings containing code patterns should score higher."""
+        code_str = b"select * from users where id = 1"
+        garbage = b"xyzqw jklmn opqrs tuvwx abcde"
+        assert _score_decryption(code_str) > _score_decryption(garbage)
+
+    def test_bigram_rich_text_beats_random_printable(self):
+        """Text with common English bigrams should outscore random printable."""
+        english = b"the answer is there in the header"
+        # Random printable ASCII that avoids common bigrams
+        random_printable = b"zqjxkvbwgypfmcludz qjxkvbwgypf"
+        assert _score_decryption(english) > _score_decryption(random_printable)
+
+    def test_password_string_ranked_first(self):
+        """Common credential strings should rank correctly."""
+        plaintext = b"password_token_secret_key"
+        key = 0x33
+        encrypted = bytes(b ^ key for b in plaintext)
+        results = try_xor_decrypt(encrypted.hex())
+        assert len(results) > 0
+        assert results[0]["decrypted"] == plaintext.decode()
+
+
+class TestBigramScoring:
+    """Tests for the bigram frequency scoring component."""
+
+    def test_common_bigrams_constant(self):
+        """Verify the bigram set contains expected entries."""
+        assert 'th' in _COMMON_BIGRAMS
+        assert 'he' in _COMMON_BIGRAMS
+        assert 'zq' not in _COMMON_BIGRAMS
+
+    def test_code_patterns_constant(self):
+        """Verify code patterns contain expected entries."""
+        assert b'http' in _CODE_PATTERNS
+        assert b'select' in _CODE_PATTERNS
+
+    def test_short_data_returns_zero(self):
+        """Data shorter than 2 bytes should score 0."""
+        assert _score_decryption(b"") == 0.0
+        assert _score_decryption(b"x") == 0.0
 
 
 class TestAllMethodsIntegration:
