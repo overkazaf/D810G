@@ -1,0 +1,54 @@
+data/rules/mba_advanced.json
+  1ba8494afe4ffabd 1-202
+data/rules/mba_chains.json
+  1ba8494afe4ffabd 1-181
+test/test_mba_advanced_chains.py
+  1ba8494afe4ffabd 1-332
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "63fdee3c8a097c7252dddfe8d3b49a6767ef8b38",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 716,
+      "total_deletions": 1,
+      "accepted_lines": 900,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_mba_advanced_chains.py": {
+          "additions": 333,
+          "deletions": 1,
+          "accepted_lines": 332
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_advanced.json": {
+          "additions": 202,
+          "accepted_lines": 202
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_chains.json": {
+          "additions": 181,
+          "accepted_lines": 181
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        }
+      }
+    }
+  }
+}
