@@ -128,6 +128,14 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
 
     result = PipelineResult()
 
+    # Mutable copy of params that evolves between passes
+    current_params = dict(params)
+    current_blocks = [dict(b) for b in params.get("blocks", [])]
+    current_params["blocks"] = current_blocks
+
+    # Track patches to avoid duplicates across iterations
+    seen_patches: set[tuple] = set()
+
     for iteration in range(max_iterations):
         result.iterations = iteration + 1
         changes_this_round = 0
@@ -136,7 +144,7 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
             start = time.time()
 
             try:
-                pass_result = pipeline_pass.run(params)
+                pass_result = pipeline_pass.run(current_params)
             except Exception as e:
                 pass_result = {
                     "status": f"error: {e}",
@@ -144,11 +152,24 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
                 }
 
             elapsed = (time.time() - start) * 1000
-            patches = len(pass_result.get("patches", []))
-            changes_this_round += patches
 
-            if verbose or patches > 0:
+            # Deduplicate patches
+            new_patches = []
+            for p in pass_result.get("patches", []):
+                patch_key = (p.get("address", 0), p.get("action", ""), p.get("target", 0))
+                if patch_key not in seen_patches:
+                    seen_patches.add(patch_key)
+                    new_patches.append(p)
+
+            pass_result["patches"] = new_patches
+            changes_this_round += len(new_patches)
+
+            if verbose or len(new_patches) > 0:
                 result.add_pass_result(pipeline_pass.name, pass_result, elapsed)
+
+            # Update block graph based on pass results
+            _apply_pass_effects(current_blocks, pipeline_pass.name, pass_result)
+            current_params["blocks"] = current_blocks
 
         # If no changes this round, we've reached fixpoint
         if changes_this_round == 0:
@@ -164,3 +185,46 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
     )
 
     return output
+
+
+def _apply_pass_effects(blocks: list[dict], pass_name: str, result: dict):
+    """Update the block graph in-place based on a pass's results.
+
+    After a pass produces patches, the block graph must reflect those changes
+    so subsequent passes (and subsequent iterations) see the updated state
+    instead of re-discovering the same issues.
+    """
+    if pass_name == "bcf":
+        # BCF removed bogus branches -- update successors to only the real target
+        for candidate in result.get("candidates", []):
+            branch_addr = candidate.get("branch_addr")
+            real_target = candidate.get("real_target")
+            if branch_addr is None or real_target is None:
+                continue
+            for block in blocks:
+                if block.get("addr") == branch_addr:
+                    block["succs"] = [real_target]
+                    block.pop("condition", None)
+                    break
+
+    elif pass_name == "opaque":
+        # Opaque predicates eliminated -- remove resolved conditions
+        for r in result.get("results", []):
+            if r.get("classification") in ("always_true", "always_false"):
+                addr = r.get("address")
+                if addr is None:
+                    continue
+                for block in blocks:
+                    if block.get("addr") == addr:
+                        block.pop("condition", None)
+                        break
+
+    elif pass_name == "dce":
+        # Dead blocks removed -- filter them out of the graph
+        dead_addrs = {b["addr"] for b in result.get("dead_blocks", [])}
+        if dead_addrs:
+            blocks[:] = [b for b in blocks if b["addr"] not in dead_addrs]
+            # Also remove dead addresses from successor lists
+            for block in blocks:
+                block["succs"] = [s for s in block.get("succs", [])
+                                  if s not in dead_addrs]

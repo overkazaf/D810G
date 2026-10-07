@@ -5,6 +5,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "python"))
 import pytest
 from d810g_engine.pipeline.orchestrator import (
     PipelinePass, PipelineResult, build_pipeline, run_pipeline,
+    _apply_pass_effects,
 )
 
 
@@ -105,9 +106,112 @@ class TestRunPipeline:
         })
         assert result["iterations"] <= 1
 
+    def test_pipeline_deduplicates_patches(self):
+        """Patches found in iteration 1 should not appear again in iteration 2."""
+        result = run_pipeline({
+            "blocks": [
+                {"addr": 0x1000, "condition": "x == x",
+                 "succs": [0x1100, 0x1200], "size": 16},
+                {"addr": 0x1100, "succs": [0x1300], "size": 32},
+                {"addr": 0x1200, "succs": [0x1300], "size": 48},
+                {"addr": 0x1300, "succs": [], "size": 8},
+            ],
+            "binary_hex": "90" * 200,
+            "entry_addr": 0x1000,
+            "max_iterations": 3,
+        })
+        assert result["fixpoint"] is True
+        # BCF should produce exactly 1 patch, not 3 (one per iteration)
+        bcf_patches = sum(p["patches"] for p in result["passes"] if p["name"] == "bcf")
+        assert bcf_patches == 1
+        # DCE should produce exactly 1 patch (the bogus block), not 3
+        dce_patches = sum(p["patches"] for p in result["passes"] if p["name"] == "dce")
+        assert dce_patches == 1
+
+    def test_pipeline_converges_in_two_iterations(self):
+        """Pipeline should reach fixpoint after iteration 2 finds no new patches."""
+        result = run_pipeline({
+            "blocks": [
+                {"addr": 0x1000, "condition": "x == x",
+                 "succs": [0x1100, 0x1200], "size": 16},
+                {"addr": 0x1100, "succs": [0x1300], "size": 32},
+                {"addr": 0x1200, "succs": [0x1300], "size": 48},
+                {"addr": 0x1300, "succs": [], "size": 8},
+            ],
+            "binary_hex": "90" * 200,
+            "entry_addr": 0x1000,
+            "max_iterations": 5,
+        })
+        assert result["iterations"] == 2
+        assert result["total_patches"] == 2
+
     def test_handler_registration(self):
         from d810g_engine.server import Server
         from d810g_engine.pipeline import register_handlers
         server = Server()
         register_handlers(server)
         assert "pipeline.run" in server._handlers
+
+
+class TestApplyPassEffects:
+
+    def test_bcf_updates_successors(self):
+        blocks = [
+            {"addr": 0x1000, "condition": "x == x", "succs": [0x1100, 0x1200]},
+            {"addr": 0x1100, "succs": [0x1300]},
+            {"addr": 0x1200, "succs": [0x1300]},
+        ]
+        result = {
+            "candidates": [
+                {"branch_addr": 0x1000, "real_target": 0x1100, "bogus_target": 0x1200},
+            ],
+            "patches": [{"address": 0x1000, "action": "force_unconditional", "target": 0x1100}],
+        }
+        _apply_pass_effects(blocks, "bcf", result)
+        assert blocks[0]["succs"] == [0x1100]
+        assert "condition" not in blocks[0]
+
+    def test_opaque_removes_condition(self):
+        blocks = [
+            {"addr": 0x2000, "condition": "x*x >= 0", "succs": [0x2100, 0x2200]},
+        ]
+        result = {
+            "results": [{"address": 0x2000, "classification": "always_true"}],
+            "patches": [{"address": 0x2000, "action": "force_true"}],
+        }
+        _apply_pass_effects(blocks, "opaque", result)
+        assert "condition" not in blocks[0]
+
+    def test_dce_removes_dead_blocks(self):
+        blocks = [
+            {"addr": 0x3000, "succs": [0x3100]},
+            {"addr": 0x3100, "succs": []},
+            {"addr": 0x3200, "succs": []},
+        ]
+        result = {
+            "dead_blocks": [{"addr": 0x3200, "size": 16, "reason": "unreachable"}],
+            "patches": [{"address": 0x3200, "action": "nop_fill", "bytes": "90" * 16}],
+        }
+        _apply_pass_effects(blocks, "dce", result)
+        addrs = [b["addr"] for b in blocks]
+        assert 0x3200 not in addrs
+        assert len(blocks) == 2
+
+    def test_dce_cleans_successor_lists(self):
+        blocks = [
+            {"addr": 0x4000, "succs": [0x4100, 0x4200]},
+            {"addr": 0x4100, "succs": []},
+            {"addr": 0x4200, "succs": []},
+        ]
+        result = {
+            "dead_blocks": [{"addr": 0x4200, "size": 8, "reason": "unreachable"}],
+            "patches": [],
+        }
+        _apply_pass_effects(blocks, "dce", result)
+        assert blocks[0]["succs"] == [0x4100]
+
+    def test_unknown_pass_is_noop(self):
+        blocks = [{"addr": 0x5000, "succs": []}]
+        original = [dict(b) for b in blocks]
+        _apply_pass_effects(blocks, "unknown_pass", {"patches": []})
+        assert blocks == original
