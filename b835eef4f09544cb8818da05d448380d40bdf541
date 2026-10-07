@@ -1,0 +1,113 @@
+README.md
+  1ba8494afe4ffabd 6-7,20-21,34,40,110,157,223,237,246,263,267-269,271-272,348,363,376-379,408-409
+CHANGELOG.md
+  1ba8494afe4ffabd 1-52
+README_CN.md
+  1ba8494afe4ffabd 9-10,23,29,99,121,146,212,226,235,252,256-258,260-261,337,352,365-368,397-398
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "b835eef4f09544cb8818da05d448380d40bdf541",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 116,
+      "total_deletions": 19,
+      "accepted_lines": 361,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/pipeline/__init__.py": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 5
+        },
+        "python/d810g_engine/mba/matcher.py": {
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/opaque/advanced.py": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/mba/rules.py": {
+          "accepted_lines": 6
+        },
+        "CHANGELOG.md": {
+          "additions": 52,
+          "accepted_lines": 52
+        },
+        "python/d810g_engine/deflattener/symbolic.py": {
+          "additions": 3,
+          "deletions": 2,
+          "accepted_lines": 3
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "additions": 20,
+          "deletions": 5,
+          "accepted_lines": 20
+        },
+        "python/d810g_engine/log.py": {
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/protocol.py": {
+          "accepted_lines": 11
+        },
+        "python/d810g_engine/config.py": {
+          "accepted_lines": 45
+        },
+        "README_CN.md": {
+          "additions": 8,
+          "deletions": 4,
+          "accepted_lines": 26
+        },
+        "python/d810g_engine/deflattener/__init__.py": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 5
+        },
+        "README.md": {
+          "accepted_lines": 31
+        },
+        "python/d810g_engine/bcf/__init__.py": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 5
+        },
+        "python/d810g_engine/opaque/__init__.py": {
+          "additions": 7,
+          "deletions": 2,
+          "accepted_lines": 7
+        },
+        "python/d810g_engine/strings/__init__.py": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 5
+        },
+        "python/d810g_engine/__main__.py": {
+          "accepted_lines": 3
+        },
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        },
+        "python/d810g_engine/server.py": {
+          "accepted_lines": 27
+        },
+        "python/d810g_engine/dce/__init__.py": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 5
+        },
+        "bash": {
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
