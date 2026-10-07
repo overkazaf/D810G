@@ -6,8 +6,8 @@
 
 D810G 将 [D-810](https://gitlab.com/eshard/d810) 级别的反混淆能力带入 Ghidra。它采用 Java + Python 混合架构：Ghidra 插件负责 UI 和二进制修补，Python 引擎借助 Z3、Unicorn、Capstone 和 Keystone 执行深度分析。
 
-![Tests](https://img.shields.io/badge/tests-201%20passed-brightgreen)
-![Rules](https://img.shields.io/badge/MBA%20rules-60-blue)
+![Tests](https://img.shields.io/badge/tests-398%20passed-brightgreen)
+![Rules](https://img.shields.io/badge/MBA%20rules-96-blue)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue)
 ![Ghidra](https://img.shields.io/badge/Ghidra-11.x-green)
 ![Python](https://img.shields.io/badge/python-3.11%2B-yellow)
@@ -20,13 +20,13 @@ D810G 将 [D-810](https://gitlab.com/eshard/d810) 级别的反混淆能力带入
 | 模块 | 说明 |
 |------|------|
 | **控制流平坦化还原** | 通过 Unicorn 模拟执行恢复 OLLVM + Tigress CFF |
-| **MBA 表达式化简** | 60 条规则，多轮迭代化简，Z3 等价性验证 |
+| **MBA 表达式化简** | 96 条规则，多轮迭代化简，Z3 等价性验证 |
 | **不透明谓词消除** | 标准 + 高级（数论、整数算术） |
 | **虚假控制流移除** | 检测并剥离由不透明谓词保护的虚假分支 |
 | **死代码消除** | BFS 可达性分析 + NOP 填充 |
 | **字符串解密** | XOR、多字节 XOR、RC4、替换表、ROT-N |
 | **VM 反虚拟化** | Tigress VM 分发器检测、handler 分类、字节码追踪 |
-| **完整流水线** | 6 趟自动链式处理，不动点迭代 |
+| **完整流水线** | 7 趟自动链式处理，不动点迭代 |
 | **独立 CLI** | 无需 Ghidra 即可使用：`simplify`、`opaque`、`interactive`、`pipeline` |
 | **Ghidra 分析器** | 分析过程中一键自动反混淆 |
 
@@ -96,7 +96,7 @@ $ PYTHONPATH=python python -m d810g_engine cli opaque "x > 5"
 ```
 $ PYTHONPATH=python python -m d810g_engine cli interactive
   D810G Interactive Rule Editor
-  Loaded 60 rules from 4 files
+  Loaded 96 rules from 6 files
 
 d810g> test (x | y) - (x & y)
   → (x ^ y)  [Z3 verified]
@@ -118,7 +118,7 @@ d810g> add my_rule ~(~x & ~y) = x | y
 PYTHONPATH=python python -m d810g_engine cli simplify "<expr>"      # 单次化简
 PYTHONPATH=python python -m d810g_engine cli simplify --deep "<expr>" # 多轮化简
 PYTHONPATH=python python -m d810g_engine cli opaque "<condition>"    # 谓词分类
-PYTHONPATH=python python -m d810g_engine cli rules                   # 列出全部 60 条规则
+PYTHONPATH=python python -m d810g_engine cli rules                   # 列出全部 96 条规则
 PYTHONPATH=python python -m d810g_engine cli rules --verify          # Z3 验证所有规则
 PYTHONPATH=python python -m d810g_engine cli batch < exprs.txt       # 批量化简
 PYTHONPATH=python python -m d810g_engine cli interactive             # REPL 交互模式
@@ -143,7 +143,7 @@ PYTHONPATH=python python demo/demo_bcf.py          # 伪造控制流移除（3 �
 PYTHONPATH=python python demo/demo_deflat.py       # 控制流反平坦化（OLLVM 状态机）
 PYTHONPATH=python python demo/demo_strings.py      # 字符串解密（XOR / RC4 / 多字节 / ROT-N）
 PYTHONPATH=python python demo/demo_vm.py           # VM 反虚拟化（handler 表 + Fibonacci 伪代码）
-PYTHONPATH=python python demo/demo_pipeline.py     # 完整 6-pass 流水线 + fixpoint 迭代
+PYTHONPATH=python python demo/demo_pipeline.py     # 完整 7-pass 流水线 + fixpoint 迭代
 ```
 
 ---
@@ -209,7 +209,7 @@ analyzeHeadless /path/to/project Project -import binary.exe \
 
 ### 反混淆流水线
 
-完整流水线按最优顺序执行 6 趟处理，循环迭代直到无更多变更：
+完整流水线按最优顺序执行 7 趟处理，循环迭代直到无更多变更：
 
 ![Pipeline](docs/assets/pipeline.svg)
 
@@ -223,7 +223,7 @@ analyzeHeadless /path/to/project Project -import binary.exe \
 | Tigress CFF（间接跳转） | ✅ | 跳转表检测与解析 |
 | Tigress CFF（if 链） | ✅ | 顺序比较链检测 |
 | OLLVM 虚假控制流 | ✅ | 不透明谓词保护的虚假分支移除 |
-| MBA 表达式 | ✅ | 60 条规则，多轮迭代，子表达式递归化简 |
+| MBA 表达式 | ✅ | 96 条规则，多轮迭代，子表达式递归化简 |
 | 不透明谓词（标准） | ✅ | Z3 位向量可满足性分析 |
 | 不透明谓词（高级） | ✅ | 整数算术回退 + 数论模式 |
 | 死代码消除 | ✅ | BFS 可达性 + NOP 填充（x86/ARM64/ARM32） |
@@ -232,7 +232,7 @@ analyzeHeadless /path/to/project Project -import binary.exe \
 | 字符串加密（替换表） | ✅ | ROT-N 及自定义查找表 |
 | Tigress VM（检测） | ✅ | 分发器检测 + handler 分类 |
 | Tigress VM（字节码追踪） | ✅ | 执行模拟 + 伪代码生成 |
-| 完整流水线 | ✅ | 6 趟自动链式处理，不动点迭代 |
+| 完整流水线 | ✅ | 7 趟自动链式处理，不动点迭代 |
 | 独立 CLI | ✅ | simplify、opaque、rules、batch、interactive、pipeline |
 | Ghidra 分析器 | ✅ | 自动分析集成 |
 | Ghidra 无头模式 | ✅ | 通过 `analyzeHeadless` 批量扫描 |
@@ -249,14 +249,16 @@ analyzeHeadless /path/to/project Project -import binary.exe \
 
 ## MBA 规则集
 
-D810G 内置 **60 条规则**，分布在 4 个规则文件中：
+D810G 内置 **96 条规则**，分布在 6 个规则文件中：
 
 | 规则集 | 数量 | 说明 |
 |--------|------|------|
-| `mba_basic.json` | 10 | 基本 MBA 恒等式（XOR、AND、OR 等价关系） |
-| `mba_hackers_delight.json` | 25 | 《Hacker's Delight》位操作技巧（abs、min、max、De Morgan） |
-| `mba_ollvm.json` | 15 | OLLVM 指令替换模式 |
+| `mba_basic.json` | 7 | 基本 MBA 恒等式（XOR、AND、OR 等价关系） |
+| `mba_hackers_delight.json` | 16 | 《Hacker's Delight》位操作技巧（abs、min、max、De Morgan） |
+| `mba_ollvm.json` | 10 | OLLVM 指令替换模式 |
 | `mba_constant_folding.json` | 10 | 代数恒等式与常量折叠 |
+| `mba_advanced.json` | 28 | 高级 MBA 模式（嵌套、多变量、复合表达式） |
+| `mba_chains.json` | 25 | 链式 MBA 变换，用于深度化简 |
 
 ### 添加自定义规则
 
@@ -332,7 +334,7 @@ pip install z3-solver unicorn keystone-engine capstone
 export GHIDRA_INSTALL_DIR=/path/to/ghidra
 $GHIDRA_INSTALL_DIR/support/gradle/gradlew buildExtension
 
-# 运行全部 201 个测试
+# 运行全部 398 个测试
 source .venv/bin/activate
 PYTHONPATH=python python -m pytest test/ -v
 ```
@@ -347,7 +349,7 @@ PYTHONPATH=python python -m pytest test/ -v
 python -m pytest test/test_deflattener.py     # CFF + Unicorn 模拟 (12 tests)
 python -m pytest test/test_tigress.py         # Tigress 变体 (6 tests)
 python -m pytest test/test_mba.py             # MBA 匹配 (9 tests)
-python -m pytest test/test_mba_extended.py    # 60 规则 Z3 验证 (41 tests)
+python -m pytest test/test_mba_extended.py    # 96 规则 Z3 验证 (41 tests)
 python -m pytest test/test_mba_deep.py        # 多轮化简 (8 tests)
 python -m pytest test/test_opaque.py          # 不透明谓词 (6 tests)
 python -m pytest test/test_opaque_advanced.py # 高级谓词 (11 tests)
@@ -360,6 +362,10 @@ python -m pytest test/test_pipeline.py        # 完整流水线 (9 tests)
 python -m pytest test/test_cli.py             # CLI 命令 (7 tests)
 python -m pytest test/test_interactive.py     # 交互式编辑器 (10 tests)
 python -m pytest test/test_protocol.py        # IPC 协议 (4 tests)
+python -m pytest test/test_parser.py           # 共享表达式解析器 (12 tests)
+python -m pytest test/test_vm_disasm.py        # VM 反汇编 + Capstone (10 tests)
+python -m pytest test/test_mba_advanced_chains.py # 高级 + 链式 MBA 规则 (35 tests)
+python -m pytest test/test_real_binary.py      # 真实二进制测试用例 (12 tests)
 python -m pytest test/test_integration.py     # 集成测试 (9 tests)
 ```
 
@@ -388,8 +394,8 @@ D810G/
 │   ├── strings/                 # 字符串解密 (XOR/RC4/sub)
 │   ├── virtualization/          # VM 分析 + 字节码追踪器
 │   └── pipeline/                # 多趟编排器
-├── data/rules/                  # MBA 规则定义 (60 条规则)
-├── test/                        # 201 个测试
+├── data/rules/                  # MBA 规则定义 (96 条规则)
+├── test/                        # 398 个测试
 ├── demo/                        # 演示脚本
 ├── scripts/                     # 无头分析脚本
 └── .github/workflows/           # CI (Python 3.11/3.12/3.13)
