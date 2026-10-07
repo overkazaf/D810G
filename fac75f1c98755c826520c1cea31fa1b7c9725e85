@@ -1,0 +1,41 @@
+docs/eval/round2_critical.md
+  1ba8494afe4ffabd 1-399
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "fac75f1c98755c826520c1cea31fa1b7c9725e85",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 399,
+      "total_deletions": 0,
+      "accepted_lines": 584,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/eval/round2_critical.md": {
+          "additions": 399,
+          "accepted_lines": 399
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        }
+      }
+    }
+  }
+}
