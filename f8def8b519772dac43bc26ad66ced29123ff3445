@@ -1,0 +1,91 @@
+.github/workflows/test.yml
+  1ba8494afe4ffabd 27
+requirements-dev.txt
+  1ba8494afe4ffabd 1
+python/d810g_engine/pipeline/orchestrator.py
+  1ba8494afe4ffabd 131-138,147,156-167,170-172,188-230
+test/test_pipeline.py
+  1ba8494afe4ffabd 8,109-147,154-217
+requirements.txt
+  1ba8494afe4ffabd 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "f8def8b519772dac43bc26ad66ced29123ff3445",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 485,
+      "total_deletions": 58,
+      "accepted_lines": 809,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_hackers_delight.json": {
+          "deletions": 1,
+          "accepted_lines": 26
+        },
+        "src/main/java/d810g/core/PcodeUtils.java": {
+          "additions": 156,
+          "deletions": 8,
+          "accepted_lines": 152
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/opaque/predicate.py": {
+          "additions": 56,
+          "deletions": 17,
+          "accepted_lines": 56
+        },
+        "requirements-dev.txt": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "additions": 68,
+          "deletions": 4,
+          "accepted_lines": 68
+        },
+        "src/main/java/d810g/core/DeobfuscationOrchestrator.java": {
+          "additions": 33,
+          "deletions": 14,
+          "accepted_lines": 33
+        },
+        "test/test_pipeline.py": {
+          "additions": 104,
+          "accepted_lines": 104
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "additions": 61,
+          "deletions": 13,
+          "accepted_lines": 178
+        },
+        ".github/workflows/test.yml": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 1
+        },
+        "requirements.txt": {
+          "additions": 5,
+          "accepted_lines": 5
+        }
+      }
+    }
+  }
+}
