@@ -4,21 +4,40 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+from d810g_engine.log import get_logger
 from d810g_engine.mba.rules import load_rules
 from d810g_engine.mba.matcher import ASTNode, parse_expr, match_rule, Op
 from d810g_engine.mba.verifier import verify_equivalence
+
+logger = get_logger("mba")
 
 
 _RULES_DIR = Path(__file__).parent.parent.parent.parent / "data" / "rules"
 
 
+_COMPARE_OPS = {"==", "!=", "<", "<=", ">", ">="}
+
+
+def _has_comparison(expr: str) -> bool:
+    """Check if an expression string contains comparison operators."""
+    for op in _COMPARE_OPS:
+        if op in expr:
+            return True
+    return False
+
+
 def simplify_expression(params: dict[str, Any]) -> dict[str, Any]:
     """Simplify an MBA expression using loaded rules."""
     expr_str = params["expression"]
-    rules_file = params.get("rules", "mba_basic.json")
+    rules_file = params.get("rules", "all")
     verify = params.get("verify", True)
 
-    rules = load_rules(_RULES_DIR / rules_file)
+    if rules_file == "all":
+        rules = []
+        for f in sorted(_RULES_DIR.glob("*.json")):
+            rules.extend(load_rules(f))
+    else:
+        rules = load_rules(_RULES_DIR / rules_file)
     expr_ast = parse_expr(expr_str)
 
     for rule in rules:
@@ -26,8 +45,18 @@ def simplify_expression(params: dict[str, Any]) -> dict[str, Any]:
         if result is not None:
             simplified = _ast_to_str(result)
             verified = False
-            if verify:
-                verified = verify_equivalence(expr_str, simplified)
+            if verify and simplified != expr_str:
+                if _has_comparison(expr_str) or _has_comparison(simplified):
+                    verified = False  # can't verify mixed boolean/arithmetic
+                else:
+                    try:
+                        verified = verify_equivalence(expr_str, simplified)
+                    except Exception:
+                        verified = False
+            elif verify:
+                verified = True
+            logger.info("Matched rule %s: %s -> %s (verified=%s)",
+                        rule.id, expr_str, simplified, verified)
             return {
                 "original": expr_str,
                 "simplified": simplified,
@@ -35,6 +64,7 @@ def simplify_expression(params: dict[str, Any]) -> dict[str, Any]:
                 "verified": verified,
             }
 
+    logger.debug("No rule matched: %s", expr_str)
     return {"original": expr_str, "simplified": expr_str, "rule_id": None, "verified": True}
 
 
@@ -101,7 +131,13 @@ def simplify_expression_deep(params: dict[str, Any]) -> dict[str, Any]:
     if current == expr_str:
         verified = True
     elif verify:
-        verified = verify_equivalence(expr_str, current)
+        if _has_comparison(expr_str) or _has_comparison(current):
+            verified = False  # can't verify mixed boolean/arithmetic
+        else:
+            try:
+                verified = verify_equivalence(expr_str, current)
+            except Exception:
+                verified = False
     else:
         verified = False
 
@@ -148,6 +184,7 @@ def _simplify_recursive(node: ASTNode, rules: list) -> tuple[ASTNode, Any]:
     return node, None
 
 
-def register_handlers(server) -> None:
+def register_handlers(server: Any) -> None:
+    """Register MBA simplification handlers on the server."""
     server.register("mba.simplify", simplify_expression)
     server.register("mba.simplify_deep", simplify_expression_deep)

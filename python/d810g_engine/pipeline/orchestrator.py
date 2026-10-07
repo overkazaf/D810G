@@ -77,11 +77,54 @@ def build_pipeline() -> list[PipelinePass]:
                      "Bogus control flow removal"),
         PipelinePass("opaque", _wrap_opaque(eliminate_predicates),
                      "Opaque predicate elimination"),
+        PipelinePass("mba", _mba_pass,
+                     "MBA expression simplification"),
         PipelinePass("dce", eliminate_dead_code,
                      "Dead code elimination"),
         PipelinePass("strings", decrypt_strings,
                      "String decryption"),
     ]
+
+
+def _mba_pass(params: dict[str, Any]) -> dict[str, Any]:
+    """MBA simplification pass — simplify expressions found in block conditions."""
+    from d810g_engine.mba import simplify_expression_deep
+
+    blocks = params.get("blocks", [])
+    simplified_count = 0
+    patches = []
+
+    for block in blocks:
+        condition = block.get("condition")
+        if not condition:
+            continue
+
+        try:
+            result = simplify_expression_deep({
+                "expression": condition,
+                "verify": True,
+                "max_iterations": 5,
+            })
+        except Exception:
+            continue  # skip conditions that crash (e.g. comparison expressions)
+
+        if result["iterations"] > 0 and result["simplified"] != condition:
+            simplified_count += 1
+            patches.append({
+                "address": block.get("addr", 0),
+                "action": "simplify_condition",
+                "original": condition,
+                "simplified": result["simplified"],
+                "rule_chain": [s["rule_id"] for s in result.get("chain", [])],
+            })
+            # Update the block's condition in-place
+            block["condition"] = result["simplified"]
+
+    return {
+        "status": "simplified" if simplified_count > 0 else "no_mba_found",
+        "simplified_count": simplified_count,
+        "patches": patches,
+    }
 
 
 def _wrap_opaque(handler):
@@ -218,6 +261,18 @@ def _apply_pass_effects(blocks: list[dict], pass_name: str, result: dict):
                     if block.get("addr") == addr:
                         block.pop("condition", None)
                         break
+
+    elif pass_name == "mba":
+        # MBA simplified conditions -- update condition strings in blocks
+        for patch in result.get("patches", []):
+            addr = patch.get("address")
+            simplified = patch.get("simplified")
+            if addr is None or simplified is None:
+                continue
+            for block in blocks:
+                if block.get("addr") == addr:
+                    block["condition"] = simplified
+                    break
 
     elif pass_name == "dce":
         # Dead blocks removed -- filter them out of the graph
