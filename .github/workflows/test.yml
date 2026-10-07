@@ -62,9 +62,8 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r requirements-dev.txt
 
-      - name: Run tests
+      - name: Run tests with coverage
         run: |
-          cd ${{ github.workspace }}
-          PYTHONPATH=python python -m pytest test/ -v --tb=short
+          PYTHONPATH=python python -m pytest test/ -v --tb=short --cov=d810g_engine --cov-report=term-missing

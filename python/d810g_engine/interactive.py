@@ -20,13 +20,11 @@ from __future__ import annotations
 
 import json
 import readline  # noqa: F401 — enables arrow keys and history in input()
-import sys
 from pathlib import Path
-from typing import Any
 
-from d810g_engine.mba import simplify_expression, _ast_to_str
+from d810g_engine.mba import _ast_to_str
 from d810g_engine.mba.rules import Rule, load_rules
-from d810g_engine.mba.matcher import parse_expr, match_rule, Op
+from d810g_engine.mba.matcher import parse_expr, match_rule
 from d810g_engine.mba.verifier import verify_equivalence
 
 

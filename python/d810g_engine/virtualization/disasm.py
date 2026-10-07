@@ -5,7 +5,7 @@ from typing import Any
 
 try:
     from capstone import Cs, CS_ARCH_X86, CS_MODE_64, CS_ARCH_ARM64, CS_MODE_ARM, CS_ARCH_ARM
-    from capstone import CS_GRP_JUMP, CS_GRP_CALL, CS_GRP_RET
+    from capstone import CS_GRP_JUMP
     from capstone.x86_const import (
         X86_INS_MOV, X86_INS_MOVZX, X86_INS_MOVSX, X86_INS_LEA,
         X86_INS_ADD, X86_INS_SUB, X86_INS_MUL, X86_INS_IMUL, X86_INS_DIV, X86_INS_IDIV,
@@ -13,7 +13,7 @@ try:
         X86_INS_SHL, X86_INS_SHR, X86_INS_SAR,
         X86_INS_CMP, X86_INS_TEST,
         X86_INS_PUSH, X86_INS_POP,
-        X86_INS_JMP, X86_INS_CALL, X86_INS_RET,
+        X86_INS_CALL, X86_INS_RET,
         X86_INS_NOP,
         X86_OP_MEM, X86_OP_REG, X86_OP_IMM,
     )

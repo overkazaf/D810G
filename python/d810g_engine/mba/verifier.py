@@ -1,7 +1,6 @@
 """Z3-based equivalence verification for MBA rules."""
 
 from __future__ import annotations
-import re as _re
 from z3 import Solver, Not, unsat
 
 from d810g_engine.parser import eval_z3

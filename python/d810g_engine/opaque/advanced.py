@@ -4,8 +4,7 @@ from __future__ import annotations
 from typing import Any
 
 from z3 import (
-    BitVec, BitVecVal, Solver, sat, unsat, Not, And, Or, ForAll,
-    Int, IntVal, ArithRef, Exists,
+    Solver, sat, unsat, Not, Or,
 )
 
 from d810g_engine.parser import eval_z3

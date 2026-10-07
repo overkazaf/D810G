@@ -1,0 +1,18 @@
+[tool.pytest.ini_options]
+testpaths = ["test"]
+pythonpath = ["python"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W"]
+ignore = ["E501"]
+
+[tool.coverage.run]
+source = ["d810g_engine"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
