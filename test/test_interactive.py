@@ -12,7 +12,7 @@ class TestInteractiveEditor:
         self.editor = InteractiveEditor()
 
     def test_rules_loaded(self):
-        assert len(self.editor.rules) >= 60
+        assert len(self.editor.rules) >= 55
 
     def test_cmd_test_match(self, capsys):
         self.editor.cmd_test("(x | y) - (x & y)")

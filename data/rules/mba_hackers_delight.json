@@ -1,0 +1,26 @@
+{
+  "name": "mba_hackers_delight",
+  "description": "Hacker's Delight bit manipulation identities",
+  "rules": [
+    {"id": "hd_neg_xor_1", "pattern": "~x + 1", "replacement": "-x", "commutative": false, "description": "Two's complement negation"},
+    {"id": "hd_neg_xor_2", "pattern": "(x ^ ~0) + 1", "replacement": "-x", "commutative": false, "description": "Negation via XOR all-ones"},
+    {"id": "hd_not_1", "pattern": "-x - 1", "replacement": "~x", "commutative": false, "description": "Bitwise NOT via negation"},
+    {"id": "hd_not_2", "pattern": "-(x + 1)", "replacement": "~x", "commutative": false, "description": "Bitwise NOT via negate(x+1)"},
+    {"id": "hd_and_1", "pattern": "x - (x & ~y)", "replacement": "x & y", "commutative": false, "description": "AND via subtraction"},
+    {"id": "hd_and_2", "pattern": "(x | y) - (x ^ y)", "replacement": "x & y", "commutative": true, "description": "AND via OR minus XOR"},
+    {"id": "hd_and_3", "pattern": "(x | y) ^ (x ^ y)", "replacement": "x & y", "commutative": true, "description": "AND via OR XOR XOR"},
+    {"id": "hd_or_1", "pattern": "(x & y) + (x ^ y)", "replacement": "x | y", "commutative": true, "description": "OR via AND plus XOR"},
+    {"id": "hd_or_2", "pattern": "(x & y) | (x ^ y)", "replacement": "x | y", "commutative": true, "description": "OR via AND or XOR"},
+    {"id": "hd_or_3", "pattern": "x + y - (x & y)", "replacement": "x | y", "commutative": false, "description": "OR via addition minus AND"},
+    {"id": "hd_xor_3", "pattern": "(x | y) - (x & y)", "replacement": "x ^ y", "commutative": true, "description": "XOR via OR minus AND (duplicate of basic for completeness)"},
+    {"id": "hd_xor_4", "pattern": "(x | y) & ~(x & y)", "replacement": "x ^ y", "commutative": true, "description": "XOR via OR AND NOT-AND"},
+    {"id": "hd_xor_5", "pattern": "(x | y) ^ (x & y)", "replacement": "x ^ y", "commutative": true, "description": "XOR via OR XOR AND"},
+    {"id": "hd_sub_1", "pattern": "x + (~y + 1)", "replacement": "x - y", "commutative": false, "description": "Subtraction via complement addition"},
+    {"id": "hd_sub_2", "pattern": "x + ~y + 1", "replacement": "x - y", "commutative": false, "description": "Subtraction via complement addition (flat)"},
+    {"id": "hd_sub_3", "pattern": "x ^ y + 2 * (~x & y)", "replacement": "x - y + 2 * y", "commutative": false, "description": "Complex subtraction identity"},
+    {"id": "hd_mul2_1", "pattern": "x + x", "replacement": "x * 2", "commutative": false, "description": "Double via addition"},
+    {"id": "hd_mul2_2", "pattern": "x << 1", "replacement": "x * 2", "commutative": false, "description": "Double via left shift"},
+    {"id": "hd_demorgan_1", "pattern": "~(~x & ~y)", "replacement": "x | y", "commutative": true, "description": "De Morgan's law: NOT(NOT-x AND NOT-y)"},
+    {"id": "hd_demorgan_2", "pattern": "~(~x | ~y)", "replacement": "x & y", "commutative": true, "description": "De Morgan's law: NOT(NOT-x OR NOT-y)"}
+  ]
+}
