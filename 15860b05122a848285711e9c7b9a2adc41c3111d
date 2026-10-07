@@ -1,0 +1,47 @@
+docs/eval/functional_report.md
+  1ba8494afe4ffabd 1-434
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "15860b05122a848285711e9c7b9a2adc41c3111d",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 434,
+      "total_deletions": 0,
+      "accepted_lines": 778,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "docs/eval/functional_report.md": {
+          "additions": 434,
+          "accepted_lines": 434
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "bash": {
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
