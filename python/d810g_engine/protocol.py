@@ -9,6 +9,8 @@ from typing import Any
 
 @dataclass
 class Request:
+    """Incoming JSON-RPC request."""
+
     method: str
     id: int = 0
     params: dict[str, Any] = field(default_factory=dict)
@@ -16,12 +18,15 @@ class Request:
 
 @dataclass
 class Response:
+    """Outgoing JSON-RPC response."""
+
     id: int = 0
     result: Any = None
     error: dict[str, Any] | None = None
 
 
 def encode_message(msg: Request | Response) -> bytes:
+    """Serialize a Request or Response to Content-Length-framed bytes."""
     if isinstance(msg, Request):
         body = {"id": msg.id, "method": msg.method, "params": msg.params}
     else:
@@ -36,6 +41,7 @@ def encode_message(msg: Request | Response) -> bytes:
 
 
 def decode_message(raw: bytes) -> Request | Response:
+    """Deserialize Content-Length-framed bytes into a Request or Response."""
     _header, body_bytes = raw.split(b"\r\n\r\n", 1)
     body = json.loads(body_bytes)
     if "method" in body:

@@ -26,7 +26,7 @@ from d810g_engine.opaque.predicate import classify_predicate
 RULES_DIR = Path(__file__).parent.parent.parent / "data" / "rules"
 
 
-def cmd_simplify(args):
+def cmd_simplify(args: argparse.Namespace) -> None:
     """Simplify an MBA expression."""
     if args.deep:
         from d810g_engine.mba import simplify_expression_deep
@@ -66,7 +66,7 @@ def cmd_simplify(args):
         print(f"  -> (no simplification found)")
 
 
-def cmd_opaque(args):
+def cmd_opaque(args: argparse.Namespace) -> None:
     """Classify an opaque predicate."""
     result = classify_predicate(
         args.expression,
@@ -92,7 +92,7 @@ def cmd_opaque(args):
     print(f"  -> {icons[result['classification']]}")
 
 
-def cmd_rules(args):
+def cmd_rules(args: argparse.Namespace) -> None:
     """List or verify available MBA rules."""
     total = 0
     for rules_file in sorted(RULES_DIR.glob("*.json")):
@@ -114,7 +114,7 @@ def cmd_rules(args):
     print(f"\n  Total: {total} rules")
 
 
-def cmd_pipeline(args):
+def cmd_pipeline(args: argparse.Namespace) -> None:
     """Run full deobfuscation pipeline on a block graph."""
     import json
     with open(args.input_file) as f:
@@ -131,7 +131,7 @@ def cmd_pipeline(args):
             print(f"    [{p['name']}] {p['status']} — {p['patches']} patches ({p['time_ms']}ms)")
 
 
-def cmd_batch(args):
+def cmd_batch(args: argparse.Namespace) -> None:
     """Process multiple expressions from stdin."""
     rules_file = args.rules
     count = 0
@@ -159,7 +159,7 @@ def cmd_batch(args):
     print(f"\n  Processed {count} expressions, simplified {simplified}")
 
 
-def main(argv=None):
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="d810g",
         description="D810G Deobfuscation Engine CLI",
@@ -213,6 +213,7 @@ def main(argv=None):
     return 0
 
 
-def _run_interactive():
+def _run_interactive() -> None:
+    """Launch the interactive rule editor."""
     from d810g_engine.interactive import main as interactive_main
     interactive_main()

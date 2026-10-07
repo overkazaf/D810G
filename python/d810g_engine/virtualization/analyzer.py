@@ -8,7 +8,8 @@ class VMHandler:
     """Represents a single VM opcode handler."""
 
     def __init__(self, opcode: int, address: int, semantics: str = "unknown",
-                 operand_count: int = 0, description: str = ""):
+                 operand_count: int = 0, description: str = "") -> None:
+        """Initialize a handler with its opcode, address, and semantics."""
         self.opcode = opcode
         self.address = address
         self.semantics = semantics
@@ -16,6 +17,7 @@ class VMHandler:
         self.description = description
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the handler to a JSON-compatible dict."""
         return {
             "opcode": self.opcode,
             "opcode_hex": f"0x{self.opcode:02x}",
@@ -29,7 +31,8 @@ class VMHandler:
 class VMContext:
     """Represents the VM's execution context."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize an empty VM context."""
         self.handlers: list[VMHandler] = []
         self.bytecode_addr: int = 0
         self.bytecode_size: int = 0
@@ -38,6 +41,7 @@ class VMContext:
         self.pc_register: str = ""
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the VM context to a JSON-compatible dict."""
         return {
             "bytecode_addr": self.bytecode_addr,
             "bytecode_size": self.bytecode_size,

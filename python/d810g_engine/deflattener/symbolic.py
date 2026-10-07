@@ -7,9 +7,10 @@ patches that replace the state-machine dispatch loop with direct jumps.
 
 from __future__ import annotations
 
-import logging
 import re
 from typing import Any
+
+from d810g_engine.log import get_logger
 
 from unicorn import (
     Uc,
@@ -31,7 +32,7 @@ from unicorn.x86_const import UC_X86_REG_RBP, UC_X86_REG_RSP
 from capstone import Cs, CS_ARCH_ARM, CS_ARCH_ARM64, CS_ARCH_X86, CS_MODE_64, CS_MODE_ARM
 from keystone import Ks, KS_ARCH_ARM, KS_ARCH_ARM64, KS_ARCH_X86, KS_MODE_64, KS_MODE_ARM as KS_MODE_ARM32, KS_MODE_LITTLE_ENDIAN
 
-log = logging.getLogger(__name__)
+log = get_logger("deflattener.symbolic")
 
 # ---------------------------------------------------------------------------
 # Tunables

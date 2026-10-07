@@ -9,6 +9,8 @@ from pathlib import Path
 
 @dataclass
 class Rule:
+    """A single MBA simplification rule with pattern and replacement."""
+
     id: str
     pattern: str
     replacement: str
@@ -17,6 +19,7 @@ class Rule:
 
 
 def load_rules(path: str | Path) -> list[Rule]:
+    """Load MBA rules from a JSON file."""
     with open(path) as f:
         data = json.load(f)
     return [

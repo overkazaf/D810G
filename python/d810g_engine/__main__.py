@@ -3,7 +3,8 @@
 import sys
 
 
-def main():
+def main() -> int:
+    """Dispatch to CLI or server mode based on argv."""
     if len(sys.argv) > 1 and sys.argv[1] == "cli":
         from d810g_engine.cli import main as cli_main
         sys.argv = [sys.argv[0]] + sys.argv[2:]  # strip "cli" from argv

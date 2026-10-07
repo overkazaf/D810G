@@ -1,32 +1,40 @@
-"""Full deobfuscation pipeline — chains all passes in optimal order."""
+"""Full deobfuscation pipeline -- chains all passes in optimal order."""
 
 from __future__ import annotations
 import time
-from typing import Any
+from typing import Any, Callable
+
+from d810g_engine.log import get_logger
+
+logger = get_logger("pipeline")
 
 
 class PipelinePass:
     """Represents a single analysis pass in the pipeline."""
 
-    def __init__(self, name: str, handler, description: str = ""):
+    def __init__(self, name: str, handler: Callable[..., dict[str, Any]], description: str = "") -> None:
+        """Initialize a named pass with its handler callable."""
         self.name = name
         self.handler = handler
         self.description = description
 
     def run(self, params: dict[str, Any]) -> dict[str, Any]:
+        """Execute the pass handler with the given parameters."""
         return self.handler(params)
 
 
 class PipelineResult:
     """Accumulated results from the full pipeline."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize empty pipeline results."""
         self.passes: list[dict[str, Any]] = []
         self.total_patches: int = 0
         self.total_time_ms: float = 0
         self.iterations: int = 0
 
-    def add_pass_result(self, name: str, result: dict[str, Any], time_ms: float):
+    def add_pass_result(self, name: str, result: dict[str, Any], time_ms: float) -> None:
+        """Record the result of a single pass."""
         patches = len(result.get("patches", []))
         self.passes.append({
             "name": name,
@@ -39,6 +47,7 @@ class PipelineResult:
         self.total_time_ms += time_ms
 
     def to_dict(self) -> dict[str, Any]:
+        """Convert pipeline results to a JSON-serializable dict."""
         return {
             "iterations": self.iterations,
             "total_passes": len(self.passes),
@@ -182,13 +191,16 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
     for iteration in range(max_iterations):
         result.iterations = iteration + 1
         changes_this_round = 0
+        logger.info("Pipeline iteration %d/%d", iteration + 1, max_iterations)
 
         for pipeline_pass in all_passes:
+            logger.debug("Starting pass: %s", pipeline_pass.name)
             start = time.time()
 
             try:
                 pass_result = pipeline_pass.run(current_params)
             except Exception as e:
+                logger.error("Pass %s failed: %s", pipeline_pass.name, e)
                 pass_result = {
                     "status": f"error: {e}",
                     "patches": [],
@@ -206,6 +218,8 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
 
             pass_result["patches"] = new_patches
             changes_this_round += len(new_patches)
+            logger.info("Pass %s done: %d patches (%.1fms)",
+                        pipeline_pass.name, len(new_patches), elapsed)
 
             if verbose or len(new_patches) > 0:
                 result.add_pass_result(pipeline_pass.name, pass_result, elapsed)
@@ -216,6 +230,7 @@ def run_pipeline(params: dict[str, Any]) -> dict[str, Any]:
 
         # If no changes this round, we've reached fixpoint
         if changes_this_round == 0:
+            logger.info("Fixpoint reached at iteration %d", iteration + 1)
             break
 
     output = result.to_dict()

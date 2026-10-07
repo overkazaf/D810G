@@ -32,7 +32,9 @@ RULES_DIR = Path(__file__).parent.parent.parent / "data" / "rules"
 
 
 class InteractiveEditor:
-    def __init__(self):
+    """Interactive MBA rule editor and tester."""
+
+    def __init__(self) -> None:
         self.rules: list[Rule] = []
         self.custom_rules: list[Rule] = []
         self.stats = {"tested": 0, "simplified": 0, "verified": 0, "failed": 0}
@@ -48,7 +50,7 @@ class InteractiveEditor:
                 print(f"  Warning: failed to load {rules_file.name}: {e}")
         print(f"  Loaded {len(self.rules)} rules from {len(list(RULES_DIR.glob('*.json')))} files")
 
-    def cmd_test(self, expr_str: str):
+    def cmd_test(self, expr_str: str) -> None:
         """Test an expression against all loaded rules."""
         self.stats["tested"] += 1
         all_rules = self.rules + self.custom_rules
@@ -78,8 +80,8 @@ class InteractiveEditor:
             print(f"  -> {simplified}  [{status}]")
             print(f"     Rule: {rule.id} — {rule.description}")
 
-    def cmd_verify(self, args: str):
-        """Verify equivalence: verify <pattern> = <replacement>"""
+    def cmd_verify(self, args: str) -> None:
+        """Verify equivalence: verify <pattern> = <replacement>."""
         if "=" not in args:
             print("  Usage: verify <pattern> = <replacement>")
             return
@@ -93,8 +95,8 @@ class InteractiveEditor:
             status = "EQUIVALENT" if result else "NOT EQUIVALENT"
             print(f"  {bits}-bit: {status}")
 
-    def cmd_add(self, args: str):
-        """Add a new rule: add <id> <pattern> = <replacement>"""
+    def cmd_add(self, args: str) -> None:
+        """Add a new rule: add <id> <pattern> = <replacement>."""
         parts = args.split(None, 1)
         if len(parts) < 2 or "=" not in parts[1]:
             print("  Usage: add <rule_id> <pattern> = <replacement>")
@@ -125,7 +127,7 @@ class InteractiveEditor:
         status = "verified" if verified else "UNVERIFIED"
         print(f"  Added rule '{rule_id}': {pattern} -> {replacement} [{status}]")
 
-    def cmd_remove(self, rule_id: str):
+    def cmd_remove(self, rule_id: str) -> None:
         """Remove a custom rule by ID."""
         rule_id = rule_id.strip()
         before = len(self.custom_rules)
@@ -135,7 +137,7 @@ class InteractiveEditor:
         else:
             print(f"  Rule '{rule_id}' not found in custom rules")
 
-    def cmd_list(self):
+    def cmd_list(self) -> None:
         """List all loaded rules."""
         print(f"\n  Built-in rules ({len(self.rules)}):")
         for r in self.rules:
@@ -148,7 +150,7 @@ class InteractiveEditor:
 
         print(f"\n  Total: {len(self.rules) + len(self.custom_rules)} rules")
 
-    def cmd_save(self, filename: str):
+    def cmd_save(self, filename: str) -> None:
         """Save custom rules to a JSON file."""
         filename = filename.strip()
         if not filename.endswith(".json"):
@@ -174,7 +176,7 @@ class InteractiveEditor:
             json.dump(data, f, indent=2)
         print(f"  Saved {len(self.custom_rules)} rules to {path}")
 
-    def cmd_load(self, filename: str):
+    def cmd_load(self, filename: str) -> None:
         """Load additional rules from a file."""
         filename = filename.strip()
         path = RULES_DIR / filename if not Path(filename).is_absolute() else Path(filename)
@@ -185,7 +187,7 @@ class InteractiveEditor:
         except Exception as e:
             print(f"  Error: {e}")
 
-    def cmd_stats(self):
+    def cmd_stats(self) -> None:
         """Show simplification statistics."""
         print(f"\n  Session Statistics:")
         print(f"    Expressions tested:  {self.stats['tested']}")
@@ -195,7 +197,7 @@ class InteractiveEditor:
         print(f"    Built-in rules:      {len(self.rules)}")
         print(f"    Custom rules:        {len(self.custom_rules)}")
 
-    def cmd_help(self):
+    def cmd_help(self) -> None:
         """Show help."""
         print("""
   D810G Interactive Rule Editor
@@ -219,7 +221,7 @@ class InteractiveEditor:
     save my_custom_rules.json
 """)
 
-    def run(self):
+    def run(self) -> None:
         """Main REPL loop."""
         print("\n  D810G Interactive Rule Editor")
         print("  Type 'help' for commands, 'quit' to exit.\n")
@@ -274,6 +276,7 @@ class InteractiveEditor:
         print("  Goodbye!")
 
 
-def main():
+def main() -> None:
+    """Launch the interactive rule editor."""
     editor = InteractiveEditor()
     editor.run()

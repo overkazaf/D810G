@@ -16,6 +16,8 @@ from d810g_engine.mba.rules import Rule
 
 
 class Op(Enum):
+    """AST node operator types for MBA expressions."""
+
     VAR = auto()
     CONST = auto()
     ADD = auto()
@@ -32,6 +34,7 @@ class Op(Enum):
 
 @dataclass
 class ASTNode:
+    """AST node for structural pattern matching of MBA expressions."""
     op: Op
     children: list[ASTNode] = field(default_factory=list)
     name: str = ""        # for VAR

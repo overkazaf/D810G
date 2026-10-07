@@ -8,7 +8,8 @@ class VMInstruction:
     """A recovered VM instruction from bytecode tracing."""
 
     def __init__(self, pc: int, opcode: int, operands: list[int],
-                 handler_addr: int, semantics: str):
+                 handler_addr: int, semantics: str) -> None:
+        """Initialize a traced VM instruction."""
         self.pc = pc
         self.opcode = opcode
         self.operands = operands
@@ -16,6 +17,7 @@ class VMInstruction:
         self.semantics = semantics
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the instruction to a JSON-compatible dict."""
         return {
             "pc": self.pc,
             "opcode": self.opcode,
@@ -34,17 +36,20 @@ class VMInstruction:
 class VMTrace:
     """A complete execution trace of a VM-protected function."""
 
-    def __init__(self):
+    def __init__(self) -> None:
+        """Initialize an empty trace."""
         self.instructions: list[VMInstruction] = []
-        self.handler_hits: dict[int, int] = {}  # handler_addr → hit count
+        self.handler_hits: dict[int, int] = {}  # handler_addr -> hit count
         self.bytecode: bytes = b""
         self.register_states: list[dict[str, int]] = []
 
-    def add_instruction(self, insn: VMInstruction):
+    def add_instruction(self, insn: VMInstruction) -> None:
+        """Append an instruction and update handler hit counts."""
         self.instructions.append(insn)
         self.handler_hits[insn.handler_addr] = self.handler_hits.get(insn.handler_addr, 0) + 1
 
     def to_dict(self) -> dict[str, Any]:
+        """Serialize the trace to a JSON-compatible dict."""
         return {
             "instruction_count": len(self.instructions),
             "unique_handlers": len(self.handler_hits),

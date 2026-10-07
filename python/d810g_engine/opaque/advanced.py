@@ -157,7 +157,7 @@ def _match_known_pattern(expr_str: str) -> dict[str, Any] | None:
 
 
 def batch_classify_advanced(params: dict[str, Any]) -> dict[str, Any]:
-    """Batch classify predicates using advanced analysis."""
+    """Classify a batch of predicates using advanced analysis."""
     predicates = params.get("predicates", [])
     bit_width = params.get("bit_width", 32)
     timeout_ms = params.get("timeout_ms", 10000)
