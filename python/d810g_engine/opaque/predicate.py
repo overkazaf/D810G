@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 from typing import Any
-from z3 import BitVec, BitVecVal, Solver, sat, unsat, Not, UGE, UGT, ULE, ULT, URem, SRem, is_bool
+from z3 import Solver, sat, unsat, Not, is_bool
+
+from d810g_engine.parser import eval_z3
 
 
 def classify_predicate(
@@ -27,88 +29,19 @@ def classify_predicate(
             "variables": [],
         }
 
-    variables: dict[str, Any] = {}
-
-    def _get_var(name: str):
-        if name not in variables:
-            variables[name] = BitVec(name, bit_width)
-        return variables[name]
-
-    def _eval(s: str):
-        s = s.strip()
-        if not s:
-            raise ValueError("empty subexpression")
-        if s.isidentifier():
-            return _get_var(s)
-        if s.startswith("0x") or s.startswith("0X"):
-            return BitVecVal(int(s, 16), bit_width)
-        if s.isdigit() or (s.startswith("-") and s[1:].isdigit()):
-            return BitVecVal(int(s), bit_width)
-
-        if s.startswith("(") and s.endswith(")"):
-            depth = 0
-            for i, c in enumerate(s):
-                if c == "(": depth += 1
-                elif c == ")": depth -= 1
-                if depth == 0 and i < len(s) - 1:
-                    break
-            else:
-                s = s[1:-1].strip()
-
-        # Comparison operators (lowest precedence in conditions)
-        for cmp_op, cmp_fn in [
-            ("!=", lambda a, b: a != b),
-            ("==", lambda a, b: a == b),
-            (">=", lambda a, b: a >= b if signed else UGE(a, b)),
-            ("<=", lambda a, b: a <= b if signed else ULE(a, b)),
-            (">", lambda a, b: a > b if signed else UGT(a, b)),
-            ("<", lambda a, b: a < b if signed else ULT(a, b)),
-        ]:
-            depth = 0
-            for i in range(len(s) - len(cmp_op), -1, -1):
-                if s[i] == ")": depth += 1
-                elif s[i] == "(": depth -= 1
-                elif depth == 0 and s[i:i + len(cmp_op)] == cmp_op:
-                    left = s[:i].strip()
-                    right = s[i + len(cmp_op):].strip()
-                    if left and right:
-                        return cmp_fn(_eval(left), _eval(right))
-
-        # Arithmetic/bitwise operators
-        for op_char, op_fn in [
-            ("|", lambda a, b: a | b),
-            ("^", lambda a, b: a ^ b),
-            ("+", lambda a, b: a + b),
-            ("-", lambda a, b: a - b),
-            ("&", lambda a, b: a & b),
-            ("%", lambda a, b: URem(a, b) if not signed else SRem(a, b)),
-            ("*", lambda a, b: a * b),
-        ]:
-            depth = 0
-            for i in range(len(s) - 1, -1, -1):
-                if s[i] == ")": depth += 1
-                elif s[i] == "(": depth -= 1
-                elif depth == 0 and s[i] == op_char:
-                    if op_char == "-" and i == 0:
-                        continue
-                    left = s[:i].strip()
-                    right = s[i + 1:].strip()
-                    if left and right:
-                        return op_fn(_eval(left), _eval(right))
-
-        return _get_var(s)
-
     try:
-        predicate = _eval(expr_str)
+        predicate, variables = eval_z3(
+            expr_str, bit_width=bit_width, signed=signed
+        )
     except Exception as e:
         return {
             "expression": expr_str,
             "classification": "error",
             "error": f"parse error: {e}",
-            "variables": list(variables.keys()),
+            "variables": [],
         }
 
-    # If _eval returns a non-boolean Z3 expression (e.g., pure arithmetic),
+    # If eval_z3 returns a non-boolean Z3 expression (e.g., pure arithmetic),
     # it can't be used as a predicate
     if not is_bool(predicate):
         return {

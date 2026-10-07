@@ -1,4 +1,10 @@
-"""AST representation and pattern matching for MBA expressions."""
+"""AST representation and pattern matching for MBA expressions.
+
+NOTE: The tokenizer and recursive-descent parser here return ASTNode trees
+(used for structural pattern matching), while the shared parser in
+d810g_engine.parser returns Z3 expressions.  A future refactor could unify
+the tokenizer and teach the shared parser an AST-output mode.
+"""
 
 from __future__ import annotations
 
