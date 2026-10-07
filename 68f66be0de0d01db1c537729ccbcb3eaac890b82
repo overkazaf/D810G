@@ -1,0 +1,55 @@
+python/d810g_engine/cli.py
+  1ba8494afe4ffabd 81-85
+python/d810g_engine/opaque/advanced.py
+  1ba8494afe4ffabd 58-61,105-106,109-110,167-170,172-174,176-186,228,241-242,248-249
+test/test_opaque.py
+  1ba8494afe4ffabd 39-76
+python/d810g_engine/opaque/predicate.py
+  1ba8494afe4ffabd 5,21-29,39-40,43-44,101-142
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "68f66be0de0d01db1c537729ccbcb3eaac890b82",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 363,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/opaque/advanced.py": {
+          "accepted_lines": 47
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/cli.py": {
+          "accepted_lines": 10
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "python/d810g_engine/opaque/predicate.py": {
+          "accepted_lines": 69
+        },
+        "test/test_opaque.py": {
+          "accepted_lines": 52
+        }
+      }
+    }
+  }
+}
