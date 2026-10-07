@@ -1,0 +1,38 @@
+test/test_real_binary.py
+  1ba8494afe4ffabd 1-267
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "5eb4eb74e53f1f57a2fb5f74283ff09fb23bb3e8",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 267,
+      "total_deletions": 0,
+      "accepted_lines": 441,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_real_binary.py": {
+          "additions": 267,
+          "accepted_lines": 267
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 92
+        }
+      }
+    }
+  }
+}
