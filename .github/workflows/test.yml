@@ -7,6 +7,44 @@ on:
     branches: [master, main]
 
 jobs:
+  java-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Ghidra
+        id: cache-ghidra
+        uses: actions/cache@v4
+        with:
+          path: ~/ghidra
+          key: ghidra-11.3
+
+      - name: Download Ghidra
+        if: steps.cache-ghidra.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p ~/ghidra
+          cd ~/ghidra
+          curl -fsSL -o ghidra.zip "https://github.com/NationalSecurityAgency/ghidra/releases/download/Ghidra_11.3_build/ghidra_11.3_PUBLIC_20250205.zip"
+          unzip -q ghidra.zip
+          mv ghidra_* ghidra_PUBLIC
+
+      - name: Build Extension
+        run: |
+          export GHIDRA_INSTALL_DIR=~/ghidra/ghidra_PUBLIC
+          chmod +x $GHIDRA_INSTALL_DIR/support/gradle/gradlew
+          $GHIDRA_INSTALL_DIR/support/gradle/gradlew -p ${{ github.workspace }} buildExtension
+
+      - name: Verify artifact
+        run: |
+          ls -la dist/*.zip
+          echo "Java build successful"
+
   test:
     runs-on: ubuntu-latest
     strategy:
