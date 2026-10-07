@@ -1,0 +1,202 @@
+{
+  "name": "mba_advanced",
+  "description": "Advanced MBA identities - multi-step compositions, XNOR, De Morgan variants, and shift-based multiplications",
+  "rules": [
+    {
+      "id": "adv_xor_arith_1",
+      "pattern": "(x + y) - 2 * (x & y)",
+      "replacement": "x ^ y",
+      "commutative": true,
+      "description": "XOR via arithmetic: x+y minus twice the carry bits"
+    },
+    {
+      "id": "adv_xor_comp_1",
+      "pattern": "~x ^ ~y",
+      "replacement": "x ^ y",
+      "commutative": true,
+      "description": "Complement cancellation in XOR"
+    },
+    {
+      "id": "adv_xor_nornand_1",
+      "pattern": "~(x | y) ^ ~(x & y)",
+      "replacement": "x ^ y",
+      "commutative": true,
+      "description": "XOR via NOR xor NAND"
+    },
+    {
+      "id": "adv_xor_add_1",
+      "pattern": "(x & ~y) + (~x & y)",
+      "replacement": "x ^ y",
+      "commutative": true,
+      "description": "XOR via addition of disjoint complement masks"
+    },
+    {
+      "id": "adv_and_arith_1",
+      "pattern": "x + y - (x | y)",
+      "replacement": "x & y",
+      "commutative": false,
+      "description": "AND via arithmetic: sum minus bitwise-OR"
+    },
+    {
+      "id": "adv_and_xnor_1",
+      "pattern": "(x | y) & ~(x ^ y)",
+      "replacement": "x & y",
+      "commutative": true,
+      "description": "AND via OR masked by XNOR"
+    },
+    {
+      "id": "adv_and_xnor_2",
+      "pattern": "~(x ^ y) & x",
+      "replacement": "x & y",
+      "commutative": false,
+      "description": "AND via XNOR mask on one operand"
+    },
+    {
+      "id": "adv_and_demorgan_1",
+      "pattern": "~(~x | (x ^ y))",
+      "replacement": "x & y",
+      "commutative": false,
+      "description": "AND via negated OR of complement and XOR"
+    },
+    {
+      "id": "adv_or_mask_1",
+      "pattern": "(x & ~y) | y",
+      "replacement": "x | y",
+      "commutative": false,
+      "description": "OR via complement-masked union"
+    },
+    {
+      "id": "adv_or_mask_2",
+      "pattern": "(~x & y) | x",
+      "replacement": "x | y",
+      "commutative": false,
+      "description": "OR via complement-masked union (swapped)"
+    },
+    {
+      "id": "adv_add_or_1",
+      "pattern": "2 * (x | y) - (x ^ y)",
+      "replacement": "x + y",
+      "commutative": true,
+      "description": "Addition via doubled OR minus XOR"
+    },
+    {
+      "id": "adv_add_carry_1",
+      "pattern": "(x ^ y) + ((x & y) << 1)",
+      "replacement": "x + y",
+      "commutative": true,
+      "description": "Addition via XOR plus shifted carry bits"
+    },
+    {
+      "id": "adv_sub_arith_1",
+      "pattern": "(x ^ y) - 2 * (~x & y)",
+      "replacement": "x - y",
+      "commutative": false,
+      "description": "Subtraction via XOR minus doubled borrow bits"
+    },
+    {
+      "id": "adv_sub_comp_1",
+      "pattern": "~y + x + 1",
+      "replacement": "x - y",
+      "commutative": false,
+      "description": "Subtraction via complement addition (y-complement first)"
+    },
+    {
+      "id": "adv_neg_comp_1",
+      "pattern": "~(x - 1)",
+      "replacement": "-x",
+      "commutative": false,
+      "description": "Negation via complement of predecessor"
+    },
+    {
+      "id": "adv_neg_comp_2",
+      "pattern": "~(-x)",
+      "replacement": "x - 1",
+      "commutative": false,
+      "description": "Complement of negation equals predecessor"
+    },
+    {
+      "id": "adv_neg_comp_3",
+      "pattern": "-(~x)",
+      "replacement": "x + 1",
+      "commutative": false,
+      "description": "Negation of complement equals successor"
+    },
+    {
+      "id": "adv_not_xor_1",
+      "pattern": "x ^ ~0",
+      "replacement": "~x",
+      "commutative": true,
+      "description": "XOR with all-ones is bitwise NOT"
+    },
+    {
+      "id": "adv_sub_allones_1",
+      "pattern": "x + ~0",
+      "replacement": "x - 1",
+      "commutative": false,
+      "description": "Adding all-ones (-1) is decrement"
+    },
+    {
+      "id": "adv_neg_mul_1",
+      "pattern": "x * ~0",
+      "replacement": "-x",
+      "commutative": true,
+      "description": "Multiply by all-ones (-1) is negation"
+    },
+    {
+      "id": "adv_xnor_1",
+      "pattern": "(x & y) | (~x & ~y)",
+      "replacement": "~(x ^ y)",
+      "commutative": true,
+      "description": "XNOR composition from AND and complement-AND"
+    },
+    {
+      "id": "adv_xnor_2",
+      "pattern": "(~x | y) & (x | ~y)",
+      "replacement": "~(x ^ y)",
+      "commutative": true,
+      "description": "XNOR via implication conjunction"
+    },
+    {
+      "id": "adv_demorgan_nand_1",
+      "pattern": "~x | ~y",
+      "replacement": "~(x & y)",
+      "commutative": true,
+      "description": "De Morgan NAND: OR of complements to single NOT-AND"
+    },
+    {
+      "id": "adv_demorgan_nor_1",
+      "pattern": "~x & ~y",
+      "replacement": "~(x | y)",
+      "commutative": true,
+      "description": "De Morgan NOR: AND of complements to single NOT-OR"
+    },
+    {
+      "id": "adv_mul_shift_1",
+      "pattern": "(x << 1) + x",
+      "replacement": "x * 3",
+      "commutative": false,
+      "description": "Multiply by 3 via shift-add (2x + x)"
+    },
+    {
+      "id": "adv_mul_shift_2",
+      "pattern": "(x << 2) - x",
+      "replacement": "x * 3",
+      "commutative": false,
+      "description": "Multiply by 3 via shift-sub (4x - x)"
+    },
+    {
+      "id": "adv_mul_shift_3",
+      "pattern": "(x << 3) + x",
+      "replacement": "x * 9",
+      "commutative": false,
+      "description": "Multiply by 9 via shift-add (8x + x)"
+    },
+    {
+      "id": "adv_mul_shift_4",
+      "pattern": "(x << 4) - x",
+      "replacement": "x * 15",
+      "commutative": false,
+      "description": "Multiply by 15 via shift-sub (16x - x)"
+    }
+  ]
+}

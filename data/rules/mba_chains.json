@@ -1,0 +1,181 @@
+{
+  "name": "mba_chains",
+  "description": "Chain simplifications for patterns that emerge after initial simplification passes",
+  "rules": [
+    {
+      "id": "chain_xor_cancel_r",
+      "pattern": "(x ^ y) ^ y",
+      "replacement": "x",
+      "commutative": false,
+      "description": "XOR cancellation: re-XOR with right operand recovers left"
+    },
+    {
+      "id": "chain_xor_cancel_l",
+      "pattern": "(x ^ y) ^ x",
+      "replacement": "y",
+      "commutative": false,
+      "description": "XOR cancellation: re-XOR with left operand recovers right"
+    },
+    {
+      "id": "chain_addsub_cancel",
+      "pattern": "(x + y) - y",
+      "replacement": "x",
+      "commutative": false,
+      "description": "Add then subtract same value cancels"
+    },
+    {
+      "id": "chain_subadd_cancel",
+      "pattern": "(x - y) + y",
+      "replacement": "x",
+      "commutative": false,
+      "description": "Subtract then add same value cancels"
+    },
+    {
+      "id": "chain_subsub_cancel",
+      "pattern": "x - (x - y)",
+      "replacement": "y",
+      "commutative": false,
+      "description": "Nested subtraction cancellation"
+    },
+    {
+      "id": "chain_and_comp",
+      "pattern": "x & ~x",
+      "replacement": "0",
+      "commutative": true,
+      "description": "AND with own complement is zero"
+    },
+    {
+      "id": "chain_or_comp",
+      "pattern": "x | ~x",
+      "replacement": "~0",
+      "commutative": true,
+      "description": "OR with own complement is all-ones"
+    },
+    {
+      "id": "chain_xor_comp",
+      "pattern": "x ^ ~x",
+      "replacement": "~0",
+      "commutative": true,
+      "description": "XOR with own complement is all-ones"
+    },
+    {
+      "id": "chain_double_neg",
+      "pattern": "-(-x)",
+      "replacement": "x",
+      "commutative": false,
+      "description": "Double arithmetic negation cancels"
+    },
+    {
+      "id": "chain_neg_twos",
+      "pattern": "-(~x + 1)",
+      "replacement": "x",
+      "commutative": false,
+      "description": "Negate two's complement negation recovers original"
+    },
+    {
+      "id": "chain_not_arith",
+      "pattern": "~(-x - 1)",
+      "replacement": "x",
+      "commutative": false,
+      "description": "Complement of arithmetic NOT recovers original"
+    },
+    {
+      "id": "chain_absorb_and",
+      "pattern": "x & (x | y)",
+      "replacement": "x",
+      "commutative": true,
+      "description": "AND absorption: x AND (x OR anything) is x"
+    },
+    {
+      "id": "chain_absorb_or",
+      "pattern": "x | (x & y)",
+      "replacement": "x",
+      "commutative": true,
+      "description": "OR absorption: x OR (x AND anything) is x"
+    },
+    {
+      "id": "chain_redundant_and",
+      "pattern": "(x & y) & x",
+      "replacement": "x & y",
+      "commutative": false,
+      "description": "Redundant AND: (x AND y) AND x simplifies"
+    },
+    {
+      "id": "chain_redundant_or",
+      "pattern": "(x | y) | x",
+      "replacement": "x | y",
+      "commutative": false,
+      "description": "Redundant OR: (x OR y) OR x simplifies"
+    },
+    {
+      "id": "chain_xor_and_1",
+      "pattern": "(x ^ y) & x",
+      "replacement": "x & ~y",
+      "commutative": false,
+      "description": "XOR-AND chain: extracts bits in x but not in y"
+    },
+    {
+      "id": "chain_xor_and_2",
+      "pattern": "(x ^ y) & y",
+      "replacement": "~x & y",
+      "commutative": false,
+      "description": "XOR-AND chain: extracts bits in y but not in x"
+    },
+    {
+      "id": "chain_xor_or_1",
+      "pattern": "(x ^ y) | x",
+      "replacement": "x | y",
+      "commutative": false,
+      "description": "XOR-OR chain: simplifies to plain OR"
+    },
+    {
+      "id": "chain_xor_or_2",
+      "pattern": "(x ^ y) | y",
+      "replacement": "x | y",
+      "commutative": false,
+      "description": "XOR-OR chain: simplifies to plain OR (right)"
+    },
+    {
+      "id": "chain_nand_and_1",
+      "pattern": "~(x & y) & x",
+      "replacement": "x & ~y",
+      "commutative": false,
+      "description": "NAND-AND chain: NAND masked with x yields x AND NOT-y"
+    },
+    {
+      "id": "chain_nor_or_1",
+      "pattern": "~(x | y) | x",
+      "replacement": "x | ~y",
+      "commutative": false,
+      "description": "NOR-OR chain: NOR union with x yields x OR NOT-y"
+    },
+    {
+      "id": "chain_factor_and",
+      "pattern": "(x & y) | (x & z)",
+      "replacement": "x & (y | z)",
+      "commutative": true,
+      "description": "Factor AND over OR: extract common factor x"
+    },
+    {
+      "id": "chain_factor_or",
+      "pattern": "(x | y) & (x | z)",
+      "replacement": "x | (y & z)",
+      "commutative": true,
+      "description": "Factor OR over AND: extract common factor x"
+    },
+    {
+      "id": "chain_comp_union_1",
+      "pattern": "(x & ~y) | (x & y)",
+      "replacement": "x",
+      "commutative": true,
+      "description": "Complementary AND union: x masked by y and NOT-y covers all of x"
+    },
+    {
+      "id": "chain_comp_union_2",
+      "pattern": "(~x & y) | (x & y)",
+      "replacement": "y",
+      "commutative": true,
+      "description": "Complementary AND union: y masked by x and NOT-x covers all of y"
+    }
+  ]
+}
