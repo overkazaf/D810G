@@ -109,8 +109,14 @@ def classify_handler(
     blocks: list[dict[str, Any]],
     binary_bytes: bytes,
     base_addr: int,
+    arch: str = "x86_64",
 ) -> VMHandler:
     """Classify a VM handler's semantics based on its code pattern.
+
+    Uses Capstone disassembly when binary bytes are available for
+    instruction-level classification.  Falls back to heuristic
+    block-property analysis when bytes are empty or Capstone is
+    unavailable.
 
     Common handler types:
     - mov: register-to-register move
@@ -125,6 +131,20 @@ def classify_handler(
     - push/pop: stack operations
     - nop: no operation
     """
+    # ---- Disassembly-based classification (preferred) ----
+    if binary_bytes and len(binary_bytes) > 0:
+        from d810g_engine.virtualization.disasm import classify_handler_by_disasm
+        result = classify_handler_by_disasm(
+            handler_addr, binary_bytes, base_addr, arch,
+        )
+        if result.get("confidence") in ("high", "medium"):
+            handler = VMHandler(opcode=0, address=handler_addr)
+            handler.semantics = result["semantics"]
+            handler.operand_count = result.get("operand_count", 0)
+            handler.description = result.get("description", "")
+            return handler
+
+    # ---- Heuristic fallback ----
     handler = VMHandler(opcode=0, address=handler_addr)
 
     # Find this handler's block
@@ -208,7 +228,7 @@ def analyze_vm(params: dict[str, Any]) -> dict[str, Any]:
 
     # Step 3: Classify each handler
     for handler_addr in dispatcher["handler_addrs"]:
-        handler = classify_handler(handler_addr, blocks, binary_bytes, base_addr)
+        handler = classify_handler(handler_addr, blocks, binary_bytes, base_addr, arch)
         ctx.handlers.append(handler)
 
     # Step 4: Assign opcodes (index-based for now)
