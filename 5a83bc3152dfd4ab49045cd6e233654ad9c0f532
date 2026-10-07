@@ -1,0 +1,47 @@
+docs/eval/critical_review.md
+  1ba8494afe4ffabd 1-363
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "5a83bc3152dfd4ab49045cd6e233654ad9c0f532",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 363,
+      "total_deletions": 0,
+      "accepted_lines": 707,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "docs/eval/critical_review.md": {
+          "additions": 363,
+          "accepted_lines": 363
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "accepted_lines": 31
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "accepted_lines": 128
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "bash": {
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
