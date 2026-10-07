@@ -98,9 +98,12 @@ def simplify_expression_deep(params: dict[str, Any]) -> dict[str, Any]:
         # No simplification found — fixpoint reached
         break
 
-    verified = False
-    if verify and current != expr_str:
+    if current == expr_str:
+        verified = True
+    elif verify:
         verified = verify_equivalence(expr_str, current)
+    else:
+        verified = False
 
     return {
         "original": expr_str,

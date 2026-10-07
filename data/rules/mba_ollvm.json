@@ -1,0 +1,21 @@
+{
+  "name": "mba_ollvm",
+  "description": "OLLVM-specific instruction substitution patterns",
+  "rules": [
+    {"id": "ollvm_add_1", "pattern": "x - (~y)", "replacement": "x + y + 1", "commutative": false, "description": "OLLVM add substitution variant 1"},
+    {"id": "ollvm_add_2", "pattern": "(x ^ y) + 2 * (x & y)", "replacement": "x + y", "commutative": true, "description": "OLLVM add via XOR and AND"},
+    {"id": "ollvm_add_3", "pattern": "~(~x + ~y)", "replacement": "x + y + 1", "commutative": true, "description": "OLLVM add variant with double complement"},
+    {"id": "ollvm_sub_1", "pattern": "x + ~y + 1", "replacement": "x - y", "commutative": false, "description": "OLLVM sub via complement"},
+    {"id": "ollvm_sub_2", "pattern": "~(~x - y)", "replacement": "x + y", "commutative": false, "description": "OLLVM sub variant with complement"},
+    {"id": "ollvm_and_1", "pattern": "~(~x | ~y)", "replacement": "x & y", "commutative": true, "description": "OLLVM AND via De Morgan"},
+    {"id": "ollvm_and_2", "pattern": "(x ^ ~y) & x", "replacement": "x & y", "commutative": false, "description": "OLLVM AND variant"},
+    {"id": "ollvm_or_1", "pattern": "~(~x & ~y)", "replacement": "x | y", "commutative": true, "description": "OLLVM OR via De Morgan"},
+    {"id": "ollvm_or_2", "pattern": "(x & y) | (x ^ y)", "replacement": "x | y", "commutative": true, "description": "OLLVM OR via AND+XOR"},
+    {"id": "ollvm_xor_1", "pattern": "(~x & y) | (x & ~y)", "replacement": "x ^ y", "commutative": true, "description": "OLLVM XOR via masked complements"},
+    {"id": "ollvm_xor_2", "pattern": "~(~x & ~y) & ~(x & y)", "replacement": "x ^ y", "commutative": true, "description": "OLLVM XOR via double De Morgan"},
+    {"id": "ollvm_not_1", "pattern": "~x ^ 0", "replacement": "~x", "commutative": false, "description": "OLLVM redundant XOR with 0"},
+    {"id": "ollvm_identity_1", "pattern": "~~x", "replacement": "x", "commutative": false, "description": "Double negation elimination"},
+    {"id": "ollvm_mul_1", "pattern": "(x << 3) - x", "replacement": "x * 7", "commutative": false, "description": "OLLVM multiply by 7 via shift-sub"},
+    {"id": "ollvm_mul_2", "pattern": "(x << 2) + x", "replacement": "x * 5", "commutative": false, "description": "OLLVM multiply by 5 via shift-add"}
+  ]
+}

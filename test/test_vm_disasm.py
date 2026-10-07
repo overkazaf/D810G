@@ -35,10 +35,11 @@ class TestDisasmRetHandler:
 
     def test_mov_then_ret(self):
         # 48 89 d8 = mov rax, rbx;  c3 = ret
+        # With RET deprioritized, meaningful ops (mov) take precedence
         binary, base = _make_binary("4889d8c3")
         result = classify_handler_by_disasm(BASE_ADDR, binary, base)
-        assert result["semantics"] == "ret"
-        assert result["confidence"] == "high"
+        assert result["semantics"] == "mov"
+        assert result["confidence"] == "medium"
 
 
 class TestDisasmArithmeticHandlers:

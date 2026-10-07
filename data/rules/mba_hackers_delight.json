@@ -17,8 +17,7 @@
     {"id": "hd_xor_5", "pattern": "(x | y) ^ (x & y)", "replacement": "x ^ y", "commutative": true, "description": "XOR via OR XOR AND"},
     {"id": "hd_sub_1", "pattern": "x + (~y + 1)", "replacement": "x - y", "commutative": false, "description": "Subtraction via complement addition"},
     {"id": "hd_sub_2", "pattern": "x + ~y + 1", "replacement": "x - y", "commutative": false, "description": "Subtraction via complement addition (flat)"},
-    {"id": "hd_sub_3", "pattern": "x ^ y + 2 * (~x & y)", "replacement": "x - y + 2 * y", "commutative": false, "description": "Complex subtraction identity"},
-    {"id": "hd_mul2_1", "pattern": "x + x", "replacement": "x * 2", "commutative": false, "description": "Double via addition"},
+{"id": "hd_mul2_1", "pattern": "x + x", "replacement": "x * 2", "commutative": false, "description": "Double via addition"},
     {"id": "hd_mul2_2", "pattern": "x << 1", "replacement": "x * 2", "commutative": false, "description": "Double via left shift"},
     {"id": "hd_demorgan_1", "pattern": "~(~x & ~y)", "replacement": "x | y", "commutative": true, "description": "De Morgan's law: NOT(NOT-x AND NOT-y)"},
     {"id": "hd_demorgan_2", "pattern": "~(~x | ~y)", "replacement": "x & y", "commutative": true, "description": "De Morgan's law: NOT(NOT-x OR NOT-y)"}

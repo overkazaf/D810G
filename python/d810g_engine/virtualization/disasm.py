@@ -106,10 +106,7 @@ def classify_handler_by_disasm(
         "disassembly": [f"{i.mnemonic} {i.op_str}" for i in instructions[:10]],
     }
 
-    if has_ret and total_meaningful <= 2:
-        result.update(semantics="ret", operand_count=1, confidence="high",
-                      description="Return from VM (contains RET instruction)")
-    elif has_call:
+    if has_call:
         result.update(semantics="call", operand_count=1, confidence="high",
                       description="Native function call")
     elif has_cmp and has_jmp:
@@ -173,6 +170,9 @@ def classify_handler_by_disasm(
         else:
             result.update(semantics="pop", operand_count=1, confidence="high",
                           description="Pop from VM stack")
+    elif has_ret and total_meaningful == 0:
+        result.update(semantics="ret", operand_count=1, confidence="high",
+                      description="Return from VM (only RET, no meaningful ops)")
     elif instructions[0].id == X86_INS_NOP:
         result.update(semantics="nop", operand_count=0, confidence="high",
                       description="No operation")

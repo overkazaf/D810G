@@ -66,14 +66,18 @@ def classify_advanced(
         return result
 
     # Step 2: Try with integer arithmetic (avoids bitvector overflow issues)
+    # Only trust integer mode when there's no multiplication — overflow semantics
+    # differ between unbounded integers and fixed-width bitvectors, so x*x >= 0
+    # is always_true in integers but dynamic in bitvectors (signed overflow).
+    has_multiplication = '*' in expr_str
     int_result = _classify_with_integers(expr_str, timeout_ms)
-    if int_result and int_result != "dynamic":
+    if int_result and int_result != "dynamic" and not has_multiplication:
         return {
             "expression": expr_str,
             "classification": int_result,
             "method": "integer_arithmetic",
             "variables": result.get("variables", []),
-            "note": "Proven via integer arithmetic (may differ from bitvector semantics)",
+            "note": "Proven via integer arithmetic (no overflow-sensitive ops)",
         }
 
     # Step 3: Pattern matching against known number theory predicates

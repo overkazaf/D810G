@@ -1,0 +1,16 @@
+{
+  "name": "mba_constant_folding",
+  "description": "Constant folding and algebraic identity rules",
+  "rules": [
+    {"id": "cf_add_zero", "pattern": "x + 0", "replacement": "x", "commutative": true, "description": "Addition identity"},
+    {"id": "cf_sub_zero", "pattern": "x - 0", "replacement": "x", "commutative": false, "description": "Subtraction identity"},
+    {"id": "cf_mul_one", "pattern": "x * 1", "replacement": "x", "commutative": true, "description": "Multiplication identity"},
+    {"id": "cf_mul_zero", "pattern": "x * 0", "replacement": "0", "commutative": true, "description": "Multiplication by zero"},
+    {"id": "cf_sub_self", "pattern": "x - x", "replacement": "0", "commutative": false, "description": "Self-subtraction"},
+    {"id": "cf_and_self", "pattern": "x & x", "replacement": "x", "commutative": false, "description": "AND idempotent"},
+    {"id": "cf_or_self", "pattern": "x | x", "replacement": "x", "commutative": false, "description": "OR idempotent"},
+    {"id": "cf_xor_self", "pattern": "x ^ x", "replacement": "0", "commutative": false, "description": "XOR self-cancellation"},
+    {"id": "cf_or_zero", "pattern": "x | 0", "replacement": "x", "commutative": true, "description": "OR with zero"},
+    {"id": "cf_and_allones", "pattern": "x & ~0", "replacement": "x", "commutative": true, "description": "AND with all-ones"}
+  ]
+}
