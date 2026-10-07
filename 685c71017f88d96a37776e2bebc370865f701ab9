@@ -1,0 +1,40 @@
+.github/workflows/test.yml
+  1ba8494afe4ffabd 10-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "685c71017f88d96a37776e2bebc370865f701ab9",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 91,
+      "total_deletions": 0,
+      "accepted_lines": 92,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        ".github/workflows/test.yml": {
+          "additions": 38,
+          "accepted_lines": 38
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "additions": 52,
+          "accepted_lines": 52
+        },
+        "test/test_pipeline.py": {
+          "additions": 1,
+          "accepted_lines": 1
+        },
+        "bash": {
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
