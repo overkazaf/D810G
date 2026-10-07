@@ -1,0 +1,67 @@
+test/test_vm_disasm.py
+  1ba8494afe4ffabd 1-287
+python/d810g_engine/virtualization/analyzer.py
+  1ba8494afe4ffabd 112,116-120,134-147,231
+python/d810g_engine/virtualization/disasm.py
+  1ba8494afe4ffabd 1-183
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "f40e93c911d37127875f866a951db07fc5cd2f38",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 1020,
+      "total_deletions": 25,
+      "accepted_lines": 1202,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "bash": {
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/virtualization/disasm.py": {
+          "additions": 183,
+          "accepted_lines": 183
+        },
+        "python/d810g_engine/strings/decryptor.py": {
+          "additions": 94,
+          "deletions": 24,
+          "accepted_lines": 91
+        },
+        "test/test_vm_disasm.py": {
+          "additions": 287,
+          "accepted_lines": 287
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/parser.py": {
+          "additions": 355,
+          "accepted_lines": 355
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "test/test_strings.py": {
+          "additions": 80,
+          "accepted_lines": 80
+        },
+        "python/d810g_engine/virtualization/analyzer.py": {
+          "additions": 21,
+          "deletions": 1,
+          "accepted_lines": 21
+        }
+      }
+    }
+  }
+}
