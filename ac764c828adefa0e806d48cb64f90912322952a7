@@ -1,0 +1,44 @@
+test/test_strings.py
+  1ba8494afe4ffabd 14-15,267-332
+python/d810g_engine/strings/decryptor.py
+  1ba8494afe4ffabd 6-21,403-417,424-426,430-432,434,438-445,448,450-453,459,465,469,474,476
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "ac764c828adefa0e806d48cb64f90912322952a7",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 47,
+      "total_deletions": 35,
+      "accepted_lines": 350,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 92
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        },
+        "python/d810g_engine/strings/decryptor.py": {
+          "additions": 47,
+          "deletions": 35,
+          "accepted_lines": 91
+        },
+        "test/test_strings.py": {
+          "accepted_lines": 85
+        }
+      }
+    }
+  }
+}
