@@ -1,0 +1,58 @@
+python/d810g_engine/strings/decryptor.py
+  1ba8494afe4ffabd 88-89,97-98,105-106,114-115,122,142-143,151-152,158,195,202-203,211-212,219-220,226,258,260,268-269,275,384-447
+test/test_strings.py
+  1ba8494afe4ffabd 12-13,187-264
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "d41cbac213759b3d0bdf5e5db854d3e83ef9babd",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 18,
+      "total_deletions": 246,
+      "accepted_lines": 778,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_strings.py": {
+          "accepted_lines": 97
+        },
+        "python/d810g_engine/parser.py": {
+          "accepted_lines": 355
+        },
+        "data/rules/mba_constant_folding.json": {
+          "accepted_lines": 16
+        },
+        "test/test_mba_extended.py": {
+          "accepted_lines": 147
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/strings/decryptor.py": {
+          "accepted_lines": 123
+        },
+        "python/d810g_engine/opaque/predicate.py": {
+          "additions": 8,
+          "deletions": 75,
+          "accepted_lines": 8
+        },
+        "data/rules/mba_ollvm.json": {
+          "accepted_lines": 21
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "additions": 10,
+          "deletions": 171,
+          "accepted_lines": 10
+        }
+      }
+    }
+  }
+}
