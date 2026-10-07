@@ -36,6 +36,44 @@ def test_always_false_contradiction():
     assert result["classification"] == "always_false"
 
 
+def test_empty_expression():
+    """Empty string should return error, not crash."""
+    result = classify_predicate("")
+    assert result["classification"] == "error"
+    assert "empty" in result["error"]
+
+
+def test_whitespace_only_expression():
+    """Whitespace-only string should return error."""
+    result = classify_predicate("   ")
+    assert result["classification"] == "error"
+
+
+def test_non_boolean_expression():
+    """Pure arithmetic (no comparison) should return error, not crash."""
+    result = classify_predicate("x + y")
+    assert result["classification"] == "error"
+    assert "not a boolean" in result["error"]
+
+
+def test_invalid_syntax():
+    """Garbage input should return error, not crash."""
+    result = classify_predicate("not valid!!!")
+    assert result["classification"] == "error"
+
+
+def test_hex_literal():
+    """Hex literals like 0xff should be parsed correctly."""
+    result = classify_predicate("(x & 0xff) == 0x41")
+    assert result["classification"] == "dynamic"
+
+
+def test_modulo_expression():
+    """Modulo operator should work -- x*(x+1) is always even."""
+    result = classify_predicate("(x * (x + 1)) % 2 == 0")
+    assert result["classification"] == "always_true"
+
+
 def test_eliminate_predicates_api():
     from d810g_engine.opaque import eliminate_predicates
     result = eliminate_predicates({

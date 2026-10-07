@@ -55,6 +55,10 @@ def classify_advanced(
     # Step 1: Standard bitvector analysis
     result = classify_predicate(expr_str, bit_width=bit_width, timeout_ms=timeout_ms)
 
+    if result["classification"] == "error":
+        result["method"] = "bitvector"
+        return result
+
     if result["classification"] != "dynamic":
         result["method"] = "bitvector"
         return result
@@ -98,8 +102,12 @@ def _classify_with_integers(expr_str: str, timeout_ms: int = 10000) -> str | Non
 
     def _eval(s: str):
         s = s.strip()
+        if not s:
+            raise ValueError("empty subexpression")
         if s.isidentifier():
             return _get_var(s)
+        if s.startswith("0x") or s.startswith("0X"):
+            return IntVal(int(s, 16))
         if s.isdigit() or (s.startswith("-") and s[1:].isdigit()):
             return IntVal(int(s))
 
@@ -156,18 +164,26 @@ def _classify_with_integers(expr_str: str, timeout_ms: int = 10000) -> str | Non
     except Exception:
         return None
 
-    solver = Solver()
-    solver.set("timeout", timeout_ms)
+    # Non-boolean expressions can't be predicates
+    from z3 import is_bool
+    if not is_bool(predicate):
+        return None
 
-    solver.push()
-    solver.add(Not(predicate))
-    can_be_false = solver.check()
-    solver.pop()
+    try:
+        solver = Solver()
+        solver.set("timeout", timeout_ms)
 
-    solver.push()
-    solver.add(predicate)
-    can_be_true = solver.check()
-    solver.pop()
+        solver.push()
+        solver.add(Not(predicate))
+        can_be_false = solver.check()
+        solver.pop()
+
+        solver.push()
+        solver.add(predicate)
+        can_be_true = solver.check()
+        solver.pop()
+    except Exception:
+        return None
 
     if can_be_false == unsat and can_be_true == sat:
         return "always_true"
@@ -209,6 +225,7 @@ def batch_classify_advanced(params: dict[str, Any]) -> dict[str, Any]:
 
     results = []
     opaque_count = 0
+    error_count = 0
 
     for pred in predicates:
         expr = pred.get("expression", pred) if isinstance(pred, dict) else pred
@@ -221,10 +238,13 @@ def batch_classify_advanced(params: dict[str, Any]) -> dict[str, Any]:
 
         if result["classification"] in ("always_true", "always_false"):
             opaque_count += 1
+        elif result["classification"] == "error":
+            error_count += 1
 
     return {
         "results": results,
         "total": len(results),
         "opaque_count": opaque_count,
-        "dynamic_count": len(results) - opaque_count,
+        "dynamic_count": len(results) - opaque_count - error_count,
+        "error_count": error_count,
     }

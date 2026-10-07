@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 from typing import Any
-from z3 import BitVec, BitVecVal, Solver, sat, unsat, Not, UGE, UGT, ULE, ULT
+from z3 import BitVec, BitVecVal, Solver, sat, unsat, Not, UGE, UGT, ULE, ULT, URem, SRem, is_bool
 
 
 def classify_predicate(
@@ -18,6 +18,15 @@ def classify_predicate(
     - If predicate is unsat: always_false
     - Otherwise: dynamic (depends on input)
     """
+    # Input validation
+    if not expr_str or not expr_str.strip():
+        return {
+            "expression": expr_str or "",
+            "classification": "error",
+            "error": "empty expression",
+            "variables": [],
+        }
+
     variables: dict[str, Any] = {}
 
     def _get_var(name: str):
@@ -27,8 +36,12 @@ def classify_predicate(
 
     def _eval(s: str):
         s = s.strip()
+        if not s:
+            raise ValueError("empty subexpression")
         if s.isidentifier():
             return _get_var(s)
+        if s.startswith("0x") or s.startswith("0X"):
+            return BitVecVal(int(s, 16), bit_width)
         if s.isdigit() or (s.startswith("-") and s[1:].isdigit()):
             return BitVecVal(int(s), bit_width)
 
@@ -68,6 +81,7 @@ def classify_predicate(
             ("+", lambda a, b: a + b),
             ("-", lambda a, b: a - b),
             ("&", lambda a, b: a & b),
+            ("%", lambda a, b: URem(a, b) if not signed else SRem(a, b)),
             ("*", lambda a, b: a * b),
         ]:
             depth = 0
@@ -84,22 +98,48 @@ def classify_predicate(
 
         return _get_var(s)
 
-    predicate = _eval(expr_str)
+    try:
+        predicate = _eval(expr_str)
+    except Exception as e:
+        return {
+            "expression": expr_str,
+            "classification": "error",
+            "error": f"parse error: {e}",
+            "variables": list(variables.keys()),
+        }
 
-    solver = Solver()
-    solver.set("timeout", timeout_ms)
+    # If _eval returns a non-boolean Z3 expression (e.g., pure arithmetic),
+    # it can't be used as a predicate
+    if not is_bool(predicate):
+        return {
+            "expression": expr_str,
+            "classification": "error",
+            "error": "expression is not a boolean predicate",
+            "variables": list(variables.keys()),
+        }
 
-    # Check if predicate can be false
-    solver.push()
-    solver.add(Not(predicate))
-    can_be_false = solver.check()
-    solver.pop()
+    try:
+        solver = Solver()
+        solver.set("timeout", timeout_ms)
 
-    # Check if predicate can be true
-    solver.push()
-    solver.add(predicate)
-    can_be_true = solver.check()
-    solver.pop()
+        # Check if predicate can be false
+        solver.push()
+        solver.add(Not(predicate))
+        can_be_false = solver.check()
+        solver.pop()
+
+        # Check if predicate can be true
+        solver.push()
+        solver.add(predicate)
+        can_be_true = solver.check()
+        solver.pop()
+    except Exception as e:
+        return {
+            "expression": expr_str,
+            "classification": "error",
+            "error": f"solver error: {e}",
+            "variables": list(variables.keys()),
+        }
 
     if can_be_false == unsat and can_be_true == sat:
         classification = "always_true"

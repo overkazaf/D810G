@@ -78,6 +78,11 @@ def cmd_opaque(args):
         print(json.dumps(result, indent=2))
         return
 
+    if result["classification"] == "error":
+        print(f"  {args.expression}")
+        print(f"  -> ERROR: {result.get('error', 'unknown')}")
+        return
+
     icons = {
         "always_true": "ALWAYS TRUE  -- opaque, can be eliminated",
         "always_false": "ALWAYS FALSE -- opaque, can be eliminated",
