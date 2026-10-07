@@ -1,0 +1,144 @@
+python/d810g_engine/dce/__init__.py
+  1ba8494afe4ffabd 3-4,6-8
+python/d810g_engine/mba/matcher.py
+  1ba8494afe4ffabd 19-20,37
+python/d810g_engine/virtualization/__init__.py
+  1ba8494afe4ffabd 3-4,6-8
+python/d810g_engine/log.py
+  1ba8494afe4ffabd 1-16
+python/d810g_engine/mba/rules.py
+  1ba8494afe4ffabd 12-13,22
+python/d810g_engine/pipeline/__init__.py
+  1ba8494afe4ffabd 3-4,6-8
+python/d810g_engine/cli.py
+  1ba8494afe4ffabd 29,69,95,117,134,162,216-217
+python/d810g_engine/bcf/__init__.py
+  1ba8494afe4ffabd 3-4,6-8
+python/d810g_engine/strings/__init__.py
+  1ba8494afe4ffabd 3-4,6-8
+python/d810g_engine/protocol.py
+  1ba8494afe4ffabd 12-13,21-22,29,44
+python/d810g_engine/deflattener/symbolic.py
+  1ba8494afe4ffabd 13,35
+python/d810g_engine/opaque/__init__.py
+  1ba8494afe4ffabd 3-5,9-10,31-32
+python/d810g_engine/pipeline/orchestrator.py
+  1ba8494afe4ffabd 1,5,7,9,15-16,22,29-30,36-37,50,194,197,203,221-222,233
+python/d810g_engine/server.py
+  1ba8494afe4ffabd 10,13,19-22,27-28,58-59,66,71,78,82
+python/d810g_engine/virtualization/tracer.py
+  1ba8494afe4ffabd 11-12,20,39-40,42,46-47,52
+python/d810g_engine/virtualization/analyzer.py
+  1ba8494afe4ffabd 11-12,20,34-35,44
+python/d810g_engine/deflattener/__init__.py
+  1ba8494afe4ffabd 3-4,6-8
+python/d810g_engine/__main__.py
+  1ba8494afe4ffabd 6-7
+python/d810g_engine/interactive.py
+  1ba8494afe4ffabd 35-37,53,83-84,98-99,130,140,153,179,190,200,224,279-280
+python/d810g_engine/config.py
+  1ba8494afe4ffabd 1-45
+python/d810g_engine/opaque/advanced.py
+  1ba8494afe4ffabd 160
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "ebe120a413560a786e6150355102c9655e86e2fb",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 45,
+      "total_deletions": 28,
+      "accepted_lines": 330,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/log.py": {
+          "accepted_lines": 16
+        },
+        "python/d810g_engine/pipeline/__init__.py": {
+          "accepted_lines": 7
+        },
+        "python/d810g_engine/__main__.py": {
+          "accepted_lines": 3
+        },
+        "python/d810g_engine/cli.py": {
+          "additions": 8,
+          "deletions": 7,
+          "accepted_lines": 8
+        },
+        "python/d810g_engine/server.py": {
+          "accepted_lines": 27
+        },
+        "python/d810g_engine/mba/matcher.py": {
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/interactive.py": {
+          "additions": 17,
+          "deletions": 14,
+          "accepted_lines": 17
+        },
+        "python/d810g_engine/dce/__init__.py": {
+          "accepted_lines": 7
+        },
+        "python/d810g_engine/virtualization/analyzer.py": {
+          "additions": 6,
+          "deletions": 2,
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 35
+        },
+        "python/d810g_engine/protocol.py": {
+          "accepted_lines": 11
+        },
+        "python/d810g_engine/strings/__init__.py": {
+          "accepted_lines": 7
+        },
+        "python/d810g_engine/virtualization/__init__.py": {
+          "additions": 5,
+          "deletions": 1,
+          "accepted_lines": 5
+        },
+        "python/d810g_engine/bcf/__init__.py": {
+          "accepted_lines": 7
+        },
+        "python/d810g_engine/config.py": {
+          "accepted_lines": 45
+        },
+        "python/d810g_engine/virtualization/tracer.py": {
+          "additions": 9,
+          "deletions": 4,
+          "accepted_lines": 9
+        },
+        "python/d810g_engine/mba/rules.py": {
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/deflattener/__init__.py": {
+          "accepted_lines": 9
+        },
+        "python/d810g_engine/deflattener/symbolic.py": {
+          "accepted_lines": 4
+        },
+        "python/d810g_engine/opaque/__init__.py": {
+          "accepted_lines": 12
+        },
+        "python/d810g_engine/opaque/advanced.py": {
+          "accepted_lines": 1
+        },
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        },
+        "bash": {
+          "accepted_lines": 1
+        }
+      }
+    }
+  }
+}
