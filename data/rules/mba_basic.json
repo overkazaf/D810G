@@ -45,27 +45,6 @@
       "description": "Subtraction via complement addition"
     },
     {
-      "id": "mba_zero_1",
-      "pattern": "x ^ x",
-      "replacement": "0",
-      "commutative": false,
-      "description": "Self-XOR is zero"
-    },
-    {
-      "id": "mba_identity_1",
-      "pattern": "x | 0",
-      "replacement": "x",
-      "commutative": true,
-      "description": "OR with zero identity"
-    },
-    {
-      "id": "mba_identity_2",
-      "pattern": "x & ~0",
-      "replacement": "x",
-      "commutative": false,
-      "description": "AND with all-ones identity"
-    },
-    {
       "id": "mba_absorb_1",
       "pattern": "x & 0",
       "replacement": "0",

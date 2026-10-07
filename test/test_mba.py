@@ -10,7 +10,7 @@ from d810g_engine.mba.verifier import verify_equivalence
 
 def test_load_rules():
     rules = load_rules(Path(__file__).parent.parent / "data" / "rules" / "mba_basic.json")
-    assert len(rules) >= 10
+    assert len(rules) >= 7
     assert rules[0].id == "mba_xor_1"
 
 

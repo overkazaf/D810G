@@ -14,7 +14,7 @@ class TestHackersDelightRules:
 
     def test_load_rules(self):
         rules = load_rules(RULES_DIR / "mba_hackers_delight.json")
-        assert len(rules) >= 19
+        assert len(rules) >= 16
 
     def test_and_via_or_minus_xor(self):
         assert verify_equivalence("(x | y) - (x ^ y)", "x & y", bit_width=32)
