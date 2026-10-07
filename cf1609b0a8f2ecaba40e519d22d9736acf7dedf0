@@ -1,0 +1,114 @@
+requirements-dev.txt
+  1ba8494afe4ffabd 2-3
+.github/workflows/test.yml
+  1ba8494afe4ffabd 65,67,69
+python/d810g_engine/virtualization/disasm.py
+  1ba8494afe4ffabd 8,16
+python/d810g_engine/interactive.py
+  1ba8494afe4ffabd 25,27
+python/d810g_engine/opaque/advanced.py
+  1ba8494afe4ffabd 7
+pyproject.toml
+  1ba8494afe4ffabd 1-18
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "cf1609b0a8f2ecaba40e519d22d9736acf7dedf0",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 193,
+      "total_deletions": 54,
+      "accepted_lines": 362,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "deletions": 1
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "additions": 8,
+          "deletions": 5,
+          "accepted_lines": 95
+        },
+        "python/d810g_engine/__main__.py": {
+          "additions": 2,
+          "deletions": 1,
+          "accepted_lines": 2
+        },
+        "python/d810g_engine/interactive.py": {
+          "additions": 2,
+          "deletions": 4,
+          "accepted_lines": 2
+        },
+        "pyproject.toml": {
+          "additions": 18,
+          "accepted_lines": 18
+        },
+        "python/d810g_engine/opaque/advanced.py": {
+          "additions": 1,
+          "deletions": 2,
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/config.py": {
+          "additions": 45,
+          "accepted_lines": 45
+        },
+        "README.md": {
+          "additions": 25,
+          "deletions": 19,
+          "accepted_lines": 25
+        },
+        "README_CN.md": {
+          "additions": 9,
+          "deletions": 9,
+          "accepted_lines": 9
+        },
+        "requirements-dev.txt": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "python/d810g_engine/log.py": {
+          "additions": 16,
+          "accepted_lines": 16
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "python/d810g_engine/server.py": {
+          "additions": 14,
+          "deletions": 1,
+          "accepted_lines": 14
+        },
+        "python/d810g_engine/protocol.py": {
+          "additions": 6,
+          "accepted_lines": 6
+        },
+        "python/d810g_engine/mba/__init__.py": {
+          "additions": 40,
+          "deletions": 6,
+          "accepted_lines": 40
+        },
+        "python/d810g_engine/virtualization/disasm.py": {
+          "additions": 2,
+          "deletions": 2,
+          "accepted_lines": 2
+        },
+        ".github/workflows/test.yml": {
+          "additions": 3,
+          "deletions": 4,
+          "accepted_lines": 3
+        }
+      }
+    }
+  }
+}
