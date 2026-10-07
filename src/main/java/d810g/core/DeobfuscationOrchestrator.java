@@ -24,39 +24,59 @@ public class DeobfuscationOrchestrator {
     }
 
     /**
-     * Run all deobfuscation passes on the given function.
+     * Run the full deobfuscation pipeline (deflat, MBA, opaque, BCF, DCE,
+     * strings) on the given function via the Python engine.
      *
      * @return a result summary with status and patch count
      */
     public DeobResult deobfuscateFunction(Program program, Function function) throws Exception {
-        // Extract the function's block graph and raw bytes
+        // Extract the function's block graph (with full properties) and raw bytes
         List<Map<String, Object>> blocks = PcodeUtils.extractBlocks(program, function);
         byte[] funcBytes = PcodeUtils.getFunctionBytes(program, function);
         String arch = program.getLanguage().getProcessor().toString();
+        long baseAddr = function.getEntryPoint().getOffset();
 
         Msg.info(this, "D810G: Analyzing " + function.getName() +
             " (" + blocks.size() + " blocks, " + funcBytes.length + " bytes, arch=" + arch + ")");
 
-        // Send to the Python engine
-        Map<String, Object> deflatParams = new HashMap<>();
-        deflatParams.put("blocks", blocks);
-        deflatParams.put("binary_hex", bytesToHex(funcBytes));
-        deflatParams.put("arch", arch);
-        deflatParams.put("base_addr", function.getEntryPoint().getOffset());
+        // Build params for the full pipeline (all 6 passes)
+        Map<String, Object> params = new HashMap<>();
+        params.put("blocks", blocks);
+        params.put("binary_hex", bytesToHex(funcBytes));
+        params.put("arch", arch);
+        params.put("entry_addr", baseAddr);
 
-        JsonObject deflatResult = protocol.send("deflat.run", deflatParams);
+        // Use the full pipeline instead of just deflat.run
+        JsonObject pipelineResult = protocol.send("pipeline.run", params);
 
         DeobResult result = new DeobResult();
 
-        if (deflatResult.has("error")) {
-            JsonObject err = deflatResult.getAsJsonObject("error");
+        if (pipelineResult.has("error")) {
+            JsonObject err = pipelineResult.getAsJsonObject("error");
             result.status = "error: " + err.get("message").getAsString();
             Msg.error(this, "D810G engine error: " + result.status);
             return result;
         }
 
-        if (deflatResult.has("result")) {
-            JsonObject r = deflatResult.getAsJsonObject("result");
+        if (pipelineResult.has("result")) {
+            JsonObject r = pipelineResult.getAsJsonObject("result");
+            result.status = r.has("status") ? r.get("status").getAsString() : "ok";
+            result.patchCount = r.has("total_patches") ? r.get("total_patches").getAsInt() : 0;
+
+            // Log per-pass results
+            JsonArray passes = r.getAsJsonArray("passes");
+            if (passes != null) {
+                for (JsonElement passEl : passes) {
+                    JsonObject pass = passEl.getAsJsonObject();
+                    String passName = pass.has("name") ? pass.get("name").getAsString() : "unknown";
+                    int passPatches = pass.has("patches") ? pass.get("patches").getAsInt() : 0;
+                    if (passPatches > 0) {
+                        Msg.info(this, String.format("D810G [%s]: %d patches", passName, passPatches));
+                    }
+                }
+            }
+
+            // Apply accumulated byte-level patches from the pipeline
             JsonArray patches = r.getAsJsonArray("patches");
             if (patches != null && patches.size() > 0) {
                 List<Map<String, Object>> patchList = new ArrayList<>();
@@ -69,7 +89,6 @@ public class DeobfuscationOrchestrator {
                 }
                 result.patchCount = PatchManager.applyPatches(program, patchList);
             }
-            result.status = r.has("status") ? r.get("status").getAsString() : "ok";
         }
         return result;
     }
