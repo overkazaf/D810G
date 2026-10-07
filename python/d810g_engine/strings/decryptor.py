@@ -85,8 +85,8 @@ def try_xor_decrypt(
     for key in key_candidates:
         # Single-byte XOR
         decrypted = bytes(b ^ key for b in encrypted)
-        score = _printable_score(decrypted)
-        if score > 0.7:
+        score = _score_decryption(decrypted)
+        if score > 0.80:
             try:
                 text = decrypted.decode("utf-8", errors="strict")
                 results.append({
@@ -94,15 +94,16 @@ def try_xor_decrypt(
                     "key": key,
                     "key_hex": f"0x{key:02x}",
                     "decrypted": text,
-                    "score": round(score, 3),
+                    "score": round(score, 4),
+                    "confidence": _confidence_label(score),
                 })
             except UnicodeDecodeError:
                 pass
 
         # XOR with index
         decrypted_idx = bytes((b ^ (key ^ (i % 256))) for i, b in enumerate(encrypted))
-        score_idx = _printable_score(decrypted_idx)
-        if score_idx > 0.7:
+        score_idx = _score_decryption(decrypted_idx)
+        if score_idx > 0.80:
             try:
                 text = decrypted_idx.decode("utf-8", errors="strict")
                 results.append({
@@ -110,14 +111,15 @@ def try_xor_decrypt(
                     "key": key,
                     "key_hex": f"0x{key:02x}",
                     "decrypted": text,
-                    "score": round(score_idx, 3),
+                    "score": round(score_idx, 4),
+                    "confidence": _confidence_label(score_idx),
                 })
             except UnicodeDecodeError:
                 pass
 
     # Sort by score descending, then prefer alphabetic-heavy decryptions
     results.sort(key=lambda r: (r["score"], _alpha_ratio(r["decrypted"])), reverse=True)
-    return results
+    return results[:5]
 
 
 def try_rc4_decrypt(
@@ -137,8 +139,8 @@ def try_rc4_decrypt(
 
     for key in key_candidates:
         decrypted = _rc4(key, encrypted)
-        score = _printable_score(decrypted)
-        if score > 0.7:
+        score = _score_decryption(decrypted)
+        if score > 0.80:
             try:
                 text = decrypted.decode("utf-8", errors="strict")
                 results.append({
@@ -146,13 +148,14 @@ def try_rc4_decrypt(
                     "key": key.hex(),
                     "key_len": len(key),
                     "decrypted": text,
-                    "score": round(score, 3),
+                    "score": round(score, 4),
+                    "confidence": _confidence_label(score),
                 })
             except UnicodeDecodeError:
                 pass
 
     results.sort(key=lambda r: r["score"], reverse=True)
-    return results[:10]
+    return results[:3]
 
 
 def _rc4(key: bytes, data: bytes) -> bytes:
@@ -189,14 +192,15 @@ def try_sub_table_decrypt(
         if len(table) != 256:
             return []
         decrypted = bytes(table[b] for b in encrypted)
-        score = _printable_score(decrypted)
+        score = _score_decryption(decrypted)
         if score > 0.5:
             try:
                 text = decrypted.decode("utf-8", errors="strict")
                 results.append({
                     "method": "substitution",
                     "decrypted": text,
-                    "score": round(score, 3),
+                    "score": round(score, 4),
+                    "confidence": _confidence_label(score),
                 })
             except UnicodeDecodeError:
                 pass
@@ -204,21 +208,22 @@ def try_sub_table_decrypt(
         # Try ROT-N (Caesar cipher on bytes)
         for rot in range(1, 256):
             decrypted = bytes((b + rot) % 256 for b in encrypted)
-            score = _printable_score(decrypted)
-            if score > 0.7:
+            score = _score_decryption(decrypted)
+            if score > 0.80:
                 try:
                     text = decrypted.decode("utf-8", errors="strict")
                     results.append({
                         "method": f"rot_{rot}",
                         "rotation": rot,
                         "decrypted": text,
-                        "score": round(score, 3),
+                        "score": round(score, 4),
+                        "confidence": _confidence_label(score),
                     })
                 except UnicodeDecodeError:
                     pass
 
     results.sort(key=lambda r: r["score"], reverse=True)
-    return results[:5]
+    return results[:3]
 
 
 def try_multibyte_xor_decrypt(
@@ -250,9 +255,9 @@ def try_multibyte_xor_decrypt(
 
         # Decrypt with the guessed key
         decrypted = bytes(encrypted[i] ^ key[i % key_len] for i in range(len(encrypted)))
-        score = _printable_score(decrypted)
+        score = _score_decryption(decrypted)
 
-        if score > 0.7:
+        if score > 0.80:
             try:
                 text = decrypted.decode("utf-8", errors="strict")
                 results.append({
@@ -260,13 +265,14 @@ def try_multibyte_xor_decrypt(
                     "key": bytes(key).hex(),
                     "key_len": key_len,
                     "decrypted": text,
-                    "score": round(score, 3),
+                    "score": round(score, 4),
+                    "confidence": _confidence_label(score),
                 })
             except UnicodeDecodeError:
                 pass
 
     results.sort(key=lambda r: r["score"], reverse=True)
-    return results[:5]
+    return results[:3]
 
 
 def _try_all_methods(data_hex: str, known_key: int | None = None) -> list[dict[str, Any]]:
@@ -373,6 +379,70 @@ def _printable_score(data: bytes) -> float:
         return 0.0
     printable = sum(1 for b in data if 0x20 <= b <= 0x7e or b in (0x09, 0x0a, 0x0d))
     return printable / len(data)
+
+
+def _score_decryption(data: bytes) -> float:
+    """Multi-factor scoring for decryption quality.
+
+    Factors:
+    1. Printable ratio (0-1)
+    2. English text likelihood -- common letter frequencies
+    3. Word-like structure -- spaces between letter groups
+    4. No control characters (except tab, newline, CR)
+    5. String length penalty -- very short strings (<8 bytes) get penalized
+    6. Alphanumeric ratio
+    """
+    if not data:
+        return 0.0
+
+    length = len(data)
+
+    # Factor 1: Printable ratio
+    printable = sum(1 for b in data if 0x20 <= b <= 0x7e or b in (0x09, 0x0a, 0x0d))
+    printable_ratio = printable / length
+
+    # Factor 2: English character frequency
+    # Common English letters: e, t, a, o, i, n, s, h, r
+    common_letters = set(b'etaoinshr ETAOINSHR')
+    common_ratio = sum(1 for b in data if b in common_letters) / length
+
+    # Factor 3: Has spaces (word-like structure)
+    # Many valid decrypted strings are identifiers/passwords with no spaces,
+    # so the no-space penalty is mild (0.5, not 0.2).
+    space_ratio = data.count(ord(' ')) / length if length > 4 else 0
+    has_words = 1.0 if 0.05 < space_ratio < 0.3 else 0.5 if space_ratio > 0 else 0.5
+
+    # Factor 4: No weird control chars
+    control_chars = sum(1 for b in data if b < 0x20 and b not in (0x09, 0x0a, 0x0d))
+    control_penalty = 1.0 - (control_chars / length)
+
+    # Factor 5: Length bonus (longer valid strings are more likely correct)
+    length_factor = min(length / 8.0, 1.0)  # full score at 8+ bytes
+
+    # Factor 6: Alphanumeric ratio
+    alnum = sum(1 for b in data if (0x30 <= b <= 0x39) or (0x41 <= b <= 0x5a) or (0x61 <= b <= 0x7a))
+    alnum_ratio = alnum / length
+
+    # Weighted combination
+    score = (
+        printable_ratio * 0.25 +
+        common_ratio * 0.20 +
+        has_words * 0.10 +
+        control_penalty * 0.15 +
+        length_factor * 0.10 +
+        alnum_ratio * 0.20
+    )
+
+    return round(score, 4)
+
+
+def _confidence_label(score: float) -> str:
+    """Return a confidence label based on the decryption score."""
+    if score > 0.95:
+        return "high"
+    if score > 0.85:
+        return "medium"
+    return "low"
 
 
 def _alpha_ratio(text: str) -> float:

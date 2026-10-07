@@ -9,6 +9,8 @@ from d810g_engine.strings.decryptor import (
     decrypt_strings,
     _byte_entropy,
     _printable_score,
+    _score_decryption,
+    _confidence_label,
 )
 
 
@@ -180,6 +182,84 @@ class TestMultibyteXOR:
         encrypted = bytes(plaintext[i] ^ key[i % 2] for i in range(len(plaintext)))
         results = try_multibyte_xor_decrypt(encrypted.hex(), max_key_len=4)
         assert any("Hello" in r["decrypted"] for r in results)
+
+
+class TestScoreDecryption:
+
+    def test_english_text_scores_high(self):
+        """Real English text should score well above 0.80."""
+        data = b"Hello World! This is a test message."
+        score = _score_decryption(data)
+        assert score > 0.80, f"English text scored only {score}"
+
+    def test_random_bytes_score_low(self):
+        """Random bytes should score well below 0.80."""
+        import os
+        data = os.urandom(32)
+        score = _score_decryption(data)
+        assert score < 0.80, f"Random data scored {score}"
+
+    def test_short_string_penalized(self):
+        """Very short strings get a length penalty."""
+        short = b"Hi"
+        long = b"Hello World"
+        short_score = _score_decryption(short)
+        long_score = _score_decryption(long)
+        assert long_score > short_score
+
+    def test_empty_data(self):
+        assert _score_decryption(b"") == 0.0
+
+    def test_control_chars_penalized(self):
+        """Data with control characters should score lower."""
+        clean = b"Hello World Test"
+        dirty = b"Hello\x01World\x02Test"
+        assert _score_decryption(clean) > _score_decryption(dirty)
+
+
+class TestConfidenceLabel:
+
+    def test_high(self):
+        assert _confidence_label(0.96) == "high"
+        assert _confidence_label(1.0) == "high"
+
+    def test_medium(self):
+        assert _confidence_label(0.90) == "medium"
+        assert _confidence_label(0.86) == "medium"
+
+    def test_low(self):
+        assert _confidence_label(0.80) == "low"
+        assert _confidence_label(0.50) == "low"
+
+
+class TestFalsePositiveRate:
+
+    def test_low_false_positive_rate(self):
+        """Random-looking data should produce few or no candidates."""
+        import os
+        random_data = os.urandom(32)
+        results = try_xor_decrypt(random_data.hex())
+        assert len(results) <= 5, f"Too many false positives: {len(results)}"
+
+    def test_xor_result_limit(self):
+        """Single-byte XOR should return at most 5 results."""
+        # Even with data that might match many keys, cap at 5
+        plaintext = b"Hello, World!"
+        key = 0x42
+        encrypted = bytes(b ^ key for b in plaintext)
+        results = try_xor_decrypt(encrypted.hex())
+        assert len(results) <= 5
+
+    def test_confidence_field_present(self):
+        """Results should include the confidence field."""
+        plaintext = b"Hello, World!"
+        key = 0x42
+        encrypted = bytes(b ^ key for b in plaintext)
+        results = try_xor_decrypt(encrypted.hex())
+        assert len(results) >= 1
+        for r in results:
+            assert "confidence" in r
+            assert r["confidence"] in ("high", "medium", "low")
 
 
 class TestAllMethodsIntegration:
