@@ -1,0 +1,77 @@
+data/rules/mba_hackers_delight.json
+  1ba8494afe4ffabd 17
+test/test_mba.py
+  1ba8494afe4ffabd 13
+test/test_mba_extended.py
+  1ba8494afe4ffabd 17
+test/test_mba_advanced_chains.py
+  1ba8494afe4ffabd 315,332
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "2233e1ee08f3d78ac3f8a34097846a9a542e9481",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 212,
+      "total_deletions": 71,
+      "accepted_lines": 259,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "test/test_mba_extended.py": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 1
+        },
+        "test/test_strings.py": {
+          "additions": 68,
+          "accepted_lines": 68
+        },
+        "data/rules/mba_hackers_delight.json": {
+          "additions": 1,
+          "deletions": 4,
+          "accepted_lines": 1
+        },
+        "test/test_mba_advanced_chains.py": {
+          "additions": 2,
+          "deletions": 2,
+          "accepted_lines": 2
+        },
+        "bash": {
+          "accepted_lines": 1
+        },
+        "data/rules/mba_ollvm.json": {
+          "deletions": 5
+        },
+        "data/rules/mba_basic.json": {
+          "deletions": 21
+        },
+        "python/d810g_engine/pipeline/orchestrator.py": {
+          "accepted_lines": 92
+        },
+        "test/test_mba.py": {
+          "additions": 1,
+          "deletions": 1,
+          "accepted_lines": 1
+        },
+        "test/test_pipeline.py": {
+          "additions": 75,
+          "deletions": 1,
+          "accepted_lines": 77
+        },
+        "python/d810g_engine/strings/decryptor.py": {
+          "additions": 64,
+          "deletions": 36,
+          "accepted_lines": 16
+        }
+      }
+    }
+  }
+}
