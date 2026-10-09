@@ -1,0 +1,124 @@
+python/d810g_engine/server.py
+  4ff1a9b7fa970012 98,109
+python/d810g_engine/mba/matcher.py
+  4ff1a9b7fa970012 89-93,212-213
+CHANGELOG.md
+  4ff1a9b7fa970012 3-15
+test/test_llm_paper_scenarios.py
+  4ff1a9b7fa970012 1-455
+README_CN.md
+  4ff1a9b7fa970012 9-10,23,30,94-113,119,141,146,247,257,273,279,358,373,391,419-420
+python/d810g_engine/cli.py
+  4ff1a9b7fa970012 12,135-179,249-260,271
+python/d810g_engine/deflattener/tigress.py
+  4ff1a9b7fa970012 6,33-34,41,63-64,66
+data/rules/mba_ollvm.json
+  4ff1a9b7fa970012 14-23
+README.md
+  4ff1a9b7fa970012 6-7,20-21,34,41,105-126,132,154,159,260,270,286,292,371,386,404,432-433
+python/d810g_engine/llm_verify.py
+  4ff1a9b7fa970012 1-117
+python/d810g_engine/deflattener/detector.py
+  4ff1a9b7fa970012 7-38,59-61,67
+python/d810g_engine/mba/verifier.py
+  4ff1a9b7fa970012 4,6,10-11,19-35,38-90,93,95-100
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.2.8-ntes.9",
+  "base_commit_sha": "53f1499eb7d5fac134228102419acb60db00202c",
+  "prompts": {
+    "1ba8494afe4ffabd": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "56958422-f0c1-423f-81c7-0faf54ec75c6",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 0,
+      "total_deletions": 0,
+      "accepted_lines": 82,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "bash": {
+          "accepted_lines": 1
+        },
+        "test/test_pipeline.py": {
+          "accepted_lines": 81
+        }
+      }
+    },
+    "4ff1a9b7fa970012": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "dc17cdcc-659a-4702-90ba-e73fbdae203a",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "nongjiawu",
+      "messages": [],
+      "total_additions": 874,
+      "total_deletions": 58,
+      "accepted_lines": 866,
+      "overriden_lines": 0,
+      "per_file_stats": {
+        "python/d810g_engine/deflattener/tigress.py": {
+          "additions": 7,
+          "deletions": 3,
+          "accepted_lines": 7
+        },
+        "test/test_llm_paper_scenarios.py": {
+          "additions": 456,
+          "deletions": 1,
+          "accepted_lines": 455
+        },
+        "CHANGELOG.md": {
+          "additions": 13,
+          "accepted_lines": 13
+        },
+        "python/d810g_engine/server.py": {
+          "additions": 2,
+          "accepted_lines": 2
+        },
+        "python/d810g_engine/mba/matcher.py": {
+          "additions": 7,
+          "deletions": 2,
+          "accepted_lines": 7
+        },
+        "README.md": {
+          "additions": 40,
+          "deletions": 16,
+          "accepted_lines": 40
+        },
+        "python/d810g_engine/cli.py": {
+          "additions": 64,
+          "deletions": 6,
+          "accepted_lines": 60
+        },
+        "python/d810g_engine/mba/verifier.py": {
+          "additions": 86,
+          "deletions": 15,
+          "accepted_lines": 83
+        },
+        "data/rules/mba_ollvm.json": {
+          "additions": 10,
+          "deletions": 1,
+          "accepted_lines": 10
+        },
+        "README_CN.md": {
+          "additions": 36,
+          "deletions": 14,
+          "accepted_lines": 36
+        },
+        "python/d810g_engine/deflattener/detector.py": {
+          "additions": 36,
+          "accepted_lines": 36
+        },
+        "python/d810g_engine/llm_verify.py": {
+          "additions": 117,
+          "accepted_lines": 117
+        }
+      }
+    }
+  }
+}
