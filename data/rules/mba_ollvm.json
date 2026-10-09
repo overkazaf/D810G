@@ -11,6 +11,15 @@
     {"id": "ollvm_not_1", "pattern": "~x ^ 0", "replacement": "~x", "commutative": false, "description": "OLLVM redundant XOR with 0"},
     {"id": "ollvm_identity_1", "pattern": "~~x", "replacement": "x", "commutative": false, "description": "Double negation elimination"},
     {"id": "ollvm_mul_1", "pattern": "(x << 3) - x", "replacement": "x * 7", "commutative": false, "description": "OLLVM multiply by 7 via shift-sub"},
-    {"id": "ollvm_mul_2", "pattern": "(x << 2) + x", "replacement": "x * 5", "commutative": false, "description": "OLLVM multiply by 5 via shift-add"}
+    {"id": "ollvm_mul_2", "pattern": "(x << 2) + x", "replacement": "x * 5", "commutative": false, "description": "OLLVM multiply by 5 via shift-add"},
+    {"id": "ollvm_add_neg", "pattern": "x - (-y)", "replacement": "x + y", "commutative": false, "description": "OLLVM addNeg: a = b - (-c)"},
+    {"id": "ollvm_add_double_neg", "pattern": "-(-x + (-y))", "replacement": "x + y", "commutative": false, "description": "OLLVM addDoubleNeg: a = -(-b + (-c))"},
+    {"id": "ollvm_add_double_neg_2", "pattern": "-(-x - y)", "replacement": "x + y", "commutative": false, "description": "OLLVM addDoubleNeg after subNeg folded the inner -(-c)"},
+    {"id": "ollvm_add_rand_1", "pattern": "((x + z) + y) - z", "replacement": "x + y", "commutative": false, "description": "OLLVM addRand: r = rand(); a = ((b + r) + c) - r"},
+    {"id": "ollvm_add_rand_2", "pattern": "((x - z) + y) + z", "replacement": "x + y", "commutative": false, "description": "OLLVM addRand2: r = rand(); a = ((b - r) + c) + r"},
+    {"id": "ollvm_sub_neg", "pattern": "x + (-y)", "replacement": "x - y", "commutative": false, "description": "OLLVM subNeg: a = b + (-c)"},
+    {"id": "ollvm_sub_rand_1", "pattern": "((x + z) - y) - z", "replacement": "x - y", "commutative": false, "description": "OLLVM subRand: r = rand(); a = ((b + r) - c) - r"},
+    {"id": "ollvm_sub_rand_2", "pattern": "((x - z) - y) + z", "replacement": "x - y", "commutative": false, "description": "OLLVM subRand2: r = rand(); a = ((b - r) - c) + r"},
+    {"id": "ollvm_xor_rand", "pattern": "(x ^ z) ^ (y ^ z)", "replacement": "x ^ y", "commutative": false, "description": "OLLVM xorSubstitutionRand / orSubstitutionRand core: random mask cancels"}
   ]
 }

@@ -95,6 +95,7 @@ def main() -> int:
     from d810g_engine.virtualization import register_handlers as register_vm
     from d810g_engine.dce import register_handlers as register_dce
     from d810g_engine.pipeline import register_handlers as register_pipeline
+    from d810g_engine.llm_verify import register_handlers as register_llm_verify
 
     server = Server()
     register_deflat(server)
@@ -105,5 +106,6 @@ def main() -> int:
     register_vm(server)
     register_dce(server)
     register_pipeline(server)
+    register_llm_verify(server)
     server.serve()
     return 0

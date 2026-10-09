@@ -1,5 +1,18 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- `verify` CLI command / `verify.llm_output` RPC: Z3 proof (32/64-bit) that an LLM-proposed deobfuscation is equivalent, with counterexamples and fabricated/hexspeak constant detection (arXiv:2505.19887)
+- 9 OLLVM `Substitution.cpp` rules: addNeg, addDoubleNeg, addRand/addRand2, subNeg, subRand/subRand2, random-mask XOR cancel (96 -> 105 rules)
+- `test_llm_paper_scenarios.py`: paper opaque predicates, IS identities, the paper's `n % 4` test function, CFF dispatcher vs. real loop, verifier (83 tests)
+- `prove_equivalence()` in `mba/verifier.py`: counterexample models, solver timeout, operator-congruence split for nonlinear terms
+
+### Fixed
+- MBA matcher tokenized hex literals as `0` followed by a variable (`0xBAAAD0BF` -> `0`, `xBAAAD0BF`), producing wrong deep simplifications
+- Z3 verification no longer hangs on products like `(n | C) * (2 ^ n)` vs. its IS-obfuscated form (`verify_equivalence` now times out fail-safe)
+- CFF detectors (OLLVM switch, Tigress indirect/if-chain) no longer flag loops whose back-edge blocks write identical constants, or constants to different variables (`state_var`, when provided), as dispatchers
+
 ## [0.2.0] - 2026-10-07
 
 ### Added

@@ -9,6 +9,7 @@ Usage:
     python -m d810g_engine cli rules                    # list all available rules
     python -m d810g_engine cli rules --verify           # verify all rules with Z3
     python -m d810g_engine cli batch < expressions.txt  # one expression per line
+    python -m d810g_engine cli verify "(a ^ b) + 2 * (a & b)" "a + b"  # check LLM output
 """
 
 from __future__ import annotations
@@ -131,6 +132,51 @@ def cmd_pipeline(args: argparse.Namespace) -> None:
             print(f"    [{p['name']}] {p['status']} — {p['patches']} patches ({p['time_ms']}ms)")
 
 
+def cmd_verify(args: argparse.Namespace) -> int:
+    """Prove an (LLM-proposed) deobfuscation equivalent, audit its constants."""
+    from d810g_engine.llm_verify import verify_llm_output
+
+    known = [int(tok, 0) for tok in " ".join(args.constants).replace(",", " ").split()]
+    result = verify_llm_output(
+        args.original,
+        args.candidate,
+        bit_widths=args.bits,
+        known_constants=known,
+        signed=not args.unsigned,
+        timeout_ms=args.timeout,
+    )
+    ok = result["equivalent"] and not result["suspicious_constants"]
+
+    if args.json:
+        print(json.dumps(result, indent=2))
+        return 0 if ok else 1
+
+    print(f"  original:  {args.original}")
+    print(f"  candidate: {args.candidate}")
+    if "error" in result:
+        print(f"  -> ERROR: {result['error']}")
+    for bits, res in result["widths"].items():
+        if res["result"] == "equivalent":
+            print(f"  {bits}-bit: EQUIVALENT (Z3 proof)")
+        elif res["result"] == "counterexample":
+            cex = res["counterexample"]
+            inputs = ", ".join(f"{k}={hex(v)}" for k, v in cex["inputs"].items())
+            print(f"  {bits}-bit: COUNTEREXAMPLE  {inputs or '(no inputs)'}")
+            print(f"           original -> {_fmt_val(cex['original_value'])}, "
+                  f"candidate -> {_fmt_val(cex['candidate_value'])}")
+        elif res["result"] == "unknown":
+            print(f"  {bits}-bit: UNKNOWN (solver timeout, not verified)")
+    for c in result["suspicious_constants"]:
+        tag = "HEXSPEAK" if c["hexspeak"] else "UNTRACED"
+        print(f"  [{tag}] constant {c['hex']}: {c['reason']}")
+    print(f"  Verdict: {'ACCEPT' if ok else 'REJECT'}")
+    return 0 if ok else 1
+
+
+def _fmt_val(val) -> str:
+    return str(val) if isinstance(val, bool) else hex(val)
+
+
 def cmd_batch(args: argparse.Namespace) -> None:
     """Process multiple expressions from stdin."""
     rules_file = args.rules
@@ -200,6 +246,19 @@ def main(argv: list[str] | None = None) -> int:
     p_pipe.add_argument("--json", action="store_true", help="Output as JSON")
     p_pipe.set_defaults(func=cmd_pipeline)
 
+    # verify
+    p_ver = sub.add_parser("verify", help="Formally verify a candidate (e.g. LLM) deobfuscation")
+    p_ver.add_argument("original", help="Obfuscated expression")
+    p_ver.add_argument("candidate", help="Proposed simplified expression")
+    p_ver.add_argument("--bits", type=lambda v: [int(b) for b in v.split(",")],
+                       default=[32, 64], help="Comma-separated bit widths (default: 32,64)")
+    p_ver.add_argument("--constants", action="append", default=[],
+                       help="Constants known from the binary, comma separated (repeatable)")
+    p_ver.add_argument("--unsigned", action="store_true", help="Unsigned comparisons / div / mod")
+    p_ver.add_argument("--timeout", type=int, default=10000, help="Z3 timeout per query in ms")
+    p_ver.add_argument("--json", action="store_true", help="Output as JSON")
+    p_ver.set_defaults(func=cmd_verify)
+
     # interactive
     p_interact = sub.add_parser("interactive", help="Interactive rule editor and tester")
     p_interact.set_defaults(func=lambda args: _run_interactive())
@@ -209,8 +268,7 @@ def main(argv: list[str] | None = None) -> int:
         parser.print_help()
         return 1
 
-    args.func(args)
-    return 0
+    return args.func(args) or 0
 
 
 def _run_interactive() -> None:

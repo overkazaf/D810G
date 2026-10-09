@@ -86,6 +86,11 @@ def _tokenize(expr: str) -> list[str]:
                 i += 1  # skip lone < or >
         elif c.isdigit():
             j = i
+            if c == "0" and expr[i + 1:i + 2] in ("x", "X"):
+                # hex literal -- binaries print constants this way
+                j = i + 2
+                while j < len(expr) and expr[j] in "0123456789abcdefABCDEF":
+                    j += 1
             while j < len(expr) and expr[j].isdigit():
                 j += 1
             tokens.append(expr[i:j])
@@ -204,8 +209,8 @@ def _parse_atom(tokens: list[str], pos: int) -> tuple[ASTNode, int]:
         if pos < len(tokens) and tokens[pos] == ")":
             pos += 1  # consume )
         return node, pos
-    if tok.isdigit():
-        return ASTNode(Op.CONST, value=int(tok)), pos + 1
+    if tok[0].isdigit():
+        return ASTNode(Op.CONST, value=int(tok, 0) if tok[:2] in ("0x", "0X") else int(tok)), pos + 1
     if tok[0].isalpha() or tok[0] == "_":
         return ASTNode(Op.VAR, name=tok), pos + 1
 

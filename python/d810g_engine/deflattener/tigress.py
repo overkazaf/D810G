@@ -3,7 +3,7 @@
 from __future__ import annotations
 from typing import Any
 
-from d810g_engine.deflattener.detector import detect_cff_pattern
+from d810g_engine.deflattener.detector import detect_cff_pattern, state_machine_evidence
 
 
 def detect_tigress_pattern(blocks: list[dict[str, Any]]) -> dict[str, Any] | None:
@@ -30,13 +30,15 @@ def detect_tigress_pattern(blocks: list[dict[str, Any]]) -> dict[str, Any] | Non
                     and block["addr"] in other.get("succs", [])
                     and "state_update" in other
                 ]
-                if len(case_blocks) >= 2:
+                evidence = state_machine_evidence(blocks, case_blocks)
+                if len(case_blocks) >= 2 and evidence is not None:
                     return {
                         "type": "tigress_indirect",
                         "dispatcher": block["addr"],
                         "case_blocks": case_blocks,
                         "jump_table": table,
                         "num_cases": len(table),
+                        **evidence,
                     }
 
     # Pattern 2: If-chain dispatcher
@@ -58,8 +60,10 @@ def detect_tigress_pattern(blocks: list[dict[str, Any]]) -> dict[str, Any] | Non
             if dispatcher["addr"] in block.get("succs", []) and "state_update" in block:
                 case_blocks.append(block["addr"])
 
-        if len(case_blocks) >= 2:
+        evidence = state_machine_evidence(blocks, case_blocks)
+        if len(case_blocks) >= 2 and evidence is not None:
             return {
+                **evidence,
                 "type": "tigress_ifchain",
                 "dispatcher": dispatcher["addr"],
                 "case_blocks": case_blocks,
